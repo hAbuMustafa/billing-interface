@@ -1,0 +1,27 @@
+<script lang="ts">
+  import { PUBLIC_patients_spreadsheetId } from "$env/static/public";
+
+  import Sheet from "$lib/components/Sheet.svelte";
+  import { getData } from "$lib/utils";
+</script>
+
+<h1>إصدار فاتورة</h1>
+{#await getData(PUBLIC_patients_spreadsheetId, "Names!C:M", "اسم المريض", "عبود")}
+  <p>جاري تحميل بيانات المرضى...</p>
+{:then patients}
+  {#if patients.rows}
+    <Sheet rows={patients.rows} />
+  {:else if patients.error}
+    <p>حدث مصيبة ما: <br />{patients.error}</p>
+  {:else}
+    <p>لا يوجد مرضى في قاعدة البيانات</p>
+  {/if}
+{:catch error}
+  <p>حدث عطل ما: <br />{error.message}</p>
+{/await}
+
+<style>
+  h1 {
+    text-align: center;
+  }
+</style>

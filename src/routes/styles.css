@@ -1,0 +1,17 @@
+:root {
+  color-scheme: light dark;
+
+  --main-bg-light: #fff;
+  --main-bg-dark: #1a202c;
+
+  --main-text-light: black;
+  --main-text-dark: hsl(120, 20%, 80%);
+
+  --main-bg-color: light-dark(var(--main-bg-light), var(--main-bg-dark));
+  --main-text-color: light-dark(var(--main-text-light), var(--main-text-dark));
+}
+
+body {
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
+}
