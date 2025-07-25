@@ -1,5 +1,5 @@
 <script>
-  import { page } from "$app/state";
+  import { page } from '$app/state';
 </script>
 
 <nav>
@@ -21,6 +21,7 @@
     </ul>
   {:else}
     <ul>
+      <li><a href="/register">إنشاء حساب</a></li>
       <li><a href="/login">تسجيل الدخول</a></li>
     </ul>
   {/if}
