@@ -2,7 +2,7 @@
   import { PUBLIC_invoice_spreadsheetId } from '$env/static/public';
 
   import Sheet from '$lib/components/Sheet.svelte';
-  import { getData } from '$lib/utils';
+  import { getData } from '$lib/utils/request';
 </script>
 
 <h1>إصدار فاتورة</h1>
