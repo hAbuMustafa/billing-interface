@@ -21,6 +21,7 @@ export async function POST({ request }) {
       range: sheetName,
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
+      includeValuesInResponse: true,
       requestBody: {
         values: rows,
       },
