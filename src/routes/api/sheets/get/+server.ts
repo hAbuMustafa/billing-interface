@@ -21,6 +21,8 @@ export async function POST({ request }) {
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range,
+      valueRenderOption: 'UNFORMATTED_VALUE',
+      dateTimeRenderOption: 'SERIAL_NUMBER',
     });
     const values = response.data;
     const remodeledValues = remodelRowsToObject(values.values);
