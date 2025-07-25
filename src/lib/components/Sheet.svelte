@@ -1,5 +1,12 @@
 <script lang="ts">
-  const { rows } = $props();
+  import { dateFromSerial } from '$lib/utils/date-format';
+  type DateColumnT = string | { name: string; format: string };
+  type PropsT = {
+    rows: { [key: string]: string | number }[];
+    dateColumns?: DateColumnT[];
+  };
+
+  const { rows, dateColumns }: PropsT = $props();
 
   let columnNames: string[] = $state([]);
   if (rows && rows.length > 0 && typeof rows[0] === 'object') {
@@ -28,7 +35,19 @@
           {#if row[columnNames[0]] !== columnNames[0]}
             <tr>
               {#each Object.entries(row) as rowTuple, j (j)}
-                <td>{rowTuple[1]}</td>
+                <td
+                  >{#if dateColumns && dateColumns.some((c) => rowTuple[0] === (typeof c === 'string' ? c : c.name))}
+                    {dateFromSerial(
+                      rowTuple[1] as number,
+                      dateColumns.find(
+                        (c): c is { name: string; format: string } =>
+                          typeof c !== 'string' && c.name === rowTuple[0]
+                      )?.format
+                    )}
+                  {:else}
+                    {rowTuple[1]}
+                  {/if}</td
+                >
               {/each}
             </tr>
           {/if}

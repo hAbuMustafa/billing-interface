@@ -10,7 +10,10 @@
   <p>جاري تحميل بيانات المرضى...</p>
 {:then patients}
   {#if patients.rows}
-    <Sheet rows={patients.rows} />
+    <Sheet
+      rows={patients.rows}
+      dateColumns={['تاريخ الدخول', { name: 'تاريخ الخروج', format: 'YYYY/MM/DD' }]}
+    />
   {:else if patients.error}
     <p>حدث مصيبة ما: <br />{patients.error}</p>
   {:else}
