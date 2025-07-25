@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { PUBLIC_patients_spreadsheetId } from "$env/static/public";
+  import { PUBLIC_invoice_spreadsheetId } from '$env/static/public';
 
-  import Sheet from "$lib/components/Sheet.svelte";
-  import { getData } from "$lib/utils";
+  import Sheet from '$lib/components/Sheet.svelte';
+  import { getData } from '$lib/utils';
 </script>
 
 <h1>إصدار فاتورة</h1>
-{#await getData(PUBLIC_patients_spreadsheetId, "Names!C:M", "اسم المريض", "عبود")}
+{#await getData(PUBLIC_invoice_spreadsheetId, 'Names!C:M', 'اسم المريض', 'عبود')}
   <p>جاري تحميل بيانات المرضى...</p>
 {:then patients}
   {#if patients.rows}
