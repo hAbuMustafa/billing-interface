@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dateFromSerial } from '$lib/utils/date-format';
+  import { dateFromExcelSerial } from '$lib/utils/date-format';
   type DateColumnT = string | { name: string; format: string };
   type PropsT = {
     rows: { [key: string]: string | number }[];
@@ -37,7 +37,7 @@
               {#each Object.entries(row) as rowTuple, j (j)}
                 <td
                   >{#if dateColumns && dateColumns.some((c) => rowTuple[0] === (typeof c === 'string' ? c : c.name))}
-                    {dateFromSerial(
+                    {dateFromExcelSerial(
                       rowTuple[1] as number,
                       dateColumns.find(
                         (c): c is { name: string; format: string } =>
