@@ -84,7 +84,7 @@
 
 <style>
   form {
-    width: 50vw;
+    width: clamp(300px, 50vw, 400px);
 
     display: grid;
     grid-template-rows: repeat(11, 1fr) 2fr;
