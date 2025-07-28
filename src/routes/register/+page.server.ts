@@ -14,7 +14,7 @@ export function load() {
 }
 
 export const actions: Actions = {
-  default: async ({ request, cookies }) => {
+  default: async ({ request, fetch }) => {
     const formData = await request.formData();
     const username = formData.get('username');
     const name = formData.get('name');
@@ -64,8 +64,11 @@ export const actions: Actions = {
       username as string,
       name as string,
       mobile as string,
-      password as string
+      password as string,
+      fetch
     );
+
+    console.log(user);
 
     throw redirect(303, '/');
   },

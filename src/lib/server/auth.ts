@@ -1,3 +1,5 @@
+import { PUBLIC_users_spreadsheetId } from '$env/static/public';
+import { dateFromExcelSerial, dateToExcelSerial } from '$lib/utils/date-format';
 import { db } from './db';
 import bcrypt from 'bcryptjs';
 
@@ -11,19 +13,31 @@ export async function createUser(
   username: string,
   name: string,
   phoneNumber: string,
-  password: string
+  password: string,
+  fetchFunc: Function
 ) {
   const hash = await bcrypt.hash(password, SALT_ROUNDS);
-  const { lastInsertRowid } = db
-    .prepare(
-      `INSERT INTO users (username, name, phone_number, password_hash) VALUES (?, ?, ?, ?)`
-    )
-    .run(username, name, phoneNumber, hash);
+  const request = await fetchFunc('/api/sheets/insert', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spreadsheetId: PUBLIC_users_spreadsheetId,
+      sheetName: 'users',
+      rows: [
+        ['', username, name, phoneNumber, hash, dateToExcelSerial(new Date().toString())],
+      ],
+    }),
+  });
+
+  const data = await request.json();
+
   return {
-    id: lastInsertRowid,
+    id: data.response.data.updates.updatedData.values,
     username,
     name,
-    phone_number: phoneNumber,
+    phoneNumber,
   };
 }
 
