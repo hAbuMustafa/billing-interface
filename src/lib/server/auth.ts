@@ -26,7 +26,7 @@ export async function createUser(
       spreadsheetId: PUBLIC_users_spreadsheetId,
       sheetName: 'users',
       rows: [
-        ['', username, name, phoneNumber, hash, dateToExcelSerial(new Date().toString())],
+        [username, name, phoneNumber, hash, dateToExcelSerial(new Date().toString())],
       ],
     }),
   });
