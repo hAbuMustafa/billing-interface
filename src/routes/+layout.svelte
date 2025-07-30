@@ -11,6 +11,10 @@
 
 <Nav />
 
+{#if page.status >= 400 && page?.form?.message}
+  <div class="error">{page.form.message}</div>
+{/if}
+
 <main>
   {@render children()}
 </main>
@@ -18,5 +22,14 @@
 <style>
   main {
     place-items: center;
+  }
+
+  .error {
+    margin-block-start: 1rem;
+    padding-block: 1rem;
+    text-align: center;
+    border: 1px solid light-dark(maroon, salmon);
+    border-radius: 8px;
+    background-color: light-dark(hsl(from salmon h s 80%), hsl(from salmon h s 20%));
   }
 </style>
