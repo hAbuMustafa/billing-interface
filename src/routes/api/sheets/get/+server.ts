@@ -52,7 +52,7 @@ export async function POST({ request }) {
           : regexify(filterValue).test(row[filterBy])
       );
 
-      if (filteredData.length === 0) {
+      if (filteredData.length === 0 && withTableHeader === true) {
         filteredData = [remodeledValues[0]];
       }
     }
