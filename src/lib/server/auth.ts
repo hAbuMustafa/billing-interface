@@ -137,15 +137,56 @@ export async function createSession(username: string, cookies: any, fetchFunc: F
   });
 }
 
-export function getSession(cookies: any) {
+export async function getSession(cookies: any, fetchFunc: Function) {
   const sessionId = cookies.get('session_id');
   if (!sessionId) return null;
 
-  return db
-    .prepare(
-      "SELECT users.id, users.username, users.name, users.phone_number FROM sessions JOIN users ON sessions.user_id = users.id WHERE sessions.id = ? AND sessions.expires_at > datetime('now')"
-    )
-    .get(sessionId) as UserT;
+  const sessionsResponse = await fetchFunc('/api/sheets/get', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spreadsheetId: PUBLIC_users_spreadsheetId,
+      range: 'sessions!A:C',
+      filterBy: 'id',
+      filterValue: sessionId,
+      filterMethod: 'equal',
+      withTableHeader: false,
+    }),
+  });
+
+  const sessionsData = await sessionsResponse.json();
+
+  if (sessionsData.rows.length === 0) return null;
+
+  if (
+    (dateFromExcelSerial(sessionsData.rows[0].expires_at, '', true) as number) -
+      Date.now() <
+    0
+  )
+    return null;
+
+  const usersResponse = await fetchFunc('/api/sheets/get', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spreadsheetId: PUBLIC_users_spreadsheetId,
+      range: 'users!A:H',
+      filterBy: 'username',
+      filterValue: sessionsData.rows[0].username,
+      filterMethod: 'equal',
+      withTableHeader: false,
+    }),
+  });
+
+  const usersData = await usersResponse.json();
+
+  if (usersData.rows.length === 0) return null;
+
+  return usersData.rows[0];
 }
 
 export function deleteSession(cookies: any) {
