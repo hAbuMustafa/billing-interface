@@ -34,10 +34,7 @@ export async function createUser(
   const data = await response.json();
 
   return {
-    id: data.response.data.updates.updatedData.values,
-    username,
-    name,
-    phoneNumber,
+    success: true,
   };
 }
 
