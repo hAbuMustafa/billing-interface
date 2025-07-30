@@ -5,7 +5,15 @@ import { remodelRowsToObject, sortRows } from '../../utils';
 
 export async function POST({ request }) {
   const body = await request.json();
-  const { spreadsheetId, range, filterBy, filterValue, sortBy, withTableHeader } = body;
+  const {
+    spreadsheetId,
+    range,
+    filterBy,
+    filterValue,
+    filterMethod,
+    sortBy,
+    withTableHeader,
+  } = body;
 
   const auth = new google.auth.GoogleAuth({
     credentials: {
@@ -24,8 +32,8 @@ export async function POST({ request }) {
       valueRenderOption: 'UNFORMATTED_VALUE',
       dateTimeRenderOption: 'SERIAL_NUMBER',
     });
-    const values = response.data;
-    const remodeledValues = remodelRowsToObject(values.values);
+    const values = response.data.values;
+    const remodeledValues = remodelRowsToObject(values);
 
     if (!withTableHeader) remodeledValues.shift();
 
