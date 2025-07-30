@@ -47,7 +47,9 @@ export async function POST({ request }) {
     // todo: allow filtering with multiple columns and values
     if (!!(filterBy && filterValue)) {
       filteredData = remodeledValues.filter((row: { [key: string]: string }) =>
-        regexify(filterValue).test(row[filterBy])
+        filterMethod === 'equal'
+          ? row[filterBy] === filterValue
+          : regexify(filterValue).test(row[filterBy])
       );
 
       if (filteredData.length === 0) {
