@@ -16,11 +16,15 @@ export function load() {
 export const actions: Actions = {
   default: async ({ request, fetch }) => {
     const formData = await request.formData();
-    const username = formData.get('username');
-    const name = formData.get('name');
-    const mobile = formData.get('mobile');
+    let username = formData.get('username');
+    let name = formData.get('name');
+    let mobile = formData.get('mobile');
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm-password');
+
+    username = (username as string).trim();
+    name = (name as string).trim();
+    mobile = (mobile as string).trim();
 
     if (!username || !password || !name || !mobile || !confirmPassword) {
       return fail(400, {
