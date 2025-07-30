@@ -17,7 +17,7 @@ export async function createUser(
   fetchFunc: Function
 ) {
   const hash = await bcrypt.hash(password, SALT_ROUNDS);
-  const request = await fetchFunc('/api/sheets/insert', {
+  const response = await fetchFunc('/api/sheets/insert', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export async function createUser(
     }),
   });
 
-  const data = await request.json();
+  const data = await response.json();
 
   return {
     id: data.response.data.updates.updatedData.values,
