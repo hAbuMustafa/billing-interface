@@ -35,6 +35,8 @@ export async function POST({ request }) {
 
     let filteredData = null;
 
+    // todo: separate into a different function
+    // todo: allow filtering with multiple columns and values
     if (!!(filterBy && filterValue)) {
       filteredData = remodeledValues.filter((row: { [key: string]: string }) =>
         regexify(filterValue).test(row[filterBy])
