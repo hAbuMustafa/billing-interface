@@ -1,4 +1,4 @@
-import { createSession, createUser, isUniqueUser, validateUser } from '$lib/server/auth';
+import { createUser, isUniqueUser } from '$lib/server/auth';
 import {
   arabicTetradicNamesPattern,
   egyptianMobileNumberPattern,
@@ -71,6 +71,8 @@ export const actions: Actions = {
         message: 'المستخدم مسجل مسبقا',
       });
     }
+
+    const result = await createUser(username, name, mobile, password as string, fetch);
 
     return redirect(303, '/');
   },
