@@ -9,7 +9,7 @@ export function load() {
 }
 
 export const actions: Actions = {
-  default: async ({ request, cookies }) => {
+  default: async ({ request, cookies, fetch }) => {
     const formData = await request.formData();
     const username = formData.get('username');
     const password = formData.get('password');
@@ -29,7 +29,7 @@ export const actions: Actions = {
       });
     }
 
-    const user = await validateUser(username as string, password as string);
+    const user = await validateUser(username as string, password as string, fetch);
 
     if (!user) {
       return fail(401, {
@@ -37,7 +37,7 @@ export const actions: Actions = {
       });
     }
 
-    createSession(user.id as number, cookies);
+    // createSession(user.name as string, cookies);
 
     throw redirect(303, '/');
   },

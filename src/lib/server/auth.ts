@@ -65,10 +65,29 @@ export async function isUniqueUser(
   return data.rows.length === 0;
 }
 
-export async function validateUser(username: string, password: string) {
-  const user = db
-    .prepare(`SELECT * FROM users WHERE username = ?`)
-    .get(username) as UserT;
+export async function validateUser(
+  username: string,
+  password: string,
+  fetchFunc: Function
+) {
+  const response = await fetchFunc('/api/sheets/get', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spreadsheetId: PUBLIC_users_spreadsheetId,
+      range: 'users!A:H',
+      filterBy: 'username',
+      filterValue: username,
+      filterMethod: 'equal',
+      withTableHeader: false,
+    }),
+  });
+
+  const data = await response.json();
+
+  const user = data.rows[0];
 
   if (!user) {
     return null;
@@ -81,10 +100,12 @@ export async function validateUser(username: string, password: string) {
   }
 
   return {
-    id: user.id,
     username: user.username,
     name: user.name,
-    phone_number: user.phone_number,
+    phoneNumber: user.phone_number,
+    isWarehouse: user.is_warehouse,
+    isActive: user.active,
+    lastLogin: user.last_login,
   };
 }
 
