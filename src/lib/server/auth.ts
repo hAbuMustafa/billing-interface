@@ -41,6 +41,30 @@ export async function createUser(
   };
 }
 
+export async function isUniqueUser(
+  username: string,
+  fetchFunc: Function
+): Promise<boolean> {
+  const response = await fetchFunc('/api/sheets/get', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spreadsheetId: PUBLIC_users_spreadsheetId,
+      range: 'users!A:H',
+      filterBy: 'username',
+      filterValue: username,
+      filterMethod: 'equal',
+      withTableHeader: false,
+    }),
+  });
+
+  const data = await response.json();
+
+  return data.rows.length === 0;
+}
+
 export async function validateUser(username: string, password: string) {
   const user = db
     .prepare(`SELECT * FROM users WHERE username = ?`)

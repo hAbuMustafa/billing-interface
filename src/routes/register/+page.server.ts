@@ -1,4 +1,4 @@
-import { createSession, createUser, validateUser } from '$lib/server/auth';
+import { createSession, createUser, isUniqueUser, validateUser } from '$lib/server/auth';
 import {
   arabicTetradicNamesPattern,
   egyptianMobileNumberPattern,
@@ -60,16 +60,14 @@ export const actions: Actions = {
       });
     }
 
-    const user = await createUser(
-      username as string,
-      name as string,
-      mobile as string,
-      password as string,
-      fetch
-    );
+    const isUnique = await isUniqueUser(username as string, fetch);
 
-    console.log(user);
+    if (!isUnique) {
+      return fail(401, {
+        message: 'المستخدم مسجل مسبقا',
+      });
+    }
 
-    throw redirect(303, '/');
+    return redirect(303, '/');
   },
 };
