@@ -109,14 +109,24 @@ export async function validateUser(
   };
 }
 
-export function createSession(userId: number, cookies: any) {
+export async function createSession(username: string, cookies: any, fetchFunc: Function) {
   const sessionId = crypto.randomUUID();
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 60);
-  db.prepare(`INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, ?)`).run(
-    sessionId,
-    userId,
-    expiresAt.toISOString()
-  );
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 2);
+  const response = await fetchFunc('/api/sheets/insert', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spreadsheetId: PUBLIC_users_spreadsheetId,
+      sheetName: 'sessions',
+      rows: [[sessionId, username, dateToExcelSerial(expiresAt.toString())]],
+    }),
+  });
+
+  const data = await response.json();
+
+  console.log(data);
 
   cookies.set('session_id', sessionId, {
     path: '/',
