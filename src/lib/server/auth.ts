@@ -164,8 +164,10 @@ export async function getSession(cookies: any, fetchFunc: Function) {
     (dateFromExcelSerial(sessionsData.rows[0].expires_at, '', true) as number) -
       Date.now() <
     0
-  )
+  ) {
+    //todo: delete this very session
     return null;
+  }
 
   const usersResponse = await fetchFunc('/api/sheets/get', {
     method: 'POST',
