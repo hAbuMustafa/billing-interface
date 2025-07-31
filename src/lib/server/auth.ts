@@ -123,8 +123,6 @@ export async function createSession(username: string, cookies: any, fetchFunc: F
 
   const data = await response.json();
 
-  console.log(data);
-
   cookies.set('session_id', sessionId, {
     path: '/',
     httpOnly: true,
