@@ -1,5 +1,6 @@
 import { PUBLIC_users_spreadsheetId } from '$env/static/public';
 import { dateFromExcelSerial, dateToExcelSerial } from '$lib/utils/date-format';
+import { getGravatarHash } from '$lib/utils/gravatar';
 import bcrypt from 'bcryptjs';
 
 const SALT_ROUNDS = 12;
@@ -179,6 +180,10 @@ export async function getUserFromSession(sessionId: string, fetchFunc: Function)
   if (usersData.rows.length === 0) return null;
 
   const user = usersData.rows[0];
+
+  user.gravatar = user.email
+    ? `https://0.gravatar.com/avatar/${getGravatarHash(user.email)}`
+    : '/default-profile.jpg';
 
   delete user.password_hash;
 
