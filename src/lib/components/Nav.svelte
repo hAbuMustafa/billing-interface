@@ -10,7 +10,6 @@
       width="80"
     />
   </a>
-  <!-- todo: if there is an active session -->
   {#if user}
     <ul>
       <li><a href="/patient-search">تسعير فاتورة</a></li>
