@@ -21,8 +21,11 @@
       <li><a href="/logout">تسجيل الخروج</a></li>
       <li>
         <img
+          class="gravatar"
           src={`https://0.gravatar.com/avatar/${getGravatarHash(user.email ?? 'default')}`}
           alt={`صورة حساب ${user.name}`}
+          width="40px"
+          height="40px"
         />
       </li>
     </ul>
@@ -65,5 +68,9 @@
     gap: 1rem;
     list-style: none;
     align-items: center;
+  }
+
+  .gravatar {
+    border-radius: 50%;
   }
 </style>
