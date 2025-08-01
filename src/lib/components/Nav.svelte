@@ -17,7 +17,7 @@
     </ul>
     <ul>
       <li><a href="/account">الحساب</a></li>
-      <li><a href="/login">تسجيل الخروج</a></li>
+      <li><a href="/logout">تسجيل الخروج</a></li>
     </ul>
   {:else}
     <ul>
