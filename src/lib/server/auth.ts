@@ -178,5 +178,7 @@ export async function getUserFromSession(sessionId: string, fetchFunc: Function)
 
   if (usersData.rows.length === 0) return null;
 
+  delete usersData.rows[0].password_hash;
+
   return usersData.rows[0];
 }
