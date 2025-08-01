@@ -56,3 +56,93 @@ export function sortRows(
     );
   });
 }
+
+async function findRowToDelete(
+  spreadsheetId: string,
+  sheetName: string,
+  sheetRange: string,
+  columnIndexToCheck: number,
+  targetValue: string | number
+) {
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${sheetName}!${sheetRange}`,
+  });
+
+  const rows = response.data.values || [];
+  const rowsToDelete: number[] = [];
+
+  rows.forEach((row, index) => {
+    if (row[columnIndexToCheck] === targetValue) {
+      rowsToDelete.push(index + 1);
+    }
+  });
+
+  return rowsToDelete;
+}
+
+async function deleteRows(spreadsheetId: string, sheetId: number, rowIndices: number[]) {
+  rowIndices.sort((a, b) => b - a);
+
+  const response = await sheets.spreadsheets.batchUpdate({
+    spreadsheetId,
+    requestBody: {
+      requests: rowIndices.map((rowIndex) => ({
+        deleteDimension: {
+          range: {
+            sheetId: sheetId,
+            dimension: 'ROWS',
+            startIndex: rowIndex - 1,
+            endIndex: rowIndex,
+          },
+        },
+      })),
+    },
+  });
+
+  return response;
+}
+
+export async function deleteRowByCondition(
+  spreadsheetId: string,
+  sheetName: string,
+  sheetRange: string,
+  columnIndex: number,
+  targetValue: string | number
+) {
+  const metadata = await sheets.spreadsheets.get({ spreadsheetId });
+
+  if (!metadata || !metadata.data.sheets) {
+    console.error(`No spreadsheet was found with the specified id ${spreadsheetId}`);
+    return;
+  }
+
+  const sheet = metadata.data.sheets.find(
+    (s) => s.properties && s.properties.title === sheetName
+  );
+
+  if (!sheet) {
+    console.error(`Sheet ${sheetName} was not found in the specified spreadsheet`);
+    return;
+  }
+  const sheetId = sheet.properties?.sheetId as number;
+
+  try {
+    const rowsToDelete = await findRowToDelete(
+      spreadsheetId,
+      sheetName,
+      sheetRange,
+      columnIndex,
+      targetValue
+    );
+
+    if (rowsToDelete.length === 0) {
+      console.warn('No matching rows found');
+      return;
+    }
+
+    await deleteRows(spreadsheetId, sheetId, rowsToDelete);
+  } catch (error) {
+    console.error('Error deleting row:', error);
+  }
+}
