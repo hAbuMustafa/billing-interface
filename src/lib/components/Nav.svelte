@@ -1,5 +1,5 @@
 <script>
-  import { page } from '$app/state';
+  const { user } = $props();
 </script>
 
 <nav>
@@ -11,7 +11,7 @@
     />
   </a>
   <!-- todo: if there is an active session -->
-  {#if page.data.user}
+  {#if user}
     <ul>
       <li><a href="/patient-search">تسعير فاتورة</a></li>
     </ul>

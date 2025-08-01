@@ -9,7 +9,7 @@
   <title>{page.data.title ? `${page.data.title} | ` : ''}صيدلية الاقتصادي</title>
 </svelte:head>
 
-<Nav />
+<Nav user={page.data.user} />
 
 {#if page.status >= 400 && page?.form?.message}
   <div class="error">{page.form.message}</div>
