@@ -1,4 +1,6 @@
 <script>
+  import { getGravatarHash } from '$lib/utils/gravatar';
+
   const { user } = $props();
 </script>
 
@@ -17,6 +19,12 @@
     <ul>
       <li><a href="/account">الحساب</a></li>
       <li><a href="/logout">تسجيل الخروج</a></li>
+      <li>
+        <img
+          src={`https://0.gravatar.com/avatar/${getGravatarHash(user.email ?? 'default')}`}
+          alt={`صورة حساب ${user.name}`}
+        />
+      </li>
     </ul>
   {:else}
     <ul>
@@ -56,5 +64,6 @@
     display: flex;
     gap: 1rem;
     list-style: none;
+    align-items: center;
   }
 </style>
