@@ -8,6 +8,7 @@ const SALT_ROUNDS = 12;
 export async function createUser(
   username: string,
   name: string,
+  email: string,
   phoneNumber: string,
   password: string,
   fetchFunc: Function
@@ -27,6 +28,7 @@ export async function createUser(
           userId,
           username,
           name,
+          email,
           phoneNumber,
           hash,
           dateToExcelSerial(new Date().toString()),
@@ -104,6 +106,7 @@ export async function validateUser(
     id: user.id,
     username: user.username,
     name: user.name,
+    email: user.email,
     phoneNumber: user.phone_number,
     isWarehouse: user.is_warehouse,
     isActive: user.active,
