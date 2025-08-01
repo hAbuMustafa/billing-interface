@@ -2,7 +2,9 @@ import { createSession, validateUser } from '$lib/server/auth';
 import { passwordPattern, usernamePattern } from '$lib/stores/patterns';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
-export function load() {
+export function load({ locals }) {
+  if (locals.user) return redirect(303, '/');
+
   return {
     title: 'تسجيل الدخول',
   };
