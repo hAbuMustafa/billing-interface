@@ -37,13 +37,15 @@
               {#each Object.entries(row) as rowTuple, j (j)}
                 <td
                   >{#if dateColumns && dateColumns.some((c) => rowTuple[0] === (typeof c === 'string' ? c : c.name))}
-                    {dateFromExcelSerial(
-                      rowTuple[1] as number,
-                      dateColumns.find(
-                        (c): c is { name: string; format: string } =>
-                          typeof c !== 'string' && c.name === rowTuple[0]
-                      )?.format
-                    )}
+                    {#if rowTuple[1]}
+                      {dateFromExcelSerial(
+                        rowTuple[1] as number,
+                        dateColumns.find(
+                          (c): c is { name: string; format: string } =>
+                            typeof c !== 'string' && c.name === rowTuple[0]
+                        )?.format
+                      )}
+                    {/if}
                   {:else}
                     {rowTuple[1]}
                   {/if}</td
