@@ -156,7 +156,19 @@ export async function getUserFromSession(sessionId: string, fetchFunc: Function)
       Date.now() <
     0
   ) {
-    //todo: delete this very session
+    await fetch('/api/sheets/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        spreadsheetId: PUBLIC_users_spreadsheetId,
+        sheetName: 'sessions',
+        sheetRange: 'A:C',
+        columnIndex: 0,
+        targetValue: sessionsData.rows[0].id,
+      }),
+    });
     return null;
   }
 
