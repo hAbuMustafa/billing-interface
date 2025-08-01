@@ -5,7 +5,13 @@ export async function GET({ cookies, fetch }) {
   const currentSessionId = cookies.get('session_id');
 
   if (currentSessionId) {
-    const response = await fetch('/api/sheets/delete', {
+    cookies.delete('session_id', {
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
+    await fetch('/api/sheets/delete', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -18,15 +24,7 @@ export async function GET({ cookies, fetch }) {
         targetValue: currentSessionId,
       }),
     });
-
-    const data = await response.json();
   }
-
-  cookies.delete('session_id', {
-    path: '/',
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-  });
 
   return redirect(303, '/');
 }
