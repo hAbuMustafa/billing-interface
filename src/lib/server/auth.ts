@@ -12,7 +12,7 @@ export async function createUser(
   password: string,
   fetchFunc: Function
 ) {
-  // todo: make uuid id for users
+  const userId = crypto.randomUUID();
   const hash = await bcrypt.hash(password, SALT_ROUNDS);
   const response = await fetchFunc('/api/sheets/insert', {
     method: 'POST',
@@ -23,7 +23,14 @@ export async function createUser(
       spreadsheetId: PUBLIC_users_spreadsheetId,
       sheetName: 'users',
       rows: [
-        [username, name, phoneNumber, hash, dateToExcelSerial(new Date().toString())],
+        [
+          userId,
+          username,
+          name,
+          phoneNumber,
+          hash,
+          dateToExcelSerial(new Date().toString()),
+        ],
       ],
     }),
   });
@@ -94,6 +101,7 @@ export async function validateUser(
   }
 
   return {
+    id: user.id,
     username: user.username,
     name: user.name,
     phoneNumber: user.phone_number,
@@ -103,7 +111,7 @@ export async function validateUser(
   };
 }
 
-export async function createSession(username: string, cookies: any, fetchFunc: Function) {
+export async function createSession(userId: string, cookies: any, fetchFunc: Function) {
   const sessionId = crypto.randomUUID();
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 4); //fix: Why it only accommodates for 1hr?
   const response = await fetchFunc('/api/sheets/insert', {
@@ -114,7 +122,7 @@ export async function createSession(username: string, cookies: any, fetchFunc: F
     body: JSON.stringify({
       spreadsheetId: PUBLIC_users_spreadsheetId,
       sheetName: 'sessions',
-      rows: [[sessionId, username, dateToExcelSerial(expiresAt.toString())]],
+      rows: [[sessionId, userId, dateToExcelSerial(expiresAt.toString())]],
     }),
   });
 
@@ -166,8 +174,8 @@ export async function getUserFromSession(sessionId: string, fetchFunc: Function)
     body: JSON.stringify({
       spreadsheetId: PUBLIC_users_spreadsheetId,
       range: 'users!A:H',
-      filterBy: 'username',
-      filterValue: sessionsData.rows[0].username,
+      filterBy: 'id',
+      filterValue: sessionsData.rows[0].user_id,
       filterMethod: 'equal',
       withTableHeader: false,
     }),
