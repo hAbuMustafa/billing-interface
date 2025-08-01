@@ -108,7 +108,7 @@ export async function validateUser(
 
 export async function createSession(username: string, cookies: any, fetchFunc: Function) {
   const sessionId = crypto.randomUUID();
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 2);
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 4); //fix: Why it only accommodates for 1hr?
   const response = await fetchFunc('/api/sheets/insert', {
     method: 'POST',
     headers: {
