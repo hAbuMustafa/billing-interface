@@ -12,6 +12,7 @@ export async function createUser(
   password: string,
   fetchFunc: Function
 ) {
+  // todo: make uuid id for users
   const hash = await bcrypt.hash(password, SALT_ROUNDS);
   const response = await fetchFunc('/api/sheets/insert', {
     method: 'POST',
