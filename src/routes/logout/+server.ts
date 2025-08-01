@@ -1,7 +1,24 @@
+import { PUBLIC_users_spreadsheetId } from '$env/static/public';
 import { redirect } from '@sveltejs/kit';
 
-export function GET({ cookies }) {
-  // todo: delete session data from db first
+export async function GET({ cookies, fetch }) {
+  const currentSessionId = cookies.get('session_id');
+
+  const response = await fetch('/api/sheets/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spreadsheetId: PUBLIC_users_spreadsheetId,
+      sheetName: 'sessions',
+      sheetRange: 'A:C',
+      columnIndex: 0,
+      targetValue: currentSessionId,
+    }),
+  });
+
+  const data = await response.json();
 
   cookies.delete('session_id', {
     path: '/',
