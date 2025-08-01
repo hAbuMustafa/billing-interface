@@ -179,15 +179,3 @@ export async function getUserFromSession(sessionId: string, fetchFunc: Function)
 
   return usersData.rows[0];
 }
-
-export function deleteSession(cookies: any) {
-  const sessionId = cookies.get('session_id');
-  if (sessionId) {
-    db.prepare('DELETE FROM sessions WHERE id = ?').run(sessionId);
-    cookies.delete('session_id', {
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
-  }
-}
