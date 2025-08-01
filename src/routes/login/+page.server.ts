@@ -31,15 +31,15 @@ export const actions: Actions = {
       });
     }
 
-    const user = await validateUser(username as string, password as string, fetch);
+    const userId = await validateUser(username as string, password as string, fetch);
 
-    if (!user) {
+    if (!userId) {
       return fail(401, {
         message: 'اسم المستخدم أو كلمة المرور غير صحيحة',
       });
     }
 
-    await createSession(user.id as string, cookies, fetch);
+    await createSession(userId as string, cookies, fetch);
 
     throw redirect(303, '/');
   },

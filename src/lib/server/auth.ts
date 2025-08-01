@@ -101,16 +101,7 @@ export async function validateUser(
     return null;
   }
 
-  return {
-    id: user.id,
-    username: user.username,
-    name: user.name,
-    email: user.email,
-    phoneNumber: user.phone_number,
-    isWarehouse: user.is_warehouse,
-    isActive: user.active,
-    lastLogin: user.last_login,
-  };
+  return user.id;
 }
 
 export async function createSession(userId: string, cookies: any, fetchFunc: Function) {
