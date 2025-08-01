@@ -129,10 +129,7 @@ export async function createSession(username: string, cookies: any, fetchFunc: F
   });
 }
 
-export async function getSession(cookies: any, fetchFunc: Function) {
-  const sessionId = cookies.get('session_id');
-  if (!sessionId) return null;
-
+export async function getUserFromSession(sessionId: string, fetchFunc: Function) {
   const sessionsResponse = await fetchFunc('/api/sheets/get', {
     method: 'POST',
     headers: {
