@@ -13,7 +13,7 @@ export async function createUser(
   fetchFunc: Function
 ) {
   const userId = crypto.randomUUID();
-  const hash = await bcrypt.hash(password, SALT_ROUNDS);
+  const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
   const response = await fetchFunc('/api/sheets/insert', {
     method: 'POST',
     headers: {
@@ -29,7 +29,7 @@ export async function createUser(
           name,
           email,
           phoneNumber,
-          hash,
+          passwordHash,
           dateToExcelSerial(new Date().toString()),
         ],
       ],
