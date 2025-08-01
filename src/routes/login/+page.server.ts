@@ -37,7 +37,7 @@ export const actions: Actions = {
       });
     }
 
-    await createSession(user.username as string, cookies, fetch);
+    await createSession(user.id as string, cookies, fetch);
 
     throw redirect(303, '/');
   },
