@@ -1,3 +1,16 @@
+import { GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY } from '$env/static/private';
+import { google } from 'googleapis';
+
+const auth = new google.auth.GoogleAuth({
+  credentials: {
+    client_email: GOOGLE_CLIENT_EMAIL,
+    private_key: GOOGLE_PRIVATE_KEY,
+  },
+  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
+
+export const sheets = google.sheets({ version: 'v4', auth });
+
 export function remodelRowsToObject(rows: any[][] | null | undefined) {
   if (!rows || rows.length === 0) {
     return [];

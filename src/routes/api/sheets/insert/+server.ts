@@ -1,19 +1,8 @@
-import { google } from 'googleapis';
-import { GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY } from '$env/static/private';
+import { sheets } from '../../utils';
 
 export async function POST({ request }) {
   const body = await request.json();
   const { spreadsheetId, sheetName, rows } = body;
-
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: GOOGLE_CLIENT_EMAIL,
-      private_key: GOOGLE_PRIVATE_KEY,
-    },
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-  });
-
-  const sheets = google.sheets({ version: 'v4', auth });
 
   try {
     const response = await sheets.spreadsheets.values.append({
