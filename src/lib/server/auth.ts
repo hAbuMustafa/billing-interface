@@ -1,6 +1,5 @@
 import { PUBLIC_users_spreadsheetId } from '$env/static/public';
 import { dateFromExcelSerial, dateToExcelSerial } from '$lib/utils/date-format';
-import { db } from './db';
 import bcrypt from 'bcryptjs';
 
 const SALT_ROUNDS = 12;
