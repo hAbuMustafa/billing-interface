@@ -3,10 +3,6 @@ import { dateFromExcelSerial, dateToExcelSerial } from '$lib/utils/date-format';
 import { db } from './db';
 import bcrypt from 'bcryptjs';
 
-// todo: convert all this logic to use Google Sheets instead of SQLite
-
-type UserT = App.Locals['user'];
-
 const SALT_ROUNDS = 12;
 
 export async function createUser(
