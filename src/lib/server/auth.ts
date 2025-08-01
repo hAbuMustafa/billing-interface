@@ -31,7 +31,7 @@ export async function createUser(
           email,
           phoneNumber,
           passwordHash,
-          dateToExcelSerial(new Date().toString()),
+          dateToExcelSerial(new Date().getTime()),
         ],
       ],
     }),
@@ -107,7 +107,7 @@ export async function validateUser(
 
 export async function createSession(userId: string, cookies: any, fetchFunc: Function) {
   const sessionId = crypto.randomUUID();
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 4); //fix: Why it only accommodates for 1hr?
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 60);
   const response = await fetchFunc('/api/sheets/insert', {
     method: 'POST',
     headers: {
@@ -116,7 +116,7 @@ export async function createSession(userId: string, cookies: any, fetchFunc: Fun
     body: JSON.stringify({
       spreadsheetId: PUBLIC_users_spreadsheetId,
       sheetName: 'sessions',
-      rows: [[sessionId, userId, dateToExcelSerial(expiresAt.toString())]],
+      rows: [[sessionId, userId, dateToExcelSerial(expiresAt.getTime())]],
     }),
   });
 
@@ -151,12 +151,8 @@ export async function getUserFromSession(sessionId: string, fetchFunc: Function)
 
   if (sessionsData.rows.length === 0) return null;
 
-  if (
-    (dateFromExcelSerial(sessionsData.rows[0].expires_at, '', true) as number) -
-      Date.now() <
-    0
-  ) {
-    await fetch('/api/sheets/delete', {
+  if (dateFromExcelSerial(sessionsData.rows[0].expires_at) < Date.now()) {
+    await fetchFunc('/api/sheets/delete', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -169,6 +165,7 @@ export async function getUserFromSession(sessionId: string, fetchFunc: Function)
         targetValue: sessionsData.rows[0].id,
       }),
     });
+    // todo: delete cookies first, or simply: await fetchFunc('/logout');
     return null;
   }
 
