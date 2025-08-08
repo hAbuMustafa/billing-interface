@@ -1,7 +1,7 @@
 <script lang="ts">
   import { PUBLIC_invoice_spreadsheetId } from '$env/static/public';
 
-  import Sheet from '$lib/components/Sheet.svelte';
+  import Sheet from '$lib/components/Sheet/Sheet.svelte';
   import { getData } from '$lib/utils/request';
 </script>
 
