@@ -46,8 +46,8 @@
 
 <style>
   .table-wrapper {
-    width: 100%;
-    max-width: 100vw;
+    width: fit-content;
+    max-width: 95vw;
 
     overflow-x: auto;
   }
