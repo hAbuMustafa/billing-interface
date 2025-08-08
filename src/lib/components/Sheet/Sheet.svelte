@@ -21,30 +21,39 @@
   setContext('column names', () => columnNames);
 </script>
 
-<table>
-  {#if columnNames.length === 0}
-    <tbody>
-      <NoData />
-    </tbody>
-  {:else}
-    <SheetHead />
-    <tbody>
-      {#if rows.length === 1}
+<div class="table-wrapper">
+  <table>
+    {#if columnNames.length === 0}
+      <tbody>
         <NoData />
-      {:else}
-        {#each rows as row, i (i)}
-          {#if row[columnNames[0]] !== columnNames[0]}
-            <Row dataObj={row} />
-          {/if}
-        {/each}
-      {/if}
-    </tbody>
-  {/if}
-</table>
+      </tbody>
+    {:else}
+      <SheetHead />
+      <tbody>
+        {#if rows.length === 1}
+          <NoData />
+        {:else}
+          {#each rows as row, i (i)}
+            {#if row[columnNames[0]] !== columnNames[0]}
+              <Row dataObj={row} />
+            {/if}
+          {/each}
+        {/if}
+      </tbody>
+    {/if}
+  </table>
+</div>
 
 <style>
-  table {
+  .table-wrapper {
     width: 100%;
+    max-width: 100vw;
+
+    overflow-x: auto;
+  }
+
+  table {
+    max-width: 100vw;
     border-collapse: collapse;
 
     white-space: nowrap;
