@@ -698,7 +698,7 @@ export const Users = mysqlTable(
     staff_id: int().references(() => Staff.id),
     public_key: int()
       .notNull()
-      .references(() => pb_key.id),
+      .references((): AnyMySqlColumn => pb_key.id),
   },
   (table) => [
     index('person_link_idx').on(table.person_id),
