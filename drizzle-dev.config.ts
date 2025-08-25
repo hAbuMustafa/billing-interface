@@ -8,7 +8,7 @@ export default defineConfig({
     port: 3306,
     user: 'root',
     password: process.env.DATABASE_Connection_PW!,
-    database: 'J23rdHospital_Users',
+    database: 'J23rdHospital',
   },
   introspect: {
     casing: 'preserve',
