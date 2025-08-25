@@ -55,14 +55,14 @@ export const pv_keysRelations = relations(pv_keys, ({ one }) => ({
   }),
 }));
 
-export const active_ingredient_therputic_useRelations = relations(
+export const active_ingredient_therapeutic_useRelations = relations(
   active_ingredient_therapeutic_use,
   ({ one }) => ({
     ActiveIngredient: one(ActiveIngredients, {
       fields: [active_ingredient_therapeutic_use.active_ingredient_id],
       references: [ActiveIngredients.id],
     }),
-    TheraputicUse: one(TherapeuticUse, {
+    TherapeuticUse: one(TherapeuticUse, {
       fields: [active_ingredient_therapeutic_use.therapeutic_use_id],
       references: [TherapeuticUse.id],
     }),
@@ -70,12 +70,12 @@ export const active_ingredient_therputic_useRelations = relations(
 );
 
 export const ActiveIngredientsRelations = relations(ActiveIngredients, ({ many }) => ({
-  active_ingredient_therputic_uses: many(active_ingredient_therapeutic_use),
+  active_ingredient_therapeutic_uses: many(active_ingredient_therapeutic_use),
   Formulations: many(Formulations),
 }));
 
-export const TheraputicUseRelations = relations(TherapeuticUse, ({ many }) => ({
-  active_ingredient_therputic_uses: many(active_ingredient_therapeutic_use),
+export const TherapeuticUseRelations = relations(TherapeuticUse, ({ many }) => ({
+  active_ingredient_therapeutic_uses: many(active_ingredient_therapeutic_use),
 }));
 
 export const BrandNamesToFormularyRelations = relations(BrandNames, ({ one }) => ({
@@ -131,7 +131,7 @@ export const FormulationsRelations = relations(Formulations, ({ one, many }) => 
   }),
 }));
 
-export const disgnosesRelations = relations(diagnoses, ({ one }) => ({
+export const diagnosesRelations = relations(diagnoses, ({ one }) => ({
   Staff: one(Staff, {
     fields: [diagnoses.diagnosing_physician],
     references: [Staff.id],
@@ -143,7 +143,7 @@ export const disgnosesRelations = relations(diagnoses, ({ one }) => ({
 }));
 
 export const StaffRelations = relations(Staff, ({ many }) => ({
-  disgnoses: many(diagnoses),
+  diagnoses: many(diagnoses),
   Patient_admissions_admitting_physician: many(Patient_admissions, {
     relationName: 'Patient_admissions_admitting_physician_Staff_id',
   }),
@@ -153,7 +153,7 @@ export const StaffRelations = relations(Staff, ({ many }) => ({
 }));
 
 export const PatientsRelations = relations(Patients, ({ one, many }) => ({
-  disgnoses: many(diagnoses),
+  diagnoses: many(diagnoses),
   Patient_admissions: many(Patient_admissions),
   Patient_Discharge_Orders: many(Patient_Discharge_Orders),
   Patient_Discharges: many(Patient_Discharges),
@@ -319,7 +319,7 @@ export const contact_informationRelations = relations(contact_information, ({ on
 }));
 
 export const PeopleDataRelations = relations(People, ({ many }) => ({
-  contact_informations: many(contact_information),
+  contact_information: many(contact_information),
   identifying_documents: many(identifying_documents),
   people_relationships_person_id: many(people_relationships, {
     relationName: 'people_relationships_person_id_People_id',
