@@ -1,151 +1,145 @@
 import { relations } from 'drizzle-orm/relations';
 import {
-  Users,
-  pb_key,
-  pv_keys,
-  ActiveIngredients,
-  active_ingredient_therapeutic_use,
-  TherapeuticUse,
-  Formulary,
-  BrandNames,
-  formulary_routes_of_administration,
-  RoutesOfAdministration,
-  Formulations,
-  Staff,
-  diagnoses,
+  People_Users,
+  S_pb_key,
+  S_pv_keys,
+  D_AC,
+  D_AC_use,
+  D_Use,
+  D_Formulary,
+  D_BrandNames,
+  D_formulary_roa,
+  D_ROA,
+  D_Formulations,
+  People_Staff,
+  Diagnoses,
   Patients,
   Patient_admissions,
-  Patient_Discharge_Orders,
-  Patient_Discharges,
-  Patient_discharge_reasons,
+  Patient_Exit_Orders,
+  Patient_Exit,
+  Patient_exit_reasons,
   Patient_Insurance,
-  Patient_ward_assignment_orders,
-  Patient_ward_assignments,
+  Patient_trans_orders,
+  Patient_trans,
   People,
   Wards,
-  contact_information,
-  identifying_documents,
-  people_relationships,
-  EconomyMedicationInpatientPharmacy,
-  EconomyMedicationInpatientPharmacy_Transactions,
-  MedicationPlan_notes,
-  MedicationPlan_NoteTypes,
-  MedicationPlan_sign_nurse,
-  MedicationPlan_sign_pharmacist,
-  MedicationPlan_sign_physician,
-  MedicationPlan,
+  People_contact_information,
+  People_identifying_documents,
+  People_relationships,
+  Ph_InEco,
+  Ph_InEco_Transactions,
+  MedPlan_notes,
+  MedPlan_NoteTypes,
+  MedPlan_sign_nurse,
+  MedPlan_sign_pharm,
+  MedPlan_sign_phys,
+  MedPlan,
 } from '$lib/server/schema';
 
-export const pb_keyToUserRelations = relations(pb_key, ({ one }) => ({
-  User: one(Users, {
-    fields: [pb_key.user_id],
-    references: [Users.id],
+export const pb_keyToUserRelations = relations(S_pb_key, ({ one }) => ({
+  User: one(People_Users, {
+    fields: [S_pb_key.user_id],
+    references: [People_Users.id],
   }),
 }));
 
-export const UsersToKeysRelations = relations(Users, ({ many }) => ({
-  pb_keys: many(pb_key),
-  pv_keys: many(pv_keys),
+export const UsersToKeysRelations = relations(People_Users, ({ many }) => ({
+  pb_keys: many(S_pb_key),
+  pv_keys: many(S_pv_keys),
 }));
 
-export const pv_keysRelations = relations(pv_keys, ({ one }) => ({
-  User: one(Users, {
-    fields: [pv_keys.user_id],
-    references: [Users.id],
+export const pv_keysRelations = relations(S_pv_keys, ({ one }) => ({
+  User: one(People_Users, {
+    fields: [S_pv_keys.user_id],
+    references: [People_Users.id],
   }),
 }));
 
-export const active_ingredient_therapeutic_useRelations = relations(
-  active_ingredient_therapeutic_use,
-  ({ one }) => ({
-    ActiveIngredient: one(ActiveIngredients, {
-      fields: [active_ingredient_therapeutic_use.active_ingredient_id],
-      references: [ActiveIngredients.id],
-    }),
-    TherapeuticUse: one(TherapeuticUse, {
-      fields: [active_ingredient_therapeutic_use.therapeutic_use_id],
-      references: [TherapeuticUse.id],
-    }),
-  })
-);
-
-export const ActiveIngredientsRelations = relations(ActiveIngredients, ({ many }) => ({
-  active_ingredient_therapeutic_uses: many(active_ingredient_therapeutic_use),
-  Formulations: many(Formulations),
-}));
-
-export const TherapeuticUseRelations = relations(TherapeuticUse, ({ many }) => ({
-  active_ingredient_therapeutic_uses: many(active_ingredient_therapeutic_use),
-}));
-
-export const BrandNamesToFormularyRelations = relations(BrandNames, ({ one }) => ({
-  Formulary: one(Formulary, {
-    fields: [BrandNames.formulary_id],
-    references: [Formulary.id],
+export const ac_therapeutic_useRelations = relations(D_AC_use, ({ one }) => ({
+  AC: one(D_AC, {
+    fields: [D_AC_use.ac_id],
+    references: [D_AC.id],
+  }),
+  TherapeuticUse: one(D_Use, {
+    fields: [D_AC_use.use_id],
+    references: [D_Use.id],
   }),
 }));
 
-export const FormularyToBrandNamesRelations = relations(Formulary, ({ many }) => ({
-  BrandNames: many(BrandNames),
-  formulary_routes_of_administrations: many(formulary_routes_of_administration),
-  Formulations: many(Formulations),
+export const ACsRelations = relations(D_AC, ({ many }) => ({
+  ac_therapeutic_uses: many(D_AC_use),
+  Formulations: many(D_Formulations),
+}));
+
+export const TherapeuticUseRelations = relations(D_Use, ({ many }) => ({
+  ac_therapeutic_uses: many(D_AC_use),
+}));
+
+export const BrandNamesToFormularyRelations = relations(D_BrandNames, ({ one }) => ({
+  Formulary: one(D_Formulary, {
+    fields: [D_BrandNames.formulary_id],
+    references: [D_Formulary.id],
+  }),
+}));
+
+export const FormularyToBrandNamesRelations = relations(D_Formulary, ({ many }) => ({
+  BrandNames: many(D_BrandNames),
+  formulary_routes_of_administrations: many(D_formulary_roa),
+  Formulations: many(D_Formulations),
 }));
 
 export const formulary_routes_of_administrationRelations = relations(
-  formulary_routes_of_administration,
+  D_formulary_roa,
   ({ one }) => ({
-    Formulary: one(Formulary, {
-      fields: [formulary_routes_of_administration.formulary_id],
-      references: [Formulary.id],
+    Formulary: one(D_Formulary, {
+      fields: [D_formulary_roa.formulary_id],
+      references: [D_Formulary.id],
     }),
-    RoutesOfAdministration: one(RoutesOfAdministration, {
-      fields: [formulary_routes_of_administration.route_of_administration],
-      references: [RoutesOfAdministration.id],
+    RoutesOfAdministration: one(D_ROA, {
+      fields: [D_formulary_roa.roa],
+      references: [D_ROA.id],
     }),
   })
 );
 
-export const RoutesOfAdministrationRelations = relations(
-  RoutesOfAdministration,
-  ({ many }) => ({
-    formulary_routes_of_administrations: many(formulary_routes_of_administration),
-  })
-);
+export const RoutesOfAdministrationRelations = relations(D_ROA, ({ many }) => ({
+  formulary_routes_of_administrations: many(D_formulary_roa),
+}));
 
-export const FormulationsRelations = relations(Formulations, ({ one, many }) => ({
-  ActiveIngredient: one(ActiveIngredients, {
-    fields: [Formulations.active_ingredient_id],
-    references: [ActiveIngredients.id],
+export const FormulationsRelations = relations(D_Formulations, ({ one, many }) => ({
+  AC: one(D_AC, {
+    fields: [D_Formulations.ac_id],
+    references: [D_AC.id],
   }),
-  Formulation: one(Formulations, {
-    fields: [Formulations.role_target],
-    references: [Formulations.id],
+  Formulation: one(D_Formulations, {
+    fields: [D_Formulations.role_target],
+    references: [D_Formulations.id],
     relationName: 'Formulations_role_target_Formulations_id',
   }),
-  Formulations: many(Formulations, {
+  Formulations: many(D_Formulations, {
     relationName: 'Formulations_role_target_Formulations_id',
   }),
-  Formulary: one(Formulary, {
-    fields: [Formulations.formulary_id],
-    references: [Formulary.id],
+  Formulary: one(D_Formulary, {
+    fields: [D_Formulations.formulary_id],
+    references: [D_Formulary.id],
   }),
 }));
 
-export const diagnosesRelations = relations(diagnoses, ({ one }) => ({
-  Staff: one(Staff, {
-    fields: [diagnoses.diagnosing_physician],
-    references: [Staff.id],
+export const diagnosesRelations = relations(Diagnoses, ({ one }) => ({
+  Staff: one(People_Staff, {
+    fields: [Diagnoses.diagnosing_phys],
+    references: [People_Staff.id],
   }),
   Patient: one(Patients, {
-    fields: [diagnoses.patient_id],
+    fields: [Diagnoses.patient_id],
     references: [Patients.id],
   }),
 }));
 
-export const StaffRelations = relations(Staff, ({ many }) => ({
-  diagnoses: many(diagnoses),
-  Patient_admissions_admitting_physician: many(Patient_admissions, {
-    relationName: 'Patient_admissions_admitting_physician_Staff_id',
+export const StaffRelations = relations(People_Staff, ({ many }) => ({
+  diagnoses: many(Diagnoses),
+  Patient_admissions_admitting_phys: many(Patient_admissions, {
+    relationName: 'Patient_admissions_admitting_phys_Staff_id',
   }),
   Patient_admissions_registrar: many(Patient_admissions, {
     relationName: 'Patient_admissions_registrar_Staff_id',
@@ -153,13 +147,13 @@ export const StaffRelations = relations(Staff, ({ many }) => ({
 }));
 
 export const PatientsRelations = relations(Patients, ({ one, many }) => ({
-  diagnoses: many(diagnoses),
+  diagnoses: many(Diagnoses),
   Patient_admissions: many(Patient_admissions),
-  Patient_Discharge_Orders: many(Patient_Discharge_Orders),
-  Patient_Discharges: many(Patient_Discharges),
+  Patient_Exit_Orders: many(Patient_Exit_Orders),
+  Patient_Exits: many(Patient_Exit),
   Patient_Insurances: many(Patient_Insurance),
-  Patient_ward_assignment_orders: many(Patient_ward_assignment_orders),
-  Patient_ward_assignments: many(Patient_ward_assignments),
+  Patient_trans_orders: many(Patient_trans_orders),
+  Patient_trans: many(Patient_trans),
   person: one(People, {
     fields: [Patients.person_id],
     references: [People.id],
@@ -175,82 +169,82 @@ export const Patient_admissionsRelations = relations(Patient_admissions, ({ one 
     fields: [Patient_admissions.patient_id],
     references: [Patients.id],
   }),
-  Staff_admitting_physician: one(Staff, {
-    fields: [Patient_admissions.admitting_physician],
-    references: [Staff.id],
-    relationName: 'Patient_admissions_admitting_physician_Staff_id',
+  Staff_admitting_phys: one(People_Staff, {
+    fields: [Patient_admissions.admitting_phys],
+    references: [People_Staff.id],
+    relationName: 'Patient_admissions_admitting_phys_Staff_id',
   }),
-  pb_key: one(pb_key, {
-    fields: [Patient_admissions.admitting_physician_sign_key_id],
-    references: [pb_key.id],
+  pb_key: one(S_pb_key, {
+    fields: [Patient_admissions.admitting_phys_sign_key_id],
+    references: [S_pb_key.id],
   }),
-  Staff_registrar: one(Staff, {
+  Staff_registrar: one(People_Staff, {
     fields: [Patient_admissions.registrar],
-    references: [Staff.id],
+    references: [People_Staff.id],
     relationName: 'Patient_admissions_registrar_Staff_id',
   }),
 }));
 
-export const pb_keyToPatientActionsRelations = relations(pb_key, ({ many }) => ({
+export const pb_keyToPatientActionsRelations = relations(S_pb_key, ({ many }) => ({
   Patient_admissions: many(Patient_admissions),
-  Patient_Discharge_Orders: many(Patient_Discharge_Orders),
-  Patient_Discharges: many(Patient_Discharges),
-  Patient_ward_assignment_orders: many(Patient_ward_assignment_orders),
-  Patient_ward_assignments: many(Patient_ward_assignments),
+  Patient_Exit_Orders: many(Patient_Exit_Orders),
+  Patient_Exits: many(Patient_Exit),
+  Patient_trans_orders: many(Patient_trans_orders),
+  Patient_trans: many(Patient_trans),
 }));
 
-export const Patient_Discharge_OrdersRelations = relations(
-  Patient_Discharge_Orders,
+export const Patient_Exit_OrdersRelations = relations(
+  Patient_Exit_Orders,
   ({ one, many }) => ({
     Patient: one(Patients, {
-      fields: [Patient_Discharge_Orders.patient_id],
+      fields: [Patient_Exit_Orders.patient_id],
       references: [Patients.id],
     }),
-    pb_key: one(pb_key, {
-      fields: [Patient_Discharge_Orders.physician_sign_key],
-      references: [pb_key.id],
+    pb_key: one(S_pb_key, {
+      fields: [Patient_Exit_Orders.phys_sign_key],
+      references: [S_pb_key.id],
     }),
-    staff: one(Staff, {
-      fields: [Patient_Discharge_Orders.physician_id],
-      references: [Staff.id],
+    staff: one(People_Staff, {
+      fields: [Patient_Exit_Orders.phys_id],
+      references: [People_Staff.id],
     }),
-    Patient_Discharges: many(Patient_Discharges),
+    Patient_Exits: many(Patient_Exit),
   })
 );
 
-export const staffRelations = relations(Staff, ({ many }) => ({
-  Patient_Discharge_Orders: many(Patient_Discharge_Orders),
-  Patient_Discharges: many(Patient_Discharges),
-  Patient_ward_assignment_orders: many(Patient_ward_assignment_orders),
+export const staffRelations = relations(People_Staff, ({ many }) => ({
+  Patient_Exit_Orders: many(Patient_Exit_Orders),
+  Patient_Exits: many(Patient_Exit),
+  Patient_trans_orders: many(Patient_trans_orders),
 }));
 
-export const Patient_DischargesRelations = relations(Patient_Discharges, ({ one }) => ({
-  Patient_Discharge_Order: one(Patient_Discharge_Orders, {
-    fields: [Patient_Discharges.discharge_order_id],
-    references: [Patient_Discharge_Orders.id],
+export const Patient_ExitsRelations = relations(Patient_Exit, ({ one }) => ({
+  Patient_Exit_Order: one(Patient_Exit_Orders, {
+    fields: [Patient_Exit.exit_order_id],
+    references: [Patient_Exit_Orders.id],
   }),
   Patient: one(Patients, {
-    fields: [Patient_Discharges.patient_id],
+    fields: [Patient_Exit.patient_id],
     references: [Patients.id],
   }),
-  Patient_discharge_reason: one(Patient_discharge_reasons, {
-    fields: [Patient_Discharges.discharge_reason],
-    references: [Patient_discharge_reasons.id],
+  Patient_exit_reason: one(Patient_exit_reasons, {
+    fields: [Patient_Exit.exit_reason],
+    references: [Patient_exit_reasons.id],
   }),
-  staff: one(Staff, {
-    fields: [Patient_Discharges.registrar],
-    references: [Staff.id],
+  staff: one(People_Staff, {
+    fields: [Patient_Exit.registrar],
+    references: [People_Staff.id],
   }),
-  pb_key: one(pb_key, {
-    fields: [Patient_Discharges.registrar_sign_key],
-    references: [pb_key.id],
+  pb_key: one(S_pb_key, {
+    fields: [Patient_Exit.registrar_sign_key],
+    references: [S_pb_key.id],
   }),
 }));
 
-export const Patient_discharge_reasonsRelations = relations(
-  Patient_discharge_reasons,
+export const Patient_exit_reasonsRelations = relations(
+  Patient_exit_reasons,
   ({ many }) => ({
-    Patient_Discharges: many(Patient_Discharges),
+    Patient_Exits: many(Patient_Exit),
   })
 );
 
@@ -261,353 +255,319 @@ export const Patient_InsuranceRelations = relations(Patient_Insurance, ({ one })
   }),
 }));
 
-export const Patient_ward_assignment_ordersRelations = relations(
-  Patient_ward_assignment_orders,
+export const Patient_trans_ordersRelations = relations(
+  Patient_trans_orders,
   ({ one }) => ({
     Patient: one(Patients, {
-      fields: [Patient_ward_assignment_orders.patient_id],
+      fields: [Patient_trans_orders.patient_id],
       references: [Patients.id],
     }),
-    staff: one(Staff, {
-      fields: [Patient_ward_assignment_orders.physician_id],
-      references: [Staff.id],
+    staff: one(People_Staff, {
+      fields: [Patient_trans_orders.phys_id],
+      references: [People_Staff.id],
     }),
-    pb_key: one(pb_key, {
-      fields: [Patient_ward_assignment_orders.physician_sign_key_id],
-      references: [pb_key.id],
+    pb_key: one(S_pb_key, {
+      fields: [Patient_trans_orders.phys_sign_key_id],
+      references: [S_pb_key.id],
     }),
     ward: one(Wards, {
-      fields: [Patient_ward_assignment_orders.ward],
+      fields: [Patient_trans_orders.ward],
       references: [Wards.id],
     }),
   })
 );
 
 export const wardsRelations = relations(Wards, ({ many }) => ({
-  Patient_ward_assignment_orders: many(Patient_ward_assignment_orders),
+  Patient_trans_orders: many(Patient_trans_orders),
   Patients: many(Patients),
 }));
 
-export const Patient_ward_assignmentsRelations = relations(
-  Patient_ward_assignments,
+export const Patient_transRelations = relations(Patient_trans, ({ one }) => ({
+  person: one(People, {
+    fields: [Patient_trans.nurse_id],
+    references: [People.id],
+  }),
+  pb_key: one(S_pb_key, {
+    fields: [Patient_trans.nurse_sign_key_id],
+    references: [S_pb_key.id],
+  }),
+  Patient: one(Patients, {
+    fields: [Patient_trans.patient_id],
+    references: [Patients.id],
+  }),
+}));
+
+export const peopleRelations = relations(People, ({ many }) => ({
+  Patient_trans: many(Patient_trans),
+  Patients: many(Patients),
+}));
+
+export const contact_informationRelations = relations(
+  People_contact_information,
   ({ one }) => ({
-    person: one(People, {
-      fields: [Patient_ward_assignments.executing_nurse_id],
+    Person: one(People, {
+      fields: [People_contact_information.person_id],
       references: [People.id],
-    }),
-    pb_key: one(pb_key, {
-      fields: [Patient_ward_assignments.executing_nurse_sign_key_id],
-      references: [pb_key.id],
-    }),
-    Patient: one(Patients, {
-      fields: [Patient_ward_assignments.patient_id],
-      references: [Patients.id],
     }),
   })
 );
 
-export const peopleRelations = relations(People, ({ many }) => ({
-  Patient_ward_assignments: many(Patient_ward_assignments),
-  Patients: many(Patients),
-}));
-
-export const contact_informationRelations = relations(contact_information, ({ one }) => ({
-  Person: one(People, {
-    fields: [contact_information.person_id],
-    references: [People.id],
-  }),
-}));
-
 export const PeopleDataRelations = relations(People, ({ many }) => ({
-  contact_information: many(contact_information),
-  identifying_documents: many(identifying_documents),
-  people_relationships_person_id: many(people_relationships, {
+  contact_information: many(People_contact_information),
+  identifying_documents: many(People_identifying_documents),
+  people_relationships_person_id: many(People_relationships, {
     relationName: 'people_relationships_person_id_People_id',
   }),
-  people_relationships_related_to_id: many(people_relationships, {
+  people_relationships_related_to_id: many(People_relationships, {
     relationName: 'people_relationships_related_to_id_People_id',
   }),
-  Staff: many(Staff),
+  Staff: many(People_Staff),
 }));
 
 export const identifying_documentsRelations = relations(
-  identifying_documents,
+  People_identifying_documents,
   ({ one }) => ({
     Person: one(People, {
-      fields: [identifying_documents.person_id],
+      fields: [People_identifying_documents.person_id],
       references: [People.id],
     }),
   })
 );
 
 export const people_relationshipsRelations = relations(
-  people_relationships,
+  People_relationships,
   ({ one }) => ({
     Person_person_id: one(People, {
-      fields: [people_relationships.person_id],
+      fields: [People_relationships.person_id],
       references: [People.id],
       relationName: 'people_relationships_person_id_People_id',
     }),
     Person_related_to_id: one(People, {
-      fields: [people_relationships.related_to_id],
+      fields: [People_relationships.related_to_id],
       references: [People.id],
       relationName: 'people_relationships_related_to_id_People_id',
     }),
   })
 );
 
-export const StaffSelfRelations = relations(Staff, ({ one, many }) => ({
-  Staff_manager_id: one(Staff, {
-    fields: [Staff.manager_id],
-    references: [Staff.id],
-    relationName: 'Staff_manager_id_Staff_id',
+export const StaffSelfRelations = relations(People_Staff, ({ one, many }) => ({
+  Staff_manager_id: one(People_Staff, {
+    fields: [People_Staff.manager_id],
+    references: [People_Staff.id],
+    relationName: 'Staff_manager_id',
   }),
-  // Staff_manager_id: many(Staff, {
-  //   relationName: 'Staff_manager_id_Staff_id',
-  // }),
+  Staff_manager_for_id: many(People_Staff, {
+    relationName: 'Staff_manager_for_id',
+  }),
   Person: one(People, {
-    fields: [Staff.person_id],
+    fields: [People_Staff.person_id],
     references: [People.id],
   }),
 }));
 
-export const EconomyMedicationInpatientPharmacyRelations = relations(
-  EconomyMedicationInpatientPharmacy,
-  ({ one, many }) => ({
-    BrandName: one(BrandNames, {
-      fields: [EconomyMedicationInpatientPharmacy.brand_name_id],
-      references: [BrandNames.id],
-    }),
-    EconomyMedicationInpatientPharmacy_Transactions: many(
-      EconomyMedicationInpatientPharmacy_Transactions
-    ),
-  })
-);
-
-export const BrandNamesRelations = relations(BrandNames, ({ many }) => ({
-  EconomyMedicationInpatientPharmacies: many(EconomyMedicationInpatientPharmacy),
+export const PhInEcoRelations = relations(Ph_InEco, ({ one, many }) => ({
+  BrandName: one(D_BrandNames, {
+    fields: [Ph_InEco.brand_name_id],
+    references: [D_BrandNames.id],
+  }),
+  PhInEco_Transactions: many(Ph_InEco_Transactions),
 }));
 
-export const EconomyMedicationInpatientPharmacy_TransactionsRelations = relations(
-  EconomyMedicationInpatientPharmacy_Transactions,
+export const BrandNamesRelations = relations(D_BrandNames, ({ many }) => ({
+  EconomyMedicationInpatientPharmacies: many(Ph_InEco),
+}));
+
+export const PhInEco_TransactionsRelations = relations(
+  Ph_InEco_Transactions,
   ({ one }) => ({
-    Staff_pharmacist_id: one(Staff, {
-      fields: [EconomyMedicationInpatientPharmacy_Transactions.pharmacist_id],
-      references: [Staff.id],
-      relationName:
-        'EconomyMedicationInpatientPharmacy_Transactions_pharmacist_id_Staff_id',
+    Staff_pharm_id: one(People_Staff, {
+      fields: [Ph_InEco_Transactions.pharm_id],
+      references: [People_Staff.id],
+      relationName: 'PhInEco_Transactions_pharm_id_Staff_id',
     }),
-    EconomyMedicationInpatientPharmacy: one(EconomyMedicationInpatientPharmacy, {
-      fields: [EconomyMedicationInpatientPharmacy_Transactions.item_id],
-      references: [EconomyMedicationInpatientPharmacy.id],
+    PhInEco: one(Ph_InEco, {
+      fields: [Ph_InEco_Transactions.item_id],
+      references: [Ph_InEco.id],
     }),
-    MedicationPlan: one(MedicationPlan, {
-      fields: [EconomyMedicationInpatientPharmacy_Transactions.medication_plan_id],
-      references: [MedicationPlan.id],
+    MedPlan: one(MedPlan, {
+      fields: [Ph_InEco_Transactions.med_plan_id],
+      references: [MedPlan.id],
     }),
-    Staff_dispensing_nurse_id: one(Staff, {
-      fields: [EconomyMedicationInpatientPharmacy_Transactions.dispensing_nurse_id],
-      references: [Staff.id],
-      relationName:
-        'EconomyMedicationInpatientPharmacy_Transactions_dispensing_nurse_id_Staff_id',
+    Staff_dispensing_nurse_id: one(People_Staff, {
+      fields: [Ph_InEco_Transactions.dispensing_nurse_id],
+      references: [People_Staff.id],
+      relationName: 'PhInEco_Transactions_dispensing_nurse_id_Staff_id',
     }),
-    pb_key: one(pb_key, {
-      fields: [EconomyMedicationInpatientPharmacy_Transactions.pharmacist_sign_key],
-      references: [pb_key.id],
+    pb_key: one(S_pb_key, {
+      fields: [Ph_InEco_Transactions.pharm_sign_key],
+      references: [S_pb_key.id],
     }),
   })
 );
 
-export const StaffDispensingRelations = relations(Staff, ({ many }) => ({
-  EconomyMedicationInpatientPharmacy_Transactions_pharmacist_id: many(
-    EconomyMedicationInpatientPharmacy_Transactions,
-    {
-      relationName:
-        'EconomyMedicationInpatientPharmacy_Transactions_pharmacist_id_Staff_id',
-    }
-  ),
-  EconomyMedicationInpatientPharmacy_Transactions_dispensing_nurse_id: many(
-    EconomyMedicationInpatientPharmacy_Transactions,
-    {
-      relationName:
-        'EconomyMedicationInpatientPharmacy_Transactions_dispensing_nurse_id_Staff_id',
-    }
-  ),
-}));
-
-export const MedicationPlanToHistoryRelations = relations(MedicationPlan, ({ many }) => ({
-  EconomyMedicationInpatientPharmacy_Transactions: many(
-    EconomyMedicationInpatientPharmacy_Transactions
-  ),
-}));
-
-export const pb_keyRelations = relations(pb_key, ({ many }) => ({
-  EconomyMedicationInpatientPharmacy_Transactions: many(
-    EconomyMedicationInpatientPharmacy_Transactions
-  ),
-}));
-
-export const MedicationPlanRelations = relations(MedicationPlan, ({ one, many }) => ({
-  pb_key: one(pb_key, {
-    fields: [MedicationPlan.discontinue_physician_sign_key_id],
-    references: [pb_key.id],
+export const StaffDispensingRelations = relations(People_Staff, ({ many }) => ({
+  PhInEco_Transactions_pharm_id: many(Ph_InEco_Transactions, {
+    relationName: 'PhInEco_Transactions_pharm_id_Staff_id',
   }),
-  Staff: one(Staff, {
-    fields: [MedicationPlan.discontinue_physician_id],
-    references: [Staff.id],
+  PhInEco_Transactions_dispensing_nurse_id: many(Ph_InEco_Transactions, {
+    relationName: 'PhInEco_Transactions_dispensing_nurse_id_Staff_id',
   }),
-  Formulary: one(Formulary, {
-    fields: [MedicationPlan.medication_id],
-    references: [Formulary.id],
+}));
+
+export const MedPlanToHistoryRelations = relations(MedPlan, ({ many }) => ({
+  PhInEco_Transactions: many(Ph_InEco_Transactions),
+}));
+
+export const pb_keyRelations = relations(S_pb_key, ({ many }) => ({
+  PhInEco_Transactions: many(Ph_InEco_Transactions),
+}));
+
+export const MedPlanRelations = relations(MedPlan, ({ one, many }) => ({
+  pb_key: one(S_pb_key, {
+    fields: [MedPlan.discontinue_phys_sign_key_id],
+    references: [S_pb_key.id],
+  }),
+  Staff: one(People_Staff, {
+    fields: [MedPlan.discontinue_phys_id],
+    references: [People_Staff.id],
+  }),
+  Formulary: one(D_Formulary, {
+    fields: [MedPlan.medication_id],
+    references: [D_Formulary.id],
   }),
   patient: one(Patients, {
-    fields: [MedicationPlan.patient_id],
+    fields: [MedPlan.patient_id],
     references: [Patients.id],
   }),
-  MedicationPlan: one(MedicationPlan, {
-    fields: [MedicationPlan.mixed_with],
-    references: [MedicationPlan.id],
-    relationName: 'MedicationPlan_mixed_with_MedicationPlan_id',
+  MedPlan: one(MedPlan, {
+    fields: [MedPlan.mixed_with],
+    references: [MedPlan.id],
+    relationName: 'MedPlan_mixed_with_MedPlan_id',
   }),
-  MedicationPlans: many(MedicationPlan, {
-    relationName: 'MedicationPlan_mixed_with_MedicationPlan_id',
+  MedPlans: many(MedPlan, {
+    relationName: 'MedPlan_mixed_with_MedPlan_id',
   }),
-  MedicationPlan_notes: many(MedicationPlan_notes),
-  MedicationPlan_sign_nurses: many(MedicationPlan_sign_nurse),
-  MedicationPlan_sign_pharmacists: many(MedicationPlan_sign_pharmacist),
-  MedicationPlan_sign_physicians: many(MedicationPlan_sign_physician),
+  MedPlan_notes: many(MedPlan_notes),
+  MedPlan_sign_nurses: many(MedPlan_sign_nurse),
+  MedPlan_sign_pharm: many(MedPlan_sign_pharm),
+  MedPlan_sign_phys: many(MedPlan_sign_phys),
 }));
 
-export const pb_keySignRelations = relations(pb_key, ({ many }) => ({
-  MedicationPlans: many(MedicationPlan),
-  MedicationPlan_notes: many(MedicationPlan_notes),
-  MedicationPlan_sign_nurses: many(MedicationPlan_sign_nurse),
-  MedicationPlan_sign_pharmacists: many(MedicationPlan_sign_pharmacist),
-  MedicationPlan_sign_physicians: many(MedicationPlan_sign_physician),
+export const pb_keySignRelations = relations(S_pb_key, ({ many }) => ({
+  MedPlans: many(MedPlan),
+  MedPlan_notes: many(MedPlan_notes),
+  MedPlan_sign_nurses: many(MedPlan_sign_nurse),
+  MedPlan_sign_pharm: many(MedPlan_sign_pharm),
+  MedPlan_sign_phys: many(MedPlan_sign_phys),
 }));
 
-export const StaffToMedicationPlansRelations = relations(Staff, ({ many }) => ({
-  MedicationPlans: many(MedicationPlan),
-  MedicationPlan_notes: many(MedicationPlan_notes),
-  MedicationPlan_sign_nurses: many(MedicationPlan_sign_nurse),
-  MedicationPlan_sign_pharmacists: many(MedicationPlan_sign_pharmacist),
-  MedicationPlan_sign_physicians: many(MedicationPlan_sign_physician),
+export const StaffToMedPlansRelations = relations(People_Staff, ({ many }) => ({
+  MedPlans: many(MedPlan),
+  MedPlan_notes: many(MedPlan_notes),
+  MedPlan_sign_nurses: many(MedPlan_sign_nurse),
+  MedPlan_sign_pharm: many(MedPlan_sign_pharm),
+  MedPlan_sign_phys: many(MedPlan_sign_phys),
 }));
 
-export const FormularyRelations = relations(Formulary, ({ many }) => ({
-  MedicationPlans: many(MedicationPlan),
+export const FormularyRelations = relations(D_Formulary, ({ many }) => ({
+  MedPlans: many(MedPlan),
 }));
 
 export const patientsRelations = relations(Patients, ({ many }) => ({
-  MedicationPlans: many(MedicationPlan),
+  MedPlans: many(MedPlan),
 }));
 
-export const MedicationPlan_notesRelations = relations(
-  MedicationPlan_notes,
-  ({ one }) => ({
-    Staff: one(Staff, {
-      fields: [MedicationPlan_notes.author_id],
-      references: [Staff.id],
-    }),
-    pb_key: one(pb_key, {
-      fields: [MedicationPlan_notes.author_sign_key_id],
-      references: [pb_key.id],
-    }),
-    MedicationPlan_NoteType: one(MedicationPlan_NoteTypes, {
-      fields: [MedicationPlan_notes.note_type],
-      references: [MedicationPlan_NoteTypes.id],
-    }),
-    MedicationPlan: one(MedicationPlan, {
-      fields: [MedicationPlan_notes.medication_plan_id],
-      references: [MedicationPlan.id],
-    }),
-  })
-);
+export const MedPlan_notesRelations = relations(MedPlan_notes, ({ one }) => ({
+  Staff: one(People_Staff, {
+    fields: [MedPlan_notes.author_id],
+    references: [People_Staff.id],
+  }),
+  pb_key: one(S_pb_key, {
+    fields: [MedPlan_notes.author_sign_key_id],
+    references: [S_pb_key.id],
+  }),
+  MedPlan_NoteType: one(MedPlan_NoteTypes, {
+    fields: [MedPlan_notes.note_type],
+    references: [MedPlan_NoteTypes.id],
+  }),
+  MedPlan: one(MedPlan, {
+    fields: [MedPlan_notes.med_plan_id],
+    references: [MedPlan.id],
+  }),
+}));
 
-export const MedicationPlan_NoteTypesRelations = relations(
-  MedicationPlan_NoteTypes,
-  ({ many }) => ({
-    MedicationPlan_notes: many(MedicationPlan_notes),
-  })
-);
+export const MedPlan_NoteTypesRelations = relations(MedPlan_NoteTypes, ({ many }) => ({
+  MedPlan_notes: many(MedPlan_notes),
+}));
 
-export const MedicationPlan_sign_nurseRelations = relations(
-  MedicationPlan_sign_nurse,
-  ({ one }) => ({
-    MedicationPlan: one(MedicationPlan, {
-      fields: [MedicationPlan_sign_nurse.medication_plan_id],
-      references: [MedicationPlan.id],
-    }),
-    Staff: one(Staff, {
-      fields: [MedicationPlan_sign_nurse.nurse_id],
-      references: [Staff.id],
-    }),
-    pb_key: one(pb_key, {
-      fields: [MedicationPlan_sign_nurse.nurse_sign_key_id],
-      references: [pb_key.id],
-    }),
-  })
-);
+export const MedPlan_sign_nurseRelations = relations(MedPlan_sign_nurse, ({ one }) => ({
+  MedPlan: one(MedPlan, {
+    fields: [MedPlan_sign_nurse.med_plan_id],
+    references: [MedPlan.id],
+  }),
+  Staff: one(People_Staff, {
+    fields: [MedPlan_sign_nurse.nurse_id],
+    references: [People_Staff.id],
+  }),
+  pb_key: one(S_pb_key, {
+    fields: [MedPlan_sign_nurse.nurse_sign_key_id],
+    references: [S_pb_key.id],
+  }),
+}));
 
-export const MedicationPlan_sign_pharmacistRelations = relations(
-  MedicationPlan_sign_pharmacist,
-  ({ one }) => ({
-    MedicationPlan: one(MedicationPlan, {
-      fields: [MedicationPlan_sign_pharmacist.medication_plan_id],
-      references: [MedicationPlan.id],
-    }),
-    Staff: one(Staff, {
-      fields: [MedicationPlan_sign_pharmacist.pharmacist_id],
-      references: [Staff.id],
-    }),
-    pb_key: one(pb_key, {
-      fields: [MedicationPlan_sign_pharmacist.pharmacist_signature_key_id],
-      references: [pb_key.id],
-    }),
-  })
-);
+export const MedPlan_sign_pharmRelations = relations(MedPlan_sign_pharm, ({ one }) => ({
+  MedPlan: one(MedPlan, {
+    fields: [MedPlan_sign_pharm.med_plan_id],
+    references: [MedPlan.id],
+  }),
+  Staff: one(People_Staff, {
+    fields: [MedPlan_sign_pharm.pharm_id],
+    references: [People_Staff.id],
+  }),
+  pb_key: one(S_pb_key, {
+    fields: [MedPlan_sign_pharm.pharm_signature_key_id],
+    references: [S_pb_key.id],
+  }),
+}));
 
-export const MedicationPlan_sign_physicianRelations = relations(
-  MedicationPlan_sign_physician,
-  ({ one }) => ({
-    MedicationPlan: one(MedicationPlan, {
-      fields: [MedicationPlan_sign_physician.medication_plan_id],
-      references: [MedicationPlan.id],
-    }),
-    Staff: one(Staff, {
-      fields: [MedicationPlan_sign_physician.physician_id],
-      references: [Staff.id],
-    }),
-    pb_key: one(pb_key, {
-      fields: [MedicationPlan_sign_physician.physician_signature_key_id],
-      references: [pb_key.id],
-    }),
-  })
-);
+export const MedPlan_sign_physRelations = relations(MedPlan_sign_phys, ({ one }) => ({
+  MedPlan: one(MedPlan, {
+    fields: [MedPlan_sign_phys.med_plan_id],
+    references: [MedPlan.id],
+  }),
+  Staff: one(People_Staff, {
+    fields: [MedPlan_sign_phys.phys_id],
+    references: [People_Staff.id],
+  }),
+  pb_key: one(S_pb_key, {
+    fields: [MedPlan_sign_phys.phys_signature_key_id],
+    references: [S_pb_key.id],
+  }),
+}));
 
-export const UsersRelations = relations(Users, ({ one }) => ({
-  pb_key: one(pb_key, {
-    fields: [Users.public_key],
-    references: [pb_key.id],
+export const UsersRelations = relations(People_Users, ({ one }) => ({
+  pb_key: one(S_pb_key, {
+    fields: [People_Users.public_key],
+    references: [S_pb_key.id],
   }),
   Person: one(People, {
-    fields: [Users.person_id],
+    fields: [People_Users.person_id],
     references: [People.id],
   }),
-  Staff: one(Staff, {
-    fields: [Users.staff_id],
-    references: [Staff.id],
+  Staff: one(People_Staff, {
+    fields: [People_Users.staff_id],
+    references: [People_Staff.id],
   }),
 }));
 
-export const pb_keyToUsersRelations = relations(pb_key, ({ many }) => ({
-  Users: many(Users),
+export const pb_keyToUsersRelations = relations(S_pb_key, ({ many }) => ({
+  Users: many(People_Users),
 }));
 
 export const PeopleRelations = relations(People, ({ many }) => ({
-  Users: many(Users),
+  Users: many(People_Users),
 }));
 
-export const StaffToUsersRelations = relations(Staff, ({ many }) => ({
-  Users: many(Users),
+export const StaffToUsersRelations = relations(People_Staff, ({ many }) => ({
+  Users: many(People_Users),
 }));
