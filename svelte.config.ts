@@ -4,6 +4,7 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 const config: Config = {
   preprocess: vitePreprocess(),
+  vitePlugin: { inspector: { toggleKeyCombo: 'control-alt-shift-x' } },
 
   kit: {
     adapter: adapter(),
