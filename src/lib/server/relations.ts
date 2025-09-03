@@ -36,23 +36,9 @@ import {
   MedPlan,
 } from '$lib/server/schema';
 
-export const pb_keyToUserRelations = relations(S_pb_key, ({ one }) => ({
-  User: one(People_Users, {
-    fields: [S_pb_key.user_id],
-    references: [People_Users.id],
-  }),
-}));
-
 export const UsersToKeysRelations = relations(People_Users, ({ many }) => ({
   pb_keys: many(S_pb_key),
   pv_keys: many(S_pv_keys),
-}));
-
-export const pv_keysRelations = relations(S_pv_keys, ({ one }) => ({
-  User: one(People_Users, {
-    fields: [S_pv_keys.user_id],
-    references: [People_Users.id],
-  }),
 }));
 
 export const ac_therapeutic_useRelations = relations(D_AC_use, ({ one }) => ({

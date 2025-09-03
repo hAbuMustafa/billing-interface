@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "cd076b1b-27fc-431e-ba13-52006e1b448e",
+  "id": "4714055b-bb57-430a-9e24-2c2e880a8afa",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "D_AC": {
@@ -3154,13 +3154,6 @@
           "notNull": true,
           "autoincrement": true
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "key": {
           "name": "key",
           "type": "varchar(256)",
@@ -3176,30 +3169,8 @@
           "autoincrement": false
         }
       },
-      "indexes": {
-        "user_id_pb_key_link_idx": {
-          "name": "user_id_pb_key_link_idx",
-          "columns": [
-            "user_id"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "S_pb_key_user_id_People_Users_id_fk": {
-          "name": "S_pb_key_user_id_People_Users_id_fk",
-          "tableFrom": "S_pb_key",
-          "tableTo": "People_Users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "pb_key_id": {
           "name": "pb_key_id",
@@ -3221,13 +3192,6 @@
           "notNull": true,
           "autoincrement": true
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "key": {
           "name": "key",
           "type": "varchar(256)",
@@ -3243,30 +3207,8 @@
           "autoincrement": false
         }
       },
-      "indexes": {
-        "user_id_link_idx": {
-          "name": "user_id_link_idx",
-          "columns": [
-            "user_id"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "S_pv_keys_user_id_People_Users_id_fk": {
-          "name": "S_pv_keys_user_id_People_Users_id_fk",
-          "tableFrom": "S_pv_keys",
-          "tableTo": "People_Users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "pv_keys_id": {
           "name": "pv_keys_id",

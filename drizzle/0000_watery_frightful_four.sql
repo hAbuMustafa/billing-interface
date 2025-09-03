@@ -303,7 +303,6 @@ CREATE TABLE `Ph_InEco_Transactions` (
 --> statement-breakpoint
 CREATE TABLE `S_pb_key` (
 	`id` int AUTO_INCREMENT NOT NULL,
-	`user_id` int NOT NULL,
 	`key` varchar(256) NOT NULL,
 	`since` datetime NOT NULL,
 	CONSTRAINT `pb_key_id` PRIMARY KEY(`id`)
@@ -311,7 +310,6 @@ CREATE TABLE `S_pb_key` (
 --> statement-breakpoint
 CREATE TABLE `S_pv_keys` (
 	`id` int AUTO_INCREMENT NOT NULL,
-	`user_id` int NOT NULL,
 	`key` varchar(256) NOT NULL,
 	`since` datetime NOT NULL,
 	CONSTRAINT `pv_keys_id` PRIMARY KEY(`id`)
@@ -389,8 +387,6 @@ ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_pharm_
 ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_pharm_sign_key_S_pb_key_id_fk` FOREIGN KEY (`pharm_sign_key`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_med_plan_id_MedPlan_id_fk` FOREIGN KEY (`med_plan_id`) REFERENCES `MedPlan`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_dispensing_nurse_id_People_Staff_id_fk` FOREIGN KEY (`dispensing_nurse_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `S_pb_key` ADD CONSTRAINT `S_pb_key_user_id_People_Users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `People_Users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `S_pv_keys` ADD CONSTRAINT `S_pv_keys_user_id_People_Users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `People_Users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX `ingredient_link_idx` ON `D_AC_use` (`ac_id`);--> statement-breakpoint
 CREATE INDEX `use_link_idx` ON `D_AC_use` (`use_id`);--> statement-breakpoint
 CREATE INDEX `brand_name_formulary_link_idx` ON `D_BrandNames` (`formulary_id`);--> statement-breakpoint
@@ -456,6 +452,4 @@ CREATE INDEX `dispensing_pharm_id_link_idx` ON `Ph_InEco_Transactions` (`pharm_i
 CREATE INDEX `item_id_link_idx` ON `Ph_InEco_Transactions` (`item_id`);--> statement-breakpoint
 CREATE INDEX `med_plan_link_idx` ON `Ph_InEco_Transactions` (`med_plan_id`);--> statement-breakpoint
 CREATE INDEX `nurse_id_link_idx` ON `Ph_InEco_Transactions` (`dispensing_nurse_id`);--> statement-breakpoint
-CREATE INDEX `sign_key_link_idx` ON `Ph_InEco_Transactions` (`pharm_sign_key`);--> statement-breakpoint
-CREATE INDEX `user_id_pb_key_link_idx` ON `S_pb_key` (`user_id`);--> statement-breakpoint
-CREATE INDEX `user_id_link_idx` ON `S_pv_keys` (`user_id`);
+CREATE INDEX `sign_key_link_idx` ON `Ph_InEco_Transactions` (`pharm_sign_key`);

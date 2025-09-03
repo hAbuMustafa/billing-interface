@@ -22,32 +22,20 @@ export const S_pb_key = mysqlTable(
   'S_pb_key',
   {
     id: int().autoincrement().notNull(),
-    user_id: int()
-      .notNull()
-      .references(() => People_Users.id),
     key: varchar({ length: 256 }).notNull(),
     since: datetime({ mode: 'string' }).notNull(),
   },
-  (table) => [
-    index('user_id_pb_key_link_idx').on(table.user_id),
-    primaryKey({ columns: [table.id], name: 'pb_key_id' }),
-  ]
+  (table) => [primaryKey({ columns: [table.id], name: 'pb_key_id' })]
 );
 
 export const S_pv_keys = mysqlTable(
   'S_pv_keys',
   {
     id: int().autoincrement().notNull(),
-    user_id: int()
-      .notNull()
-      .references(() => People_Users.id),
     key: varchar({ length: 256 }).notNull(),
     since: datetime({ mode: 'string' }).notNull(),
   },
-  (table) => [
-    index('user_id_link_idx').on(table.user_id),
-    primaryKey({ columns: [table.id], name: 'pv_keys_id' }),
-  ]
+  (table) => [primaryKey({ columns: [table.id], name: 'pv_keys_id' })]
 );
 
 export const Wards = mysqlTable(
