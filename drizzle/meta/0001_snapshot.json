@@ -1,0 +1,3295 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "id": "ed03ba4a-4a83-40e9-aa35-97a137b893e3",
+  "prevId": "4714055b-bb57-430a-9e24-2c2e880a8afa",
+  "tables": {
+    "D_AC": {
+      "name": "D_AC",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name_ar": {
+          "name": "name_ar",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "alias": {
+          "name": "alias",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "AC_id": {
+          "name": "AC_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "D_AC_use": {
+      "name": "D_AC_use",
+      "columns": {
+        "ac_id": {
+          "name": "ac_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "use_id": {
+          "name": "use_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "ingredient_link_idx": {
+          "name": "ingredient_link_idx",
+          "columns": [
+            "ac_id"
+          ],
+          "isUnique": false
+        },
+        "use_link_idx": {
+          "name": "use_link_idx",
+          "columns": [
+            "use_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "D_AC_use_ac_id_D_AC_id_fk": {
+          "name": "D_AC_use_ac_id_D_AC_id_fk",
+          "tableFrom": "D_AC_use",
+          "tableTo": "D_AC",
+          "columnsFrom": [
+            "ac_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "D_AC_use_use_id_D_Use_id_fk": {
+          "name": "D_AC_use_use_id_D_Use_id_fk",
+          "tableFrom": "D_AC_use",
+          "tableTo": "D_Use",
+          "columnsFrom": [
+            "use_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "D_BrandNames": {
+      "name": "D_BrandNames",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "formulary_id": {
+          "name": "formulary_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name_ar": {
+          "name": "name_ar",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "size": {
+          "name": "size",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "size_unit": {
+          "name": "size_unit",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "producer": {
+          "name": "producer",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "brand_name_formulary_link_idx": {
+          "name": "brand_name_formulary_link_idx",
+          "columns": [
+            "formulary_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "D_BrandNames_formulary_id_D_Formulary_id_fk": {
+          "name": "D_BrandNames_formulary_id_D_Formulary_id_fk",
+          "tableFrom": "D_BrandNames",
+          "tableTo": "D_Formulary",
+          "columnsFrom": [
+            "formulary_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "BrandNames_id": {
+          "name": "BrandNames_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "D_Formulary": {
+      "name": "D_Formulary",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "volume_in_ml": {
+          "name": "volume_in_ml",
+          "type": "decimal(5,2)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "Formulary_id": {
+          "name": "Formulary_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "D_Formulations": {
+      "name": "D_Formulations",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "formulary_id": {
+          "name": "formulary_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ac_id": {
+          "name": "ac_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "decimal(10,5)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount_unit": {
+          "name": "amount_unit",
+          "type": "varchar(5)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "role_target": {
+          "name": "role_target",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "ac_link_idx": {
+          "name": "ac_link_idx",
+          "columns": [
+            "ac_id"
+          ],
+          "isUnique": false
+        },
+        "ac_role_target_link_idx": {
+          "name": "ac_role_target_link_idx",
+          "columns": [
+            "role_target"
+          ],
+          "isUnique": false
+        },
+        "formulary_link_idx": {
+          "name": "formulary_link_idx",
+          "columns": [
+            "formulary_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "D_Formulations_formulary_id_D_Formulary_id_fk": {
+          "name": "D_Formulations_formulary_id_D_Formulary_id_fk",
+          "tableFrom": "D_Formulations",
+          "tableTo": "D_Formulary",
+          "columnsFrom": [
+            "formulary_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "D_Formulations_ac_id_D_AC_id_fk": {
+          "name": "D_Formulations_ac_id_D_AC_id_fk",
+          "tableFrom": "D_Formulations",
+          "tableTo": "D_AC",
+          "columnsFrom": [
+            "ac_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ac_role_target_link": {
+          "name": "ac_role_target_link",
+          "tableFrom": "D_Formulations",
+          "tableTo": "D_Formulations",
+          "columnsFrom": [
+            "role_target"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Formulations_id": {
+          "name": "Formulations_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "D_ROA": {
+      "name": "D_ROA",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "ROA_id": {
+          "name": "ROA_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "D_Use": {
+      "name": "D_Use",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "use": {
+          "name": "use",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "Use_id": {
+          "name": "Use_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "D_formulary_roa": {
+      "name": "D_formulary_roa",
+      "columns": {
+        "formulary_id": {
+          "name": "formulary_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "roa": {
+          "name": "roa",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "formulary_name_link_idx": {
+          "name": "formulary_name_link_idx",
+          "columns": [
+            "formulary_id"
+          ],
+          "isUnique": false
+        },
+        "formulary_routes_link_idx": {
+          "name": "formulary_routes_link_idx",
+          "columns": [
+            "roa"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "D_formulary_roa_formulary_id_D_Formulary_id_fk": {
+          "name": "D_formulary_roa_formulary_id_D_Formulary_id_fk",
+          "tableFrom": "D_formulary_roa",
+          "tableTo": "D_Formulary",
+          "columnsFrom": [
+            "formulary_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "D_formulary_roa_roa_D_ROA_id_fk": {
+          "name": "D_formulary_roa_roa_D_ROA_id_fk",
+          "tableFrom": "D_formulary_roa",
+          "tableTo": "D_ROA",
+          "columnsFrom": [
+            "roa"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Diagnoses": {
+      "name": "Diagnoses",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "diagnosis_time": {
+          "name": "diagnosis_time",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "diagnosis": {
+          "name": "diagnosis",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "diagnosis_icd11": {
+          "name": "diagnosis_icd11",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "diagnosing_phys": {
+          "name": "diagnosing_phys",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "diagnosing_phys_link_idx": {
+          "name": "diagnosing_phys_link_idx",
+          "columns": [
+            "diagnosing_phys"
+          ],
+          "isUnique": false
+        },
+        "patient_diagnosis_link_idx": {
+          "name": "patient_diagnosis_link_idx",
+          "columns": [
+            "patient_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Diagnoses_patient_id_Patients_id_fk": {
+          "name": "Diagnoses_patient_id_Patients_id_fk",
+          "tableFrom": "Diagnoses",
+          "tableTo": "Patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Diagnoses_diagnosing_phys_People_Staff_id_fk": {
+          "name": "Diagnoses_diagnosing_phys_People_Staff_id_fk",
+          "tableFrom": "Diagnoses",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "diagnosing_phys"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "diagnoses_id": {
+          "name": "diagnoses_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "MedPlan": {
+      "name": "MedPlan",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "medication_id": {
+          "name": "medication_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "decimal(10,2)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount_unit": {
+          "name": "amount_unit",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "frequency": {
+          "name": "frequency",
+          "type": "decimal(10,2)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "duration_days": {
+          "name": "duration_days",
+          "type": "decimal(10,2)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "mixed_with": {
+          "name": "mixed_with",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "discontinued_at": {
+          "name": "discontinued_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "discontinue_phys_id": {
+          "name": "discontinue_phys_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "discontinue_phys_signature": {
+          "name": "discontinue_phys_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "discontinue_phys_sign_key_id": {
+          "name": "discontinue_phys_sign_key_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "dc_phy_sign_key_id_link_idx": {
+          "name": "dc_phy_sign_key_id_link_idx",
+          "columns": [
+            "discontinue_phys_sign_key_id"
+          ],
+          "isUnique": false
+        },
+        "hold_phys_id_link_idx": {
+          "name": "hold_phys_id_link_idx",
+          "columns": [
+            "discontinue_phys_id"
+          ],
+          "isUnique": false
+        },
+        "medication_id_link_idx": {
+          "name": "medication_id_link_idx",
+          "columns": [
+            "medication_id"
+          ],
+          "isUnique": false
+        },
+        "med_plan_patient_id_idx": {
+          "name": "med_plan_patient_id_idx",
+          "columns": [
+            "patient_id"
+          ],
+          "isUnique": false
+        },
+        "mixture_link_idx": {
+          "name": "mixture_link_idx",
+          "columns": [
+            "mixed_with"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "MedPlan_patient_id_Patients_id_fk": {
+          "name": "MedPlan_patient_id_Patients_id_fk",
+          "tableFrom": "MedPlan",
+          "tableTo": "Patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_medication_id_D_Formulary_id_fk": {
+          "name": "MedPlan_medication_id_D_Formulary_id_fk",
+          "tableFrom": "MedPlan",
+          "tableTo": "D_Formulary",
+          "columnsFrom": [
+            "medication_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_discontinue_phys_id_People_Staff_id_fk": {
+          "name": "MedPlan_discontinue_phys_id_People_Staff_id_fk",
+          "tableFrom": "MedPlan",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "discontinue_phys_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_discontinue_phys_sign_key_id_S_pb_key_id_fk": {
+          "name": "MedPlan_discontinue_phys_sign_key_id_S_pb_key_id_fk",
+          "tableFrom": "MedPlan",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "discontinue_phys_sign_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "mixture_link": {
+          "name": "mixture_link",
+          "tableFrom": "MedPlan",
+          "tableTo": "MedPlan",
+          "columnsFrom": [
+            "mixed_with"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "MedPlan_id": {
+          "name": "MedPlan_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "MedPlan_NoteTypes": {
+      "name": "MedPlan_NoteTypes",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "MedPlan_NoteTypes_id": {
+          "name": "MedPlan_NoteTypes_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "MedPlan_notes": {
+      "name": "MedPlan_notes",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "med_plan_id": {
+          "name": "med_plan_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "note": {
+          "name": "note",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "note_type": {
+          "name": "note_type",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "author_id": {
+          "name": "author_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "author_signature": {
+          "name": "author_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "author_sign_key_id": {
+          "name": "author_sign_key_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "author_link_idx": {
+          "name": "author_link_idx",
+          "columns": [
+            "author_id"
+          ],
+          "isUnique": false
+        },
+        "author_sign_key_id_link_idx": {
+          "name": "author_sign_key_id_link_idx",
+          "columns": [
+            "author_sign_key_id"
+          ],
+          "isUnique": false
+        },
+        "note_type_link_idx": {
+          "name": "note_type_link_idx",
+          "columns": [
+            "note_type"
+          ],
+          "isUnique": false
+        },
+        "treatment_plan_link_idx": {
+          "name": "treatment_plan_link_idx",
+          "columns": [
+            "med_plan_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "MedPlan_notes_med_plan_id_MedPlan_id_fk": {
+          "name": "MedPlan_notes_med_plan_id_MedPlan_id_fk",
+          "tableFrom": "MedPlan_notes",
+          "tableTo": "MedPlan",
+          "columnsFrom": [
+            "med_plan_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_notes_note_type_MedPlan_NoteTypes_id_fk": {
+          "name": "MedPlan_notes_note_type_MedPlan_NoteTypes_id_fk",
+          "tableFrom": "MedPlan_notes",
+          "tableTo": "MedPlan_NoteTypes",
+          "columnsFrom": [
+            "note_type"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_notes_author_id_People_Staff_id_fk": {
+          "name": "MedPlan_notes_author_id_People_Staff_id_fk",
+          "tableFrom": "MedPlan_notes",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "author_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_notes_author_sign_key_id_S_pb_key_id_fk": {
+          "name": "MedPlan_notes_author_sign_key_id_S_pb_key_id_fk",
+          "tableFrom": "MedPlan_notes",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "author_sign_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "MedPlan_notes_id": {
+          "name": "MedPlan_notes_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "MedPlan_sign_nurse": {
+      "name": "MedPlan_sign_nurse",
+      "columns": {
+        "med_plan_id": {
+          "name": "med_plan_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nurse_id": {
+          "name": "nurse_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nurse_signature": {
+          "name": "nurse_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nurse_sign_key_id": {
+          "name": "nurse_sign_key_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "signature_time": {
+          "name": "signature_time",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "med_plan_id_nurse_sign_link_idx": {
+          "name": "med_plan_id_nurse_sign_link_idx",
+          "columns": [
+            "med_plan_id"
+          ],
+          "isUnique": false
+        },
+        "nurse_id_mp_link_idx": {
+          "name": "nurse_id_mp_link_idx",
+          "columns": [
+            "nurse_id"
+          ],
+          "isUnique": false
+        },
+        "pharm_sign_key_id_mp_link_idx": {
+          "name": "pharm_sign_key_id_mp_link_idx",
+          "columns": [
+            "nurse_sign_key_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "MedPlan_sign_nurse_med_plan_id_MedPlan_id_fk": {
+          "name": "MedPlan_sign_nurse_med_plan_id_MedPlan_id_fk",
+          "tableFrom": "MedPlan_sign_nurse",
+          "tableTo": "MedPlan",
+          "columnsFrom": [
+            "med_plan_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_sign_nurse_nurse_id_People_Staff_id_fk": {
+          "name": "MedPlan_sign_nurse_nurse_id_People_Staff_id_fk",
+          "tableFrom": "MedPlan_sign_nurse",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "nurse_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_sign_nurse_nurse_sign_key_id_S_pb_key_id_fk": {
+          "name": "MedPlan_sign_nurse_nurse_sign_key_id_S_pb_key_id_fk",
+          "tableFrom": "MedPlan_sign_nurse",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "nurse_sign_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "MedPlan_sign_pharm": {
+      "name": "MedPlan_sign_pharm",
+      "columns": {
+        "med_plan_id": {
+          "name": "med_plan_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "pharm_id": {
+          "name": "pharm_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "pharm_signature": {
+          "name": "pharm_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "pharm_signature_key_id": {
+          "name": "pharm_signature_key_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "signature_time": {
+          "name": "signature_time",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "med_plan_id_pharm_sign_link_idx": {
+          "name": "med_plan_id_pharm_sign_link_idx",
+          "columns": [
+            "med_plan_id"
+          ],
+          "isUnique": false
+        },
+        "pharm_sign_key_id_mp_link_idx": {
+          "name": "pharm_sign_key_id_mp_link_idx",
+          "columns": [
+            "pharm_signature_key_id"
+          ],
+          "isUnique": false
+        },
+        "phys_id_mp_link_idx": {
+          "name": "phys_id_mp_link_idx",
+          "columns": [
+            "pharm_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "MedPlan_sign_pharm_med_plan_id_MedPlan_id_fk": {
+          "name": "MedPlan_sign_pharm_med_plan_id_MedPlan_id_fk",
+          "tableFrom": "MedPlan_sign_pharm",
+          "tableTo": "MedPlan",
+          "columnsFrom": [
+            "med_plan_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_sign_pharm_pharm_id_People_Staff_id_fk": {
+          "name": "MedPlan_sign_pharm_pharm_id_People_Staff_id_fk",
+          "tableFrom": "MedPlan_sign_pharm",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "pharm_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_sign_pharm_pharm_signature_key_id_S_pb_key_id_fk": {
+          "name": "MedPlan_sign_pharm_pharm_signature_key_id_S_pb_key_id_fk",
+          "tableFrom": "MedPlan_sign_pharm",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "pharm_signature_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "MedPlan_sign_phys": {
+      "name": "MedPlan_sign_phys",
+      "columns": {
+        "med_plan_id": {
+          "name": "med_plan_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phys_id": {
+          "name": "phys_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phys_signature": {
+          "name": "phys_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phys_signature_key_id": {
+          "name": "phys_signature_key_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "signature_time": {
+          "name": "signature_time",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "med_plan_id_link_idx": {
+          "name": "med_plan_id_link_idx",
+          "columns": [
+            "med_plan_id"
+          ],
+          "isUnique": false
+        },
+        "phys_id_mp_link_idx": {
+          "name": "phys_id_mp_link_idx",
+          "columns": [
+            "phys_id"
+          ],
+          "isUnique": false
+        },
+        "phys_sign_key_id_mp_link_idx": {
+          "name": "phys_sign_key_id_mp_link_idx",
+          "columns": [
+            "phys_signature_key_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "MedPlan_sign_phys_med_plan_id_MedPlan_id_fk": {
+          "name": "MedPlan_sign_phys_med_plan_id_MedPlan_id_fk",
+          "tableFrom": "MedPlan_sign_phys",
+          "tableTo": "MedPlan",
+          "columnsFrom": [
+            "med_plan_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_sign_phys_phys_id_People_Staff_id_fk": {
+          "name": "MedPlan_sign_phys_phys_id_People_Staff_id_fk",
+          "tableFrom": "MedPlan_sign_phys",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "phys_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "MedPlan_sign_phys_phys_signature_key_id_S_pb_key_id_fk": {
+          "name": "MedPlan_sign_phys_phys_signature_key_id_S_pb_key_id_fk",
+          "tableFrom": "MedPlan_sign_phys",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "phys_signature_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Patient_Exit": {
+      "name": "Patient_Exit",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "exit_order_id": {
+          "name": "exit_order_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "exit_reason": {
+          "name": "exit_reason",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "registrar": {
+          "name": "registrar",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "registrar_signature": {
+          "name": "registrar_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "registrar_sign_key": {
+          "name": "registrar_sign_key",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "patient_exit_exit_order_id_link_idx": {
+          "name": "patient_exit_exit_order_id_link_idx",
+          "columns": [
+            "exit_order_id"
+          ],
+          "isUnique": false
+        },
+        "patient_exit_patient_id_link_idx": {
+          "name": "patient_exit_patient_id_link_idx",
+          "columns": [
+            "patient_id"
+          ],
+          "isUnique": false
+        },
+        "patient_exit_reason_id_link_idx": {
+          "name": "patient_exit_reason_id_link_idx",
+          "columns": [
+            "exit_reason"
+          ],
+          "isUnique": false
+        },
+        "patient_exit_registrar_id_link_idx": {
+          "name": "patient_exit_registrar_id_link_idx",
+          "columns": [
+            "registrar"
+          ],
+          "isUnique": false
+        },
+        "patient_exit_registrar_sign_key_id_link_idx": {
+          "name": "patient_exit_registrar_sign_key_id_link_idx",
+          "columns": [
+            "registrar_sign_key"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Patient_Exit_patient_id_Patients_id_fk": {
+          "name": "Patient_Exit_patient_id_Patients_id_fk",
+          "tableFrom": "Patient_Exit",
+          "tableTo": "Patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_Exit_exit_order_id_Patient_Exit_Orders_id_fk": {
+          "name": "Patient_Exit_exit_order_id_Patient_Exit_Orders_id_fk",
+          "tableFrom": "Patient_Exit",
+          "tableTo": "Patient_Exit_Orders",
+          "columnsFrom": [
+            "exit_order_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_Exit_exit_reason_Patient_exit_reasons_id_fk": {
+          "name": "Patient_Exit_exit_reason_Patient_exit_reasons_id_fk",
+          "tableFrom": "Patient_Exit",
+          "tableTo": "Patient_exit_reasons",
+          "columnsFrom": [
+            "exit_reason"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_Exit_registrar_People_Staff_id_fk": {
+          "name": "Patient_Exit_registrar_People_Staff_id_fk",
+          "tableFrom": "Patient_Exit",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "registrar"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_Exit_registrar_sign_key_S_pb_key_id_fk": {
+          "name": "Patient_Exit_registrar_sign_key_S_pb_key_id_fk",
+          "tableFrom": "Patient_Exit",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "registrar_sign_key"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Patient_Exit_id": {
+          "name": "Patient_Exit_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Patient_Exit_Orders": {
+      "name": "Patient_Exit_Orders",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "phys_id": {
+          "name": "phys_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phys_signature": {
+          "name": "phys_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phys_sign_key": {
+          "name": "phys_sign_key",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "patient_exit_orders_patient_id_link_idx": {
+          "name": "patient_exit_orders_patient_id_link_idx",
+          "columns": [
+            "patient_id"
+          ],
+          "isUnique": false
+        },
+        "patient_exit_orders_phys_sign_key_id_link_idx": {
+          "name": "patient_exit_orders_phys_sign_key_id_link_idx",
+          "columns": [
+            "phys_sign_key"
+          ],
+          "isUnique": false
+        },
+        "patient_exit_orders_phys_id_link_idx": {
+          "name": "patient_exit_orders_phys_id_link_idx",
+          "columns": [
+            "phys_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Patient_Exit_Orders_patient_id_Patients_id_fk": {
+          "name": "Patient_Exit_Orders_patient_id_Patients_id_fk",
+          "tableFrom": "Patient_Exit_Orders",
+          "tableTo": "Patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_Exit_Orders_phys_id_People_Staff_id_fk": {
+          "name": "Patient_Exit_Orders_phys_id_People_Staff_id_fk",
+          "tableFrom": "Patient_Exit_Orders",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "phys_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_Exit_Orders_phys_sign_key_S_pb_key_id_fk": {
+          "name": "Patient_Exit_Orders_phys_sign_key_S_pb_key_id_fk",
+          "tableFrom": "Patient_Exit_Orders",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "phys_sign_key"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Patient_Exit_Orders_id": {
+          "name": "Patient_Exit_Orders_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Patient_Insurance": {
+      "name": "Patient_Insurance",
+      "columns": {
+        "patient_id": {
+          "name": "patient_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "insurance_number": {
+          "name": "insurance_number",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "insurance_entity": {
+          "name": "insurance_entity",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "valid_from_date": {
+          "name": "valid_from_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expiration_date": {
+          "name": "expiration_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "stay": {
+          "name": "stay",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "medication_deductible_percent": {
+          "name": "medication_deductible_percent",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'1'"
+        },
+        "lab_deductible_percent": {
+          "name": "lab_deductible_percent",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'1'"
+        },
+        "radiology_deductible_percent": {
+          "name": "radiology_deductible_percent",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'1'"
+        },
+        "dental_deductible_percent": {
+          "name": "dental_deductible_percent",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'1'"
+        },
+        "maternal_deductible_percent": {
+          "name": "maternal_deductible_percent",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'1'"
+        }
+      },
+      "indexes": {
+        "patient_insurance_link_idx": {
+          "name": "patient_insurance_link_idx",
+          "columns": [
+            "patient_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Patient_Insurance_patient_id_Patients_id_fk": {
+          "name": "Patient_Insurance_patient_id_Patients_id_fk",
+          "tableFrom": "Patient_Insurance",
+          "tableTo": "Patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Patient_admissions": {
+      "name": "Patient_admissions",
+      "columns": {
+        "timestamp": {
+          "name": "timestamp",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "admission_notes": {
+          "name": "admission_notes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "admitted_from": {
+          "name": "admitted_from",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "admitting_phys": {
+          "name": "admitting_phys",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "admitting_phys_signature": {
+          "name": "admitting_phys_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "admitting_phys_sign_key_id": {
+          "name": "admitting_phys_sign_key_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "registrar": {
+          "name": "registrar",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "admission_patient_id_link_idx": {
+          "name": "admission_patient_id_link_idx",
+          "columns": [
+            "patient_id"
+          ],
+          "isUnique": false
+        },
+        "admission_phys_id_link_idx": {
+          "name": "admission_phys_id_link_idx",
+          "columns": [
+            "admitting_phys"
+          ],
+          "isUnique": false
+        },
+        "admitting_phys_sign_key_id_link_idx": {
+          "name": "admitting_phys_sign_key_id_link_idx",
+          "columns": [
+            "admitting_phys_sign_key_id"
+          ],
+          "isUnique": false
+        },
+        "admitting_registrar_id_link_idx": {
+          "name": "admitting_registrar_id_link_idx",
+          "columns": [
+            "registrar"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Patient_admissions_patient_id_Patients_id_fk": {
+          "name": "Patient_admissions_patient_id_Patients_id_fk",
+          "tableFrom": "Patient_admissions",
+          "tableTo": "Patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_admissions_admitting_phys_People_Staff_id_fk": {
+          "name": "Patient_admissions_admitting_phys_People_Staff_id_fk",
+          "tableFrom": "Patient_admissions",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "admitting_phys"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_admissions_admitting_phys_sign_key_id_S_pb_key_id_fk": {
+          "name": "Patient_admissions_admitting_phys_sign_key_id_S_pb_key_id_fk",
+          "tableFrom": "Patient_admissions",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "admitting_phys_sign_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_admissions_registrar_People_Staff_id_fk": {
+          "name": "Patient_admissions_registrar_People_Staff_id_fk",
+          "tableFrom": "Patient_admissions",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "registrar"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Patient_exit_reasons": {
+      "name": "Patient_exit_reasons",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "reason": {
+          "name": "reason",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "Patient_exit_reasons_id": {
+          "name": "Patient_exit_reasons_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Patient_trans": {
+      "name": "Patient_trans",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "nurse_id": {
+          "name": "nurse_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nurse_signature": {
+          "name": "nurse_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nurse_sign_key_id": {
+          "name": "nurse_sign_key_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "trans_order_nurse_id_link_idx": {
+          "name": "trans_order_nurse_id_link_idx",
+          "columns": [
+            "nurse_id"
+          ],
+          "isUnique": false
+        },
+        "trans_order_nurse_sign_key_id_link_idx": {
+          "name": "trans_order_nurse_sign_key_id_link_idx",
+          "columns": [
+            "nurse_sign_key_id"
+          ],
+          "isUnique": false
+        },
+        "trans_patient_id_link_idx": {
+          "name": "trans_patient_id_link_idx",
+          "columns": [
+            "patient_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Patient_trans_patient_id_Patients_id_fk": {
+          "name": "Patient_trans_patient_id_Patients_id_fk",
+          "tableFrom": "Patient_trans",
+          "tableTo": "Patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_trans_nurse_id_People_id_fk": {
+          "name": "Patient_trans_nurse_id_People_id_fk",
+          "tableFrom": "Patient_trans",
+          "tableTo": "People",
+          "columnsFrom": [
+            "nurse_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_trans_nurse_sign_key_id_S_pb_key_id_fk": {
+          "name": "Patient_trans_nurse_sign_key_id_S_pb_key_id_fk",
+          "tableFrom": "Patient_trans",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "nurse_sign_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Patient_trans_id": {
+          "name": "Patient_trans_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Patient_trans_orders": {
+      "name": "Patient_trans_orders",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ward": {
+          "name": "ward",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "phys_id": {
+          "name": "phys_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phys_signature": {
+          "name": "phys_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phys_sign_key_id": {
+          "name": "phys_sign_key_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "trans_order_patient_id_link_idx": {
+          "name": "trans_order_patient_id_link_idx",
+          "columns": [
+            "patient_id"
+          ],
+          "isUnique": false
+        },
+        "trans_order_phys_id_link_idx": {
+          "name": "trans_order_phys_id_link_idx",
+          "columns": [
+            "phys_id"
+          ],
+          "isUnique": false
+        },
+        "trans_order_phys_sign_id_link_idx": {
+          "name": "trans_order_phys_sign_id_link_idx",
+          "columns": [
+            "phys_sign_key_id"
+          ],
+          "isUnique": false
+        },
+        "trans_order_ward_id_link_idx": {
+          "name": "trans_order_ward_id_link_idx",
+          "columns": [
+            "ward"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Patient_trans_orders_patient_id_Patients_id_fk": {
+          "name": "Patient_trans_orders_patient_id_Patients_id_fk",
+          "tableFrom": "Patient_trans_orders",
+          "tableTo": "Patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_trans_orders_ward_Wards_id_fk": {
+          "name": "Patient_trans_orders_ward_Wards_id_fk",
+          "tableFrom": "Patient_trans_orders",
+          "tableTo": "Wards",
+          "columnsFrom": [
+            "ward"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_trans_orders_phys_id_People_Staff_id_fk": {
+          "name": "Patient_trans_orders_phys_id_People_Staff_id_fk",
+          "tableFrom": "Patient_trans_orders",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "phys_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patient_trans_orders_phys_sign_key_id_S_pb_key_id_fk": {
+          "name": "Patient_trans_orders_phys_sign_key_id_S_pb_key_id_fk",
+          "tableFrom": "Patient_trans_orders",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "phys_sign_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Patient_trans_orders_id": {
+          "name": "Patient_trans_orders_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Patients": {
+      "name": "Patients",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "meal_type": {
+          "name": "meal_type",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ward": {
+          "name": "ward",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "patients_person_id_link_idx": {
+          "name": "patients_person_id_link_idx",
+          "columns": [
+            "person_id"
+          ],
+          "isUnique": false
+        },
+        "patients_ward_link_idx": {
+          "name": "patients_ward_link_idx",
+          "columns": [
+            "ward"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Patients_person_id_People_id_fk": {
+          "name": "Patients_person_id_People_id_fk",
+          "tableFrom": "Patients",
+          "tableTo": "People",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Patients_ward_Wards_id_fk": {
+          "name": "Patients_ward_Wards_id_fk",
+          "tableFrom": "Patients",
+          "tableTo": "Wards",
+          "columnsFrom": [
+            "ward"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Patients_id": {
+          "name": "Patients_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "People": {
+      "name": "People",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "father_name": {
+          "name": "father_name",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "grandfather_name": {
+          "name": "grandfather_name",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "family_name": {
+          "name": "family_name",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "birthdate": {
+          "name": "birthdate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "race": {
+          "name": "race",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "marital_status": {
+          "name": "marital_status",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "gender": {
+          "name": "gender",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "religion": {
+          "name": "religion",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "occupation": {
+          "name": "occupation",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "People_id": {
+          "name": "People_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "People_Staff": {
+      "name": "People_Staff",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "job": {
+          "name": "job",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "qualification": {
+          "name": "qualification",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "major": {
+          "name": "major",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "department": {
+          "name": "department",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "employment_date": {
+          "name": "employment_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "manager_id": {
+          "name": "manager_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "staff_manager_link_idx": {
+          "name": "staff_manager_link_idx",
+          "columns": [
+            "manager_id"
+          ],
+          "isUnique": false
+        },
+        "staff_person_link_idx": {
+          "name": "staff_person_link_idx",
+          "columns": [
+            "person_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "People_Staff_person_id_People_id_fk": {
+          "name": "People_Staff_person_id_People_id_fk",
+          "tableFrom": "People_Staff",
+          "tableTo": "People",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "staff_manager_link": {
+          "name": "staff_manager_link",
+          "tableFrom": "People_Staff",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "manager_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Staff_id": {
+          "name": "Staff_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "People_Users": {
+      "name": "People_Users",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "hashed_pw": {
+          "name": "hashed_pw",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "role": {
+          "name": "role",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "staff_id": {
+          "name": "staff_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "public_key": {
+          "name": "public_key",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "active": {
+          "name": "active",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "last_login": {
+          "name": "last_login",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "person_link_idx": {
+          "name": "person_link_idx",
+          "columns": [
+            "person_id"
+          ],
+          "isUnique": false
+        },
+        "public_key_link_idx": {
+          "name": "public_key_link_idx",
+          "columns": [
+            "public_key"
+          ],
+          "isUnique": false
+        },
+        "user_staff_id_link_idx": {
+          "name": "user_staff_id_link_idx",
+          "columns": [
+            "staff_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "People_Users_person_id_People_id_fk": {
+          "name": "People_Users_person_id_People_id_fk",
+          "tableFrom": "People_Users",
+          "tableTo": "People",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "People_Users_staff_id_People_Staff_id_fk": {
+          "name": "People_Users_staff_id_People_Staff_id_fk",
+          "tableFrom": "People_Users",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "staff_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "People_Users_public_key_S_pb_key_id_fk": {
+          "name": "People_Users_public_key_S_pb_key_id_fk",
+          "tableFrom": "People_Users",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "public_key"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Users_id": {
+          "name": "Users_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "username_UNIQUE": {
+          "name": "username_UNIQUE",
+          "columns": [
+            "username"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "People_contact_information": {
+      "name": "People_contact_information",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "contact_string": {
+          "name": "contact_string",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "contact_type": {
+          "name": "contact_type",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "is_verified": {
+          "name": "is_verified",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "contact_person_link_idx": {
+          "name": "contact_person_link_idx",
+          "columns": [
+            "person_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "People_contact_information_person_id_People_id_fk": {
+          "name": "People_contact_information_person_id_People_id_fk",
+          "tableFrom": "People_contact_information",
+          "tableTo": "People",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "contact_information_id": {
+          "name": "contact_information_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "contact_string_UNIQUE": {
+          "name": "contact_string_UNIQUE",
+          "columns": [
+            "contact_string"
+          ]
+        },
+        "id_contact_information_UNIQUE": {
+          "name": "id_contact_information_UNIQUE",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "People_identifying_documents": {
+      "name": "People_identifying_documents",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "document_number": {
+          "name": "document_number",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "document_type": {
+          "name": "document_type",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "document_person_link_idx": {
+          "name": "document_person_link_idx",
+          "columns": [
+            "person_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "People_identifying_documents_person_id_People_id_fk": {
+          "name": "People_identifying_documents_person_id_People_id_fk",
+          "tableFrom": "People_identifying_documents",
+          "tableTo": "People",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "identifying_documents_id": {
+          "name": "identifying_documents_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "People_relationships": {
+      "name": "People_relationships",
+      "columns": {
+        "person_id": {
+          "name": "person_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "related_to_id": {
+          "name": "related_to_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "relationship": {
+          "name": "relationship",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "people_relations_link_idx": {
+          "name": "people_relations_link_idx",
+          "columns": [
+            "person_id",
+            "related_to_id"
+          ],
+          "isUnique": false
+        },
+        "person_relations_reference_idx": {
+          "name": "person_relations_reference_idx",
+          "columns": [
+            "person_id"
+          ],
+          "isUnique": false
+        },
+        "person_relative_reference_idx": {
+          "name": "person_relative_reference_idx",
+          "columns": [
+            "related_to_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "People_relationships_person_id_People_id_fk": {
+          "name": "People_relationships_person_id_People_id_fk",
+          "tableFrom": "People_relationships",
+          "tableTo": "People",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "People_relationships_related_to_id_People_id_fk": {
+          "name": "People_relationships_related_to_id_People_id_fk",
+          "tableFrom": "People_relationships",
+          "tableTo": "People",
+          "columnsFrom": [
+            "related_to_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Ph_InEco": {
+      "name": "Ph_InEco",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "brand_name_id": {
+          "name": "brand_name_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "unit_price": {
+          "name": "unit_price",
+          "type": "decimal(10,5)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expiry_date": {
+          "name": "expiry_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "batch_number": {
+          "name": "batch_number",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "drug_id_link_idx": {
+          "name": "drug_id_link_idx",
+          "columns": [
+            "brand_name_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Ph_InEco_brand_name_id_D_BrandNames_id_fk": {
+          "name": "Ph_InEco_brand_name_id_D_BrandNames_id_fk",
+          "tableFrom": "Ph_InEco",
+          "tableTo": "D_BrandNames",
+          "columnsFrom": [
+            "brand_name_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "PhInEco_id": {
+          "name": "PhInEco_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Ph_InEco_Transactions": {
+      "name": "Ph_InEco_Transactions",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "pharm_id": {
+          "name": "pharm_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "pharm_signature": {
+          "name": "pharm_signature",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "pharm_sign_key": {
+          "name": "pharm_sign_key",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "med_plan_id": {
+          "name": "med_plan_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dispensing_nurse_id": {
+          "name": "dispensing_nurse_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "dispensing_pharm_id_link_idx": {
+          "name": "dispensing_pharm_id_link_idx",
+          "columns": [
+            "pharm_id"
+          ],
+          "isUnique": false
+        },
+        "item_id_link_idx": {
+          "name": "item_id_link_idx",
+          "columns": [
+            "item_id"
+          ],
+          "isUnique": false
+        },
+        "med_plan_link_idx": {
+          "name": "med_plan_link_idx",
+          "columns": [
+            "med_plan_id"
+          ],
+          "isUnique": false
+        },
+        "nurse_id_link_idx": {
+          "name": "nurse_id_link_idx",
+          "columns": [
+            "dispensing_nurse_id"
+          ],
+          "isUnique": false
+        },
+        "sign_key_link_idx": {
+          "name": "sign_key_link_idx",
+          "columns": [
+            "pharm_sign_key"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Ph_InEco_Transactions_item_id_Ph_InEco_id_fk": {
+          "name": "Ph_InEco_Transactions_item_id_Ph_InEco_id_fk",
+          "tableFrom": "Ph_InEco_Transactions",
+          "tableTo": "Ph_InEco",
+          "columnsFrom": [
+            "item_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Ph_InEco_Transactions_pharm_id_People_Staff_id_fk": {
+          "name": "Ph_InEco_Transactions_pharm_id_People_Staff_id_fk",
+          "tableFrom": "Ph_InEco_Transactions",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "pharm_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Ph_InEco_Transactions_pharm_sign_key_S_pb_key_id_fk": {
+          "name": "Ph_InEco_Transactions_pharm_sign_key_S_pb_key_id_fk",
+          "tableFrom": "Ph_InEco_Transactions",
+          "tableTo": "S_pb_key",
+          "columnsFrom": [
+            "pharm_sign_key"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Ph_InEco_Transactions_med_plan_id_MedPlan_id_fk": {
+          "name": "Ph_InEco_Transactions_med_plan_id_MedPlan_id_fk",
+          "tableFrom": "Ph_InEco_Transactions",
+          "tableTo": "MedPlan",
+          "columnsFrom": [
+            "med_plan_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Ph_InEco_Transactions_dispensing_nurse_id_People_Staff_id_fk": {
+          "name": "Ph_InEco_Transactions_dispensing_nurse_id_People_Staff_id_fk",
+          "tableFrom": "Ph_InEco_Transactions",
+          "tableTo": "People_Staff",
+          "columnsFrom": [
+            "dispensing_nurse_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "PhInEco_Transactions_id": {
+          "name": "PhInEco_Transactions_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "S_pb_key": {
+      "name": "S_pb_key",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "key": {
+          "name": "key",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "since": {
+          "name": "since",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "pb_key_id": {
+          "name": "pb_key_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "S_pv_keys": {
+      "name": "S_pv_keys",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "key": {
+          "name": "key",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "since": {
+          "name": "since",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "pv_keys_id": {
+          "name": "pv_keys_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Wards": {
+      "name": "Wards",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "floor": {
+          "name": "floor",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "Wards_id": {
+          "name": "Wards_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    }
+  },
+  "views": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {},
+    "indexes": {}
+  }
+}

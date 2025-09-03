@@ -1,4 +1,11 @@
-import { mysqlTable, int, text, datetime } from 'drizzle-orm/mysql-core';
+import {
+  mysqlTable,
+  int,
+  text,
+  datetime,
+  timestamp,
+  tinyint,
+} from 'drizzle-orm/mysql-core';
 import { drizzle } from 'drizzle-orm/mysql2';
 import { seed } from 'drizzle-seed';
 import { createConnection } from 'mysql2';
@@ -25,6 +32,9 @@ const users = mysqlTable('People_Users', {
   public_key: int()
     .notNull()
     .references(() => pubKeys.id),
+  created_at: timestamp().notNull().defaultNow(),
+  active: tinyint().notNull().default(0),
+  last_login: timestamp(),
 });
 
 async function seeder() {

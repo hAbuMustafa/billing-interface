@@ -1,6 +1,5 @@
 import {
   mysqlTable,
-  mysqlSchema,
   type AnyMySqlColumn,
   index,
   foreignKey,
@@ -14,14 +13,13 @@ import {
   text,
   unique,
   datetime,
-  type MySqlTableWithColumns,
+  timestamp,
 } from 'drizzle-orm/mysql-core';
-import { sql } from 'drizzle-orm';
 
 export const S_pb_key = mysqlTable(
   'S_pb_key',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     key: varchar({ length: 256 }).notNull(),
     since: datetime({ mode: 'string' }).notNull(),
   },
@@ -31,7 +29,7 @@ export const S_pb_key = mysqlTable(
 export const S_pv_keys = mysqlTable(
   'S_pv_keys',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     key: varchar({ length: 256 }).notNull(),
     since: datetime({ mode: 'string' }).notNull(),
   },
@@ -67,7 +65,7 @@ export const D_AC_use = mysqlTable(
 export const D_AC = mysqlTable(
   'D_AC',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     name: varchar({ length: 100 }).notNull(),
     name_ar: varchar({ length: 100 }).notNull(),
     alias: varchar({ length: 45 }),
@@ -78,7 +76,7 @@ export const D_AC = mysqlTable(
 export const D_BrandNames = mysqlTable(
   'D_BrandNames',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     formulary_id: int()
       .notNull()
       .references(() => D_Formulary.id),
@@ -97,7 +95,7 @@ export const D_BrandNames = mysqlTable(
 export const D_Formulary = mysqlTable(
   'D_Formulary',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     name: varchar({ length: 100 }).notNull(),
     volume_in_ml: decimal({ precision: 5, scale: 2 }),
   },
@@ -123,7 +121,7 @@ export const D_formulary_roa = mysqlTable(
 export const D_Formulations = mysqlTable(
   'D_Formulations',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     formulary_id: int()
       .notNull()
       .references(() => D_Formulary.id),
@@ -151,7 +149,7 @@ export const D_Formulations = mysqlTable(
 export const D_ROA = mysqlTable(
   'D_ROA',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     name: varchar({ length: 15 }).notNull(),
   },
   (table) => [primaryKey({ columns: [table.id], name: 'ROA_id' })]
@@ -169,7 +167,7 @@ export const D_Use = mysqlTable(
 export const Diagnoses = mysqlTable(
   'Diagnoses',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     patient_id: int()
       .notNull()
       .references(() => Patients.id),
@@ -217,7 +215,7 @@ export const Patient_admissions = mysqlTable(
 export const Patient_Exit_Orders = mysqlTable(
   'Patient_Exit_Orders',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     patient_id: int()
       .notNull()
       .references(() => Patients.id),
@@ -242,7 +240,7 @@ export const Patient_Exit_Orders = mysqlTable(
 export const Patient_exit_reasons = mysqlTable(
   'Patient_exit_reasons',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     reason: varchar({ length: 15 }).notNull(),
   },
   (table) => [primaryKey({ columns: [table.id], name: 'Patient_exit_reasons_id' })]
@@ -251,7 +249,7 @@ export const Patient_exit_reasons = mysqlTable(
 export const Patient_Exit = mysqlTable(
   'Patient_Exit',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     patient_id: int()
       .notNull()
       .references(() => Patients.id),
@@ -332,7 +330,7 @@ export const Patient_trans_orders = mysqlTable(
 export const Patient_trans = mysqlTable(
   'Patient_trans',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     patient_id: int()
       .notNull()
       .references(() => Patients.id),
@@ -411,7 +409,7 @@ export const People_identifying_documents = mysqlTable(
 export const People = mysqlTable(
   'People',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     first_name: varchar({ length: 45 }).notNull(),
     father_name: varchar({ length: 45 }).notNull(),
     grandfather_name: varchar({ length: 45 }).notNull(),
@@ -447,7 +445,7 @@ export const People_relationships = mysqlTable(
 export const People_Staff = mysqlTable(
   'People_Staff',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     job: varchar({ length: 45 }).notNull(),
     qualification: varchar({ length: 45 }).notNull(),
     major: varchar({ length: 45 }).notNull(),
@@ -473,7 +471,7 @@ export const People_Staff = mysqlTable(
 export const Ph_InEco = mysqlTable(
   'Ph_InEco',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     brand_name_id: int()
       .notNull()
       .references(() => D_BrandNames.id),
@@ -491,7 +489,7 @@ export const Ph_InEco = mysqlTable(
 export const Ph_InEco_Transactions = mysqlTable(
   'Ph_InEco_Transactions',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     timestamp: datetime({ mode: 'string' }).notNull(),
     item_id: int()
       .notNull()
@@ -523,7 +521,7 @@ export const Ph_InEco_Transactions = mysqlTable(
 export const MedPlan = mysqlTable(
   'MedPlan',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     timestamp: datetime({ mode: 'string' }).notNull(),
     patient_id: int()
       .notNull()
@@ -559,7 +557,7 @@ export const MedPlan = mysqlTable(
 export const MedPlan_notes = mysqlTable(
   'MedPlan_notes',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     timestamp: datetime({ mode: 'string' }).notNull(),
     med_plan_id: int()
       .notNull()
@@ -588,7 +586,7 @@ export const MedPlan_notes = mysqlTable(
 export const MedPlan_NoteTypes = mysqlTable(
   'MedPlan_NoteTypes',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     type: text().notNull(),
   },
   (table) => [primaryKey({ columns: [table.id], name: 'MedPlan_NoteTypes_id' })]
@@ -663,7 +661,7 @@ export const MedPlan_sign_phys = mysqlTable(
 export const People_Users = mysqlTable(
   'People_Users',
   {
-    id: int().autoincrement().notNull(),
+    id: int().notNull(),
     username: varchar({ length: 45 }).notNull(),
     hashed_pw: longtext().notNull(),
     role: int().notNull(),
@@ -674,6 +672,9 @@ export const People_Users = mysqlTable(
     public_key: int()
       .notNull()
       .references((): AnyMySqlColumn => S_pb_key.id),
+    created_at: timestamp().notNull().defaultNow(),
+    active: tinyint().notNull().default(0),
+    last_login: timestamp(),
   },
   (table) => [
     index('person_link_idx').on(table.person_id),
