@@ -34,6 +34,7 @@
 		"better-sqlite3": "^12.2.0",
 		"dayjs": "^1.11.13",
 		"drizzle-orm": "^0.44.5",
+		"drizzle-seed": "^0.3.1",
 		"extend-arabic-query": "^0.3.2",
 		"googleapis": "^153.0.0",
 		"mysql2": "^3.14.3"
