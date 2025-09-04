@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import {
   mysqlTable,
   type AnyMySqlColumn,
@@ -14,6 +15,7 @@ import {
   unique,
   datetime,
   timestamp,
+  char,
 } from 'drizzle-orm/mysql-core';
 
 export const S_pb_keys = mysqlTable(
@@ -683,4 +685,18 @@ export const People_Users = mysqlTable(
     primaryKey({ columns: [table.id], name: 'Users_id' }),
     unique('username_UNIQUE').on(table.username),
   ]
+);
+
+export const Sys_Sessions = mysqlTable(
+  'Sys_Sessions',
+  {
+    id: char({ length: 36 }).primaryKey(),
+    user_id: int()
+      .notNull()
+      .references(() => People_Users.id),
+    expires_at: timestamp()
+      .notNull()
+      .default(sql`(CURRENT_TIMESTAMP + INTERVAL 2 HOUR)`),
+  },
+  (table) => [index('sessions_user_link').on(table.user_id)]
 );
