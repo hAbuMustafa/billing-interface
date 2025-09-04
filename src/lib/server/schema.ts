@@ -16,8 +16,8 @@ import {
   timestamp,
 } from 'drizzle-orm/mysql-core';
 
-export const S_pb_key = mysqlTable(
-  'S_pb_key',
+export const S_pb_keys = mysqlTable(
+  'S_pb_keys',
   {
     id: int().notNull(),
     key: varchar({ length: 256 }).notNull(),
@@ -54,7 +54,7 @@ export const D_AC_use = mysqlTable(
       .references(() => D_AC.id),
     use_id: int()
       .notNull()
-      .references(() => D_Use.id),
+      .references(() => D_Uses.id),
   },
   (table) => [
     index('ingredient_link_idx').on(table.ac_id),
@@ -155,8 +155,8 @@ export const D_ROA = mysqlTable(
   (table) => [primaryKey({ columns: [table.id], name: 'ROA_id' })]
 );
 
-export const D_Use = mysqlTable(
-  'D_Use',
+export const D_Uses = mysqlTable(
+  'D_Uses',
   {
     id: int().notNull(),
     use: varchar({ length: 45 }).notNull(),
@@ -201,7 +201,7 @@ export const Patient_admissions = mysqlTable(
     admitting_phys_signature: varchar({ length: 256 }).notNull(),
     admitting_phys_sign_key_id: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
     registrar: int().references(() => People_Staff.id),
   },
   (table) => [
@@ -226,7 +226,7 @@ export const Patient_Exit_Orders = mysqlTable(
     phys_signature: varchar({ length: 256 }).notNull(),
     phys_sign_key: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
     timestamp: datetime({ mode: 'string' }).notNull(),
   },
   (table) => [
@@ -265,7 +265,7 @@ export const Patient_Exit = mysqlTable(
     registrar_signature: varchar({ length: 256 }).notNull(),
     registrar_sign_key: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
   },
   (table) => [
     index('patient_exit_exit_order_id_link_idx').on(table.exit_order_id),
@@ -315,7 +315,7 @@ export const Patient_trans_orders = mysqlTable(
     phys_signature: varchar({ length: 256 }).notNull(),
     phys_sign_key_id: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
     timestamp: datetime({ mode: 'string' }).notNull(),
   },
   (table) => [
@@ -341,7 +341,7 @@ export const Patient_trans = mysqlTable(
     nurse_signature: varchar({ length: 256 }).notNull(),
     nurse_sign_key_id: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
     timestamp: datetime({ mode: 'string' }).notNull(),
   },
   (table) => [
@@ -501,7 +501,7 @@ export const Ph_InEco_Transactions = mysqlTable(
     pharm_signature: varchar({ length: 256 }).notNull(),
     pharm_sign_key: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
     med_plan_id: int().references(() => MedPlan.id),
     dispensing_nurse_id: int().references(() => People_Staff.id),
   },
@@ -537,7 +537,7 @@ export const MedPlan = mysqlTable(
     discontinued_at: datetime({ mode: 'string' }),
     discontinue_phys_id: int().references(() => People_Staff.id),
     discontinue_phys_signature: varchar({ length: 256 }),
-    discontinue_phys_sign_key_id: int().references(() => S_pb_key.id),
+    discontinue_phys_sign_key_id: int().references(() => S_pb_keys.id),
   },
   (table) => [
     index('dc_phy_sign_key_id_link_idx').on(table.discontinue_phys_sign_key_id),
@@ -572,7 +572,7 @@ export const MedPlan_notes = mysqlTable(
     author_signature: varchar({ length: 256 }).notNull(),
     author_sign_key_id: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
   },
   (table) => [
     index('author_link_idx').on(table.author_id),
@@ -604,7 +604,7 @@ export const MedPlan_sign_nurse = mysqlTable(
     nurse_signature: varchar({ length: 256 }).notNull(),
     nurse_sign_key_id: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
     signature_time: datetime({ mode: 'string' }).notNull(),
   },
   (table) => [
@@ -626,7 +626,7 @@ export const MedPlan_sign_pharm = mysqlTable(
     pharm_signature: varchar({ length: 256 }).notNull(),
     pharm_signature_key_id: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
     signature_time: datetime({ mode: 'string' }).notNull(),
   },
   (table) => [
@@ -648,7 +648,7 @@ export const MedPlan_sign_phys = mysqlTable(
     phys_signature: varchar({ length: 256 }).notNull(),
     phys_signature_key_id: int()
       .notNull()
-      .references(() => S_pb_key.id),
+      .references(() => S_pb_keys.id),
     signature_time: datetime({ mode: 'string' }).notNull(),
   },
   (table) => [
@@ -671,7 +671,7 @@ export const People_Users = mysqlTable(
     staff_id: int().references(() => People_Staff.id),
     public_key: int()
       .notNull()
-      .references((): AnyMySqlColumn => S_pb_key.id),
+      .references((): AnyMySqlColumn => S_pb_keys.id),
     created_at: timestamp().notNull().defaultNow(),
     active: tinyint().notNull().default(0),
     last_login: timestamp(),
