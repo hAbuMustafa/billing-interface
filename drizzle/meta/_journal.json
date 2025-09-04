@@ -8,6 +8,13 @@
       "when": 1756965137619,
       "tag": "0000_nervous_magdalene",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1756990695963,
+      "tag": "0001_majestic_romulus",
+      "breakpoints": true
     }
   ]
 }

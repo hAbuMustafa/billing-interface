@@ -6,6 +6,8 @@ import {
   foreignKey,
   primaryKey,
   int,
+  bigint,
+  serial,
   decimal,
   varchar,
   longtext,
@@ -21,7 +23,7 @@ import {
 export const S_pb_keys = mysqlTable(
   'S_pb_keys',
   {
-    id: int().notNull(),
+    id: serial(),
     key: varchar({ length: 256 }).notNull(),
     since: datetime({ mode: 'string' }).notNull(),
   },
@@ -31,7 +33,7 @@ export const S_pb_keys = mysqlTable(
 export const S_pv_keys = mysqlTable(
   'S_pv_keys',
   {
-    id: int().notNull(),
+    id: serial(),
     key: varchar({ length: 256 }).notNull(),
     since: datetime({ mode: 'string' }).notNull(),
   },
@@ -51,12 +53,8 @@ export const Wards = mysqlTable(
 export const D_AC_use = mysqlTable(
   'D_AC_use',
   {
-    ac_id: int()
-      .notNull()
-      .references(() => D_AC.id),
-    use_id: int()
-      .notNull()
-      .references(() => D_Uses.id),
+    ac_id: bigint({ mode: 'bigint', unsigned: true }).references(() => D_AC.id),
+    use_id: bigint({ mode: 'bigint', unsigned: true }).references(() => D_Uses.id),
   },
   (table) => [
     index('ingredient_link_idx').on(table.ac_id),
@@ -67,7 +65,7 @@ export const D_AC_use = mysqlTable(
 export const D_AC = mysqlTable(
   'D_AC',
   {
-    id: int().notNull(),
+    id: serial(),
     name: varchar({ length: 100 }).notNull(),
     name_ar: varchar({ length: 100 }).notNull(),
     alias: varchar({ length: 45 }),
@@ -78,10 +76,10 @@ export const D_AC = mysqlTable(
 export const D_BrandNames = mysqlTable(
   'D_BrandNames',
   {
-    id: int().notNull(),
-    formulary_id: int()
-      .notNull()
-      .references(() => D_Formulary.id),
+    id: serial(),
+    formulary_id: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => D_Formulary.id
+    ),
     name: varchar({ length: 45 }).notNull(),
     name_ar: varchar({ length: 45 }),
     size: decimal().notNull(),
@@ -97,7 +95,7 @@ export const D_BrandNames = mysqlTable(
 export const D_Formulary = mysqlTable(
   'D_Formulary',
   {
-    id: int().notNull(),
+    id: serial(),
     name: varchar({ length: 100 }).notNull(),
     volume_in_ml: decimal({ precision: 5, scale: 2 }),
   },
@@ -107,9 +105,9 @@ export const D_Formulary = mysqlTable(
 export const D_formulary_roa = mysqlTable(
   'D_formulary_roa',
   {
-    formulary_id: int()
-      .notNull()
-      .references(() => D_Formulary.id),
+    formulary_id: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => D_Formulary.id
+    ),
     roa: int()
       .notNull()
       .references(() => D_ROA.id),
@@ -123,17 +121,15 @@ export const D_formulary_roa = mysqlTable(
 export const D_Formulations = mysqlTable(
   'D_Formulations',
   {
-    id: int().notNull(),
-    formulary_id: int()
-      .notNull()
-      .references(() => D_Formulary.id),
-    ac_id: int()
-      .notNull()
-      .references(() => D_AC.id),
+    id: serial(),
+    formulary_id: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => D_Formulary.id
+    ),
+    ac_id: bigint({ mode: 'bigint', unsigned: true }).references(() => D_AC.id),
     amount: decimal({ precision: 10, scale: 5 }).notNull(),
     amount_unit: varchar({ length: 5 }).notNull(),
     role: varchar({ length: 45 }).notNull(),
-    role_target: int(),
+    role_target: bigint({ mode: 'bigint', unsigned: true }),
   },
   (table) => [
     index('ac_link_idx').on(table.ac_id),
@@ -160,7 +156,7 @@ export const D_ROA = mysqlTable(
 export const D_Uses = mysqlTable(
   'D_Uses',
   {
-    id: int().notNull(),
+    id: serial(),
     use: varchar({ length: 45 }).notNull(),
   },
   (table) => [primaryKey({ columns: [table.id], name: 'Use_id' })]
@@ -169,14 +165,12 @@ export const D_Uses = mysqlTable(
 export const Diagnoses = mysqlTable(
   'Diagnoses',
   {
-    id: int().notNull(),
-    patient_id: int()
-      .notNull()
-      .references(() => Patients.id),
+    id: serial(),
+    patient_id: bigint({ mode: 'bigint', unsigned: true }).references(() => Patients.id),
     diagnosis_time: datetime({ mode: 'string' }).notNull(),
     diagnosis: varchar({ length: 45 }).notNull(),
     diagnosis_icd11: varchar({ length: 45 }),
-    diagnosing_phys: int()
+    diagnosing_phys: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Staff.id),
     type: varchar({ length: 45 }),
@@ -192,19 +186,19 @@ export const Patient_admissions = mysqlTable(
   'Patient_admissions',
   {
     timestamp: datetime({ mode: 'string' }).notNull(),
-    patient_id: int()
-      .notNull()
-      .references(() => Patients.id),
+    patient_id: bigint({ mode: 'bigint', unsigned: true }).references(() => Patients.id),
     admission_notes: longtext(),
     admitted_from: varchar({ length: 45 }).notNull(),
-    admitting_phys: int()
+    admitting_phys: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Staff.id),
     admitting_phys_signature: varchar({ length: 256 }).notNull(),
-    admitting_phys_sign_key_id: int()
-      .notNull()
-      .references(() => S_pb_keys.id),
-    registrar: int().references(() => People_Staff.id),
+    admitting_phys_sign_key_id: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => S_pb_keys.id
+    ),
+    registrar: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => People_Staff.id
+    ),
   },
   (table) => [
     index('admission_patient_id_link_idx').on(table.patient_id),
@@ -217,18 +211,14 @@ export const Patient_admissions = mysqlTable(
 export const Patient_Exit_Orders = mysqlTable(
   'Patient_Exit_Orders',
   {
-    id: int().notNull(),
-    patient_id: int()
-      .notNull()
-      .references(() => Patients.id),
+    id: serial(),
+    patient_id: bigint({ mode: 'bigint', unsigned: true }).references(() => Patients.id),
     notes: longtext(),
-    phys_id: int()
-      .notNull()
-      .references(() => People_Staff.id),
+    phys_id: bigint({ mode: 'bigint', unsigned: true }).references(() => People_Staff.id),
     phys_signature: varchar({ length: 256 }).notNull(),
-    phys_sign_key: int()
-      .notNull()
-      .references(() => S_pb_keys.id),
+    phys_sign_key: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => S_pb_keys.id
+    ),
     timestamp: datetime({ mode: 'string' }).notNull(),
   },
   (table) => [
@@ -251,21 +241,23 @@ export const Patient_exit_reasons = mysqlTable(
 export const Patient_Exit = mysqlTable(
   'Patient_Exit',
   {
-    id: int().notNull(),
-    patient_id: int()
+    id: serial(),
+    patient_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => Patients.id),
-    exit_order_id: int().references(() => Patient_Exit_Orders.id),
+    exit_order_id: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => Patient_Exit_Orders.id
+    ),
     timestamp: datetime({ mode: 'string' }).notNull(),
     exit_reason: int()
       .notNull()
       .references(() => Patient_exit_reasons.id),
     notes: longtext(),
-    registrar: int()
+    registrar: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Staff.id),
     registrar_signature: varchar({ length: 256 }).notNull(),
-    registrar_sign_key: int()
+    registrar_sign_key: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => S_pb_keys.id),
   },
@@ -282,7 +274,7 @@ export const Patient_Exit = mysqlTable(
 export const Patient_Insurance = mysqlTable(
   'Patient_Insurance',
   {
-    patient_id: int()
+    patient_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => Patients.id),
     insurance_number: varchar({ length: 45 }).notNull(),
@@ -303,19 +295,19 @@ export const Patient_Insurance = mysqlTable(
 export const Patient_trans_orders = mysqlTable(
   'Patient_trans_orders',
   {
-    id: int().notNull(),
-    patient_id: int()
+    id: serial(),
+    patient_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => Patients.id),
     ward: int()
       .notNull()
       .references(() => Wards.id),
     notes: longtext(),
-    phys_id: int()
+    phys_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Staff.id),
     phys_signature: varchar({ length: 256 }).notNull(),
-    phys_sign_key_id: int()
+    phys_sign_key_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => S_pb_keys.id),
     timestamp: datetime({ mode: 'string' }).notNull(),
@@ -332,16 +324,16 @@ export const Patient_trans_orders = mysqlTable(
 export const Patient_trans = mysqlTable(
   'Patient_trans',
   {
-    id: int().notNull(),
-    patient_id: int()
+    id: serial(),
+    patient_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => Patients.id),
     notes: longtext(),
-    nurse_id: int()
+    nurse_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
     nurse_signature: varchar({ length: 256 }).notNull(),
-    nurse_sign_key_id: int()
+    nurse_sign_key_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => S_pb_keys.id),
     timestamp: datetime({ mode: 'string' }).notNull(),
@@ -357,8 +349,8 @@ export const Patient_trans = mysqlTable(
 export const Patients = mysqlTable(
   'Patients',
   {
-    id: int().notNull(),
-    person_id: int()
+    id: serial(),
+    person_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
     meal_type: varchar({ length: 45 }).notNull(),
@@ -376,10 +368,10 @@ export const Patients = mysqlTable(
 export const People_contact_information = mysqlTable(
   'People_contact_information',
   {
-    id: int().notNull(),
+    id: serial(),
     contact_string: varchar({ length: 100 }).notNull(),
     contact_type: varchar({ length: 45 }).notNull(),
-    person_id: int()
+    person_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
     is_verified: tinyint().notNull(),
@@ -395,10 +387,10 @@ export const People_contact_information = mysqlTable(
 export const People_identifying_documents = mysqlTable(
   'People_identifying_documents',
   {
-    id: int().notNull(),
+    id: serial(),
     document_number: varchar({ length: 45 }).notNull(),
     document_type: varchar({ length: 20 }).notNull(),
-    person_id: int()
+    person_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
   },
@@ -411,7 +403,7 @@ export const People_identifying_documents = mysqlTable(
 export const People = mysqlTable(
   'People',
   {
-    id: int().notNull(),
+    id: serial(),
     first_name: varchar({ length: 45 }).notNull(),
     father_name: varchar({ length: 45 }).notNull(),
     grandfather_name: varchar({ length: 45 }).notNull(),
@@ -429,10 +421,10 @@ export const People = mysqlTable(
 export const People_relationships = mysqlTable(
   'People_relationships',
   {
-    person_id: int()
+    person_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
-    related_to_id: int()
+    related_to_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
     relationship: varchar({ length: 45 }).notNull(),
@@ -447,14 +439,14 @@ export const People_relationships = mysqlTable(
 export const People_Staff = mysqlTable(
   'People_Staff',
   {
-    id: int().notNull(),
+    id: serial(),
     job: varchar({ length: 45 }).notNull(),
     qualification: varchar({ length: 45 }).notNull(),
     major: varchar({ length: 45 }).notNull(),
     department: varchar({ length: 45 }).notNull(),
     employment_date: date({ mode: 'date' }).notNull(),
-    manager_id: int().notNull(),
-    person_id: int()
+    manager_id: bigint({ mode: 'bigint', unsigned: true }).notNull(),
+    person_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
   },
@@ -473,8 +465,8 @@ export const People_Staff = mysqlTable(
 export const Ph_InEco = mysqlTable(
   'Ph_InEco',
   {
-    id: int().notNull(),
-    brand_name_id: int()
+    id: serial(),
+    brand_name_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => D_BrandNames.id),
     amount: int().notNull(),
@@ -491,21 +483,23 @@ export const Ph_InEco = mysqlTable(
 export const Ph_InEco_Transactions = mysqlTable(
   'Ph_InEco_Transactions',
   {
-    id: int().notNull(),
+    id: serial(),
     timestamp: datetime({ mode: 'string' }).notNull(),
-    item_id: int()
+    item_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => Ph_InEco.id),
     amount: int().notNull(),
-    pharm_id: int()
+    pharm_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Staff.id),
     pharm_signature: varchar({ length: 256 }).notNull(),
-    pharm_sign_key: int()
+    pharm_sign_key: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => S_pb_keys.id),
-    med_plan_id: int().references(() => MedPlan.id),
-    dispensing_nurse_id: int().references(() => People_Staff.id),
+    med_plan_id: bigint({ mode: 'bigint', unsigned: true }).references(() => MedPlan.id),
+    dispensing_nurse_id: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => People_Staff.id
+    ),
   },
   (table) => [
     index('dispensing_pharm_id_link_idx').on(table.pharm_id),
@@ -523,23 +517,27 @@ export const Ph_InEco_Transactions = mysqlTable(
 export const MedPlan = mysqlTable(
   'MedPlan',
   {
-    id: int().notNull(),
+    id: serial(),
     timestamp: datetime({ mode: 'string' }).notNull(),
-    patient_id: int()
+    patient_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => Patients.id),
-    medication_id: int()
+    medication_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => D_Formulary.id),
     amount: decimal({ precision: 10, scale: 2 }).notNull(),
     amount_unit: varchar({ length: 15 }).notNull(),
     frequency: decimal({ precision: 10, scale: 2 }).notNull(),
     duration_days: decimal({ precision: 10, scale: 2 }).notNull(),
-    mixed_with: int(),
+    mixed_with: bigint({ mode: 'bigint', unsigned: true }),
     discontinued_at: datetime({ mode: 'string' }),
-    discontinue_phys_id: int().references(() => People_Staff.id),
+    discontinue_phys_id: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => People_Staff.id
+    ),
     discontinue_phys_signature: varchar({ length: 256 }),
-    discontinue_phys_sign_key_id: int().references(() => S_pb_keys.id),
+    discontinue_phys_sign_key_id: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => S_pb_keys.id
+    ),
   },
   (table) => [
     index('dc_phy_sign_key_id_link_idx').on(table.discontinue_phys_sign_key_id),
@@ -559,20 +557,20 @@ export const MedPlan = mysqlTable(
 export const MedPlan_notes = mysqlTable(
   'MedPlan_notes',
   {
-    id: int().notNull(),
+    id: serial(),
     timestamp: datetime({ mode: 'string' }).notNull(),
-    med_plan_id: int()
+    med_plan_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => MedPlan.id),
     note: longtext().notNull(),
     note_type: int()
       .notNull()
       .references(() => MedPlan_NoteTypes.id),
-    author_id: int()
+    author_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Staff.id),
     author_signature: varchar({ length: 256 }).notNull(),
-    author_sign_key_id: int()
+    author_sign_key_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => S_pb_keys.id),
   },
@@ -597,14 +595,14 @@ export const MedPlan_NoteTypes = mysqlTable(
 export const MedPlan_sign_nurse = mysqlTable(
   'MedPlan_sign_nurse',
   {
-    med_plan_id: int()
+    med_plan_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => MedPlan.id),
-    nurse_id: int()
+    nurse_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Staff.id),
     nurse_signature: varchar({ length: 256 }).notNull(),
-    nurse_sign_key_id: int()
+    nurse_sign_key_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => S_pb_keys.id),
     signature_time: datetime({ mode: 'string' }).notNull(),
@@ -619,14 +617,14 @@ export const MedPlan_sign_nurse = mysqlTable(
 export const MedPlan_sign_pharm = mysqlTable(
   'MedPlan_sign_pharm',
   {
-    med_plan_id: int()
+    med_plan_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => MedPlan.id),
-    pharm_id: int()
+    pharm_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Staff.id),
     pharm_signature: varchar({ length: 256 }).notNull(),
-    pharm_signature_key_id: int()
+    pharm_signature_key_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => S_pb_keys.id),
     signature_time: datetime({ mode: 'string' }).notNull(),
@@ -641,14 +639,14 @@ export const MedPlan_sign_pharm = mysqlTable(
 export const MedPlan_sign_phys = mysqlTable(
   'MedPlan_sign_phys',
   {
-    med_plan_id: int()
+    med_plan_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => MedPlan.id),
-    phys_id: int()
+    phys_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Staff.id),
     phys_signature: varchar({ length: 256 }).notNull(),
-    phys_signature_key_id: int()
+    phys_signature_key_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => S_pb_keys.id),
     signature_time: datetime({ mode: 'string' }).notNull(),
@@ -663,17 +661,19 @@ export const MedPlan_sign_phys = mysqlTable(
 export const People_Users = mysqlTable(
   'People_Users',
   {
-    id: int().notNull(),
+    id: serial(),
     username: varchar({ length: 45 }).notNull(),
     hashed_pw: longtext().notNull(),
     role: int().notNull(),
-    person_id: int()
+    person_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
-    staff_id: int().references(() => People_Staff.id),
-    public_key: int()
+    staff_id: bigint({ mode: 'bigint', unsigned: true }).references(
+      () => People_Staff.id
+    ),
+    public_key: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
-      .references((): AnyMySqlColumn => S_pb_keys.id),
+      .references(() => S_pb_keys.id),
     created_at: timestamp().notNull().defaultNow(),
     active: tinyint().notNull().default(0),
     last_login: timestamp(),
@@ -691,7 +691,7 @@ export const Sys_Sessions = mysqlTable(
   'Sys_Sessions',
   {
     id: char({ length: 36 }).primaryKey(),
-    user_id: int()
+    user_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People_Users.id),
     expires_at: timestamp()
