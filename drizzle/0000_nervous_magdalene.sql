@@ -1,5 +1,5 @@
 CREATE TABLE `D_AC` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`name` varchar(100) NOT NULL,
 	`name_ar` varchar(100) NOT NULL,
 	`alias` varchar(45),
@@ -12,7 +12,7 @@ CREATE TABLE `D_AC_use` (
 );
 --> statement-breakpoint
 CREATE TABLE `D_BrandNames` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`formulary_id` int NOT NULL,
 	`name` varchar(45) NOT NULL,
 	`name_ar` varchar(45),
@@ -23,14 +23,14 @@ CREATE TABLE `D_BrandNames` (
 );
 --> statement-breakpoint
 CREATE TABLE `D_Formulary` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`name` varchar(100) NOT NULL,
 	`volume_in_ml` decimal(5,2),
 	CONSTRAINT `Formulary_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `D_Formulations` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`formulary_id` int NOT NULL,
 	`ac_id` int NOT NULL,
 	`amount` decimal(10,5) NOT NULL,
@@ -41,12 +41,12 @@ CREATE TABLE `D_Formulations` (
 );
 --> statement-breakpoint
 CREATE TABLE `D_ROA` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`name` varchar(15) NOT NULL,
 	CONSTRAINT `ROA_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
-CREATE TABLE `D_Use` (
+CREATE TABLE `D_Uses` (
 	`id` int NOT NULL,
 	`use` varchar(45) NOT NULL,
 	CONSTRAINT `Use_id` PRIMARY KEY(`id`)
@@ -58,7 +58,7 @@ CREATE TABLE `D_formulary_roa` (
 );
 --> statement-breakpoint
 CREATE TABLE `Diagnoses` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`patient_id` int NOT NULL,
 	`diagnosis_time` datetime NOT NULL,
 	`diagnosis` varchar(45) NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE `Diagnoses` (
 );
 --> statement-breakpoint
 CREATE TABLE `MedPlan` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`timestamp` datetime NOT NULL,
 	`patient_id` int NOT NULL,
 	`medication_id` int NOT NULL,
@@ -86,13 +86,13 @@ CREATE TABLE `MedPlan` (
 );
 --> statement-breakpoint
 CREATE TABLE `MedPlan_NoteTypes` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`type` text NOT NULL,
 	CONSTRAINT `MedPlan_NoteTypes_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `MedPlan_notes` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`timestamp` datetime NOT NULL,
 	`med_plan_id` int NOT NULL,
 	`note` longtext NOT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE `MedPlan_sign_phys` (
 );
 --> statement-breakpoint
 CREATE TABLE `Patient_Exit` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`patient_id` int NOT NULL,
 	`exit_order_id` int,
 	`timestamp` datetime NOT NULL,
@@ -141,7 +141,7 @@ CREATE TABLE `Patient_Exit` (
 );
 --> statement-breakpoint
 CREATE TABLE `Patient_Exit_Orders` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`patient_id` int NOT NULL,
 	`notes` longtext,
 	`phys_id` int NOT NULL,
@@ -178,13 +178,13 @@ CREATE TABLE `Patient_admissions` (
 );
 --> statement-breakpoint
 CREATE TABLE `Patient_exit_reasons` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`reason` varchar(15) NOT NULL,
 	CONSTRAINT `Patient_exit_reasons_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `Patient_trans` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`patient_id` int NOT NULL,
 	`notes` longtext,
 	`nurse_id` int NOT NULL,
@@ -215,7 +215,7 @@ CREATE TABLE `Patients` (
 );
 --> statement-breakpoint
 CREATE TABLE `People` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`first_name` varchar(45) NOT NULL,
 	`father_name` varchar(45) NOT NULL,
 	`grandfather_name` varchar(45) NOT NULL,
@@ -230,7 +230,7 @@ CREATE TABLE `People` (
 );
 --> statement-breakpoint
 CREATE TABLE `People_Staff` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`job` varchar(45) NOT NULL,
 	`qualification` varchar(45) NOT NULL,
 	`major` varchar(45) NOT NULL,
@@ -242,13 +242,16 @@ CREATE TABLE `People_Staff` (
 );
 --> statement-breakpoint
 CREATE TABLE `People_Users` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`username` varchar(45) NOT NULL,
 	`hashed_pw` longtext NOT NULL,
 	`role` int NOT NULL,
 	`person_id` int NOT NULL,
 	`staff_id` int,
 	`public_key` int NOT NULL,
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`active` tinyint NOT NULL DEFAULT 0,
+	`last_login` timestamp,
 	CONSTRAINT `Users_id` PRIMARY KEY(`id`),
 	CONSTRAINT `username_UNIQUE` UNIQUE(`username`)
 );
@@ -279,7 +282,7 @@ CREATE TABLE `People_relationships` (
 );
 --> statement-breakpoint
 CREATE TABLE `Ph_InEco` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`brand_name_id` int NOT NULL,
 	`amount` int NOT NULL,
 	`unit_price` decimal(10,5) NOT NULL,
@@ -289,7 +292,7 @@ CREATE TABLE `Ph_InEco` (
 );
 --> statement-breakpoint
 CREATE TABLE `Ph_InEco_Transactions` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`timestamp` datetime NOT NULL,
 	`item_id` int NOT NULL,
 	`amount` int NOT NULL,
@@ -301,18 +304,25 @@ CREATE TABLE `Ph_InEco_Transactions` (
 	CONSTRAINT `PhInEco_Transactions_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
-CREATE TABLE `S_pb_key` (
-	`id` int AUTO_INCREMENT NOT NULL,
+CREATE TABLE `S_pb_keys` (
+	`id` int NOT NULL,
 	`key` varchar(256) NOT NULL,
 	`since` datetime NOT NULL,
 	CONSTRAINT `pb_key_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `S_pv_keys` (
-	`id` int AUTO_INCREMENT NOT NULL,
+	`id` int NOT NULL,
 	`key` varchar(256) NOT NULL,
 	`since` datetime NOT NULL,
 	CONSTRAINT `pv_keys_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `Sys_Sessions` (
+	`id` char(36) NOT NULL,
+	`user_id` int NOT NULL,
+	`expires_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP + INTERVAL 2 HOUR),
+	CONSTRAINT `Sys_Sessions_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `Wards` (
@@ -323,7 +333,7 @@ CREATE TABLE `Wards` (
 );
 --> statement-breakpoint
 ALTER TABLE `D_AC_use` ADD CONSTRAINT `D_AC_use_ac_id_D_AC_id_fk` FOREIGN KEY (`ac_id`) REFERENCES `D_AC`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `D_AC_use` ADD CONSTRAINT `D_AC_use_use_id_D_Use_id_fk` FOREIGN KEY (`use_id`) REFERENCES `D_Use`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `D_AC_use` ADD CONSTRAINT `D_AC_use_use_id_D_Uses_id_fk` FOREIGN KEY (`use_id`) REFERENCES `D_Uses`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `D_BrandNames` ADD CONSTRAINT `D_BrandNames_formulary_id_D_Formulary_id_fk` FOREIGN KEY (`formulary_id`) REFERENCES `D_Formulary`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `D_Formulations` ADD CONSTRAINT `D_Formulations_formulary_id_D_Formulary_id_fk` FOREIGN KEY (`formulary_id`) REFERENCES `D_Formulary`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `D_Formulations` ADD CONSTRAINT `D_Formulations_ac_id_D_AC_id_fk` FOREIGN KEY (`ac_id`) REFERENCES `D_AC`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
@@ -335,48 +345,48 @@ ALTER TABLE `Diagnoses` ADD CONSTRAINT `Diagnoses_diagnosing_phys_People_Staff_i
 ALTER TABLE `MedPlan` ADD CONSTRAINT `MedPlan_patient_id_Patients_id_fk` FOREIGN KEY (`patient_id`) REFERENCES `Patients`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan` ADD CONSTRAINT `MedPlan_medication_id_D_Formulary_id_fk` FOREIGN KEY (`medication_id`) REFERENCES `D_Formulary`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan` ADD CONSTRAINT `MedPlan_discontinue_phys_id_People_Staff_id_fk` FOREIGN KEY (`discontinue_phys_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `MedPlan` ADD CONSTRAINT `MedPlan_discontinue_phys_sign_key_id_S_pb_key_id_fk` FOREIGN KEY (`discontinue_phys_sign_key_id`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `MedPlan` ADD CONSTRAINT `MedPlan_discontinue_phys_sign_key_id_S_pb_keys_id_fk` FOREIGN KEY (`discontinue_phys_sign_key_id`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan` ADD CONSTRAINT `mixture_link` FOREIGN KEY (`mixed_with`) REFERENCES `MedPlan`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan_notes` ADD CONSTRAINT `MedPlan_notes_med_plan_id_MedPlan_id_fk` FOREIGN KEY (`med_plan_id`) REFERENCES `MedPlan`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan_notes` ADD CONSTRAINT `MedPlan_notes_note_type_MedPlan_NoteTypes_id_fk` FOREIGN KEY (`note_type`) REFERENCES `MedPlan_NoteTypes`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan_notes` ADD CONSTRAINT `MedPlan_notes_author_id_People_Staff_id_fk` FOREIGN KEY (`author_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `MedPlan_notes` ADD CONSTRAINT `MedPlan_notes_author_sign_key_id_S_pb_key_id_fk` FOREIGN KEY (`author_sign_key_id`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `MedPlan_notes` ADD CONSTRAINT `MedPlan_notes_author_sign_key_id_S_pb_keys_id_fk` FOREIGN KEY (`author_sign_key_id`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan_sign_nurse` ADD CONSTRAINT `MedPlan_sign_nurse_med_plan_id_MedPlan_id_fk` FOREIGN KEY (`med_plan_id`) REFERENCES `MedPlan`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan_sign_nurse` ADD CONSTRAINT `MedPlan_sign_nurse_nurse_id_People_Staff_id_fk` FOREIGN KEY (`nurse_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `MedPlan_sign_nurse` ADD CONSTRAINT `MedPlan_sign_nurse_nurse_sign_key_id_S_pb_key_id_fk` FOREIGN KEY (`nurse_sign_key_id`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `MedPlan_sign_nurse` ADD CONSTRAINT `MedPlan_sign_nurse_nurse_sign_key_id_S_pb_keys_id_fk` FOREIGN KEY (`nurse_sign_key_id`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan_sign_pharm` ADD CONSTRAINT `MedPlan_sign_pharm_med_plan_id_MedPlan_id_fk` FOREIGN KEY (`med_plan_id`) REFERENCES `MedPlan`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan_sign_pharm` ADD CONSTRAINT `MedPlan_sign_pharm_pharm_id_People_Staff_id_fk` FOREIGN KEY (`pharm_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `MedPlan_sign_pharm` ADD CONSTRAINT `MedPlan_sign_pharm_pharm_signature_key_id_S_pb_key_id_fk` FOREIGN KEY (`pharm_signature_key_id`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `MedPlan_sign_pharm` ADD CONSTRAINT `MedPlan_sign_pharm_pharm_signature_key_id_S_pb_keys_id_fk` FOREIGN KEY (`pharm_signature_key_id`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan_sign_phys` ADD CONSTRAINT `MedPlan_sign_phys_med_plan_id_MedPlan_id_fk` FOREIGN KEY (`med_plan_id`) REFERENCES `MedPlan`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `MedPlan_sign_phys` ADD CONSTRAINT `MedPlan_sign_phys_phys_id_People_Staff_id_fk` FOREIGN KEY (`phys_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `MedPlan_sign_phys` ADD CONSTRAINT `MedPlan_sign_phys_phys_signature_key_id_S_pb_key_id_fk` FOREIGN KEY (`phys_signature_key_id`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `MedPlan_sign_phys` ADD CONSTRAINT `MedPlan_sign_phys_phys_signature_key_id_S_pb_keys_id_fk` FOREIGN KEY (`phys_signature_key_id`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_Exit` ADD CONSTRAINT `Patient_Exit_patient_id_Patients_id_fk` FOREIGN KEY (`patient_id`) REFERENCES `Patients`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_Exit` ADD CONSTRAINT `Patient_Exit_exit_order_id_Patient_Exit_Orders_id_fk` FOREIGN KEY (`exit_order_id`) REFERENCES `Patient_Exit_Orders`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_Exit` ADD CONSTRAINT `Patient_Exit_exit_reason_Patient_exit_reasons_id_fk` FOREIGN KEY (`exit_reason`) REFERENCES `Patient_exit_reasons`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_Exit` ADD CONSTRAINT `Patient_Exit_registrar_People_Staff_id_fk` FOREIGN KEY (`registrar`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `Patient_Exit` ADD CONSTRAINT `Patient_Exit_registrar_sign_key_S_pb_key_id_fk` FOREIGN KEY (`registrar_sign_key`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `Patient_Exit` ADD CONSTRAINT `Patient_Exit_registrar_sign_key_S_pb_keys_id_fk` FOREIGN KEY (`registrar_sign_key`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_Exit_Orders` ADD CONSTRAINT `Patient_Exit_Orders_patient_id_Patients_id_fk` FOREIGN KEY (`patient_id`) REFERENCES `Patients`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_Exit_Orders` ADD CONSTRAINT `Patient_Exit_Orders_phys_id_People_Staff_id_fk` FOREIGN KEY (`phys_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `Patient_Exit_Orders` ADD CONSTRAINT `Patient_Exit_Orders_phys_sign_key_S_pb_key_id_fk` FOREIGN KEY (`phys_sign_key`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `Patient_Exit_Orders` ADD CONSTRAINT `Patient_Exit_Orders_phys_sign_key_S_pb_keys_id_fk` FOREIGN KEY (`phys_sign_key`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_Insurance` ADD CONSTRAINT `Patient_Insurance_patient_id_Patients_id_fk` FOREIGN KEY (`patient_id`) REFERENCES `Patients`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_admissions` ADD CONSTRAINT `Patient_admissions_patient_id_Patients_id_fk` FOREIGN KEY (`patient_id`) REFERENCES `Patients`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_admissions` ADD CONSTRAINT `Patient_admissions_admitting_phys_People_Staff_id_fk` FOREIGN KEY (`admitting_phys`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `Patient_admissions` ADD CONSTRAINT `Patient_admissions_admitting_phys_sign_key_id_S_pb_key_id_fk` FOREIGN KEY (`admitting_phys_sign_key_id`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `Patient_admissions` ADD CONSTRAINT `Patient_admissions_admitting_phys_sign_key_id_S_pb_keys_id_fk` FOREIGN KEY (`admitting_phys_sign_key_id`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_admissions` ADD CONSTRAINT `Patient_admissions_registrar_People_Staff_id_fk` FOREIGN KEY (`registrar`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_trans` ADD CONSTRAINT `Patient_trans_patient_id_Patients_id_fk` FOREIGN KEY (`patient_id`) REFERENCES `Patients`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_trans` ADD CONSTRAINT `Patient_trans_nurse_id_People_id_fk` FOREIGN KEY (`nurse_id`) REFERENCES `People`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `Patient_trans` ADD CONSTRAINT `Patient_trans_nurse_sign_key_id_S_pb_key_id_fk` FOREIGN KEY (`nurse_sign_key_id`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `Patient_trans` ADD CONSTRAINT `Patient_trans_nurse_sign_key_id_S_pb_keys_id_fk` FOREIGN KEY (`nurse_sign_key_id`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_trans_orders` ADD CONSTRAINT `Patient_trans_orders_patient_id_Patients_id_fk` FOREIGN KEY (`patient_id`) REFERENCES `Patients`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_trans_orders` ADD CONSTRAINT `Patient_trans_orders_ward_Wards_id_fk` FOREIGN KEY (`ward`) REFERENCES `Wards`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patient_trans_orders` ADD CONSTRAINT `Patient_trans_orders_phys_id_People_Staff_id_fk` FOREIGN KEY (`phys_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `Patient_trans_orders` ADD CONSTRAINT `Patient_trans_orders_phys_sign_key_id_S_pb_key_id_fk` FOREIGN KEY (`phys_sign_key_id`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `Patient_trans_orders` ADD CONSTRAINT `Patient_trans_orders_phys_sign_key_id_S_pb_keys_id_fk` FOREIGN KEY (`phys_sign_key_id`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patients` ADD CONSTRAINT `Patients_person_id_People_id_fk` FOREIGN KEY (`person_id`) REFERENCES `People`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Patients` ADD CONSTRAINT `Patients_ward_Wards_id_fk` FOREIGN KEY (`ward`) REFERENCES `Wards`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `People_Staff` ADD CONSTRAINT `People_Staff_person_id_People_id_fk` FOREIGN KEY (`person_id`) REFERENCES `People`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `People_Staff` ADD CONSTRAINT `staff_manager_link` FOREIGN KEY (`manager_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `People_Users` ADD CONSTRAINT `People_Users_person_id_People_id_fk` FOREIGN KEY (`person_id`) REFERENCES `People`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `People_Users` ADD CONSTRAINT `People_Users_staff_id_People_Staff_id_fk` FOREIGN KEY (`staff_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `People_Users` ADD CONSTRAINT `People_Users_public_key_S_pb_key_id_fk` FOREIGN KEY (`public_key`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `People_Users` ADD CONSTRAINT `People_Users_public_key_S_pb_keys_id_fk` FOREIGN KEY (`public_key`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `People_contact_information` ADD CONSTRAINT `People_contact_information_person_id_People_id_fk` FOREIGN KEY (`person_id`) REFERENCES `People`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `People_identifying_documents` ADD CONSTRAINT `People_identifying_documents_person_id_People_id_fk` FOREIGN KEY (`person_id`) REFERENCES `People`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `People_relationships` ADD CONSTRAINT `People_relationships_person_id_People_id_fk` FOREIGN KEY (`person_id`) REFERENCES `People`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
@@ -384,9 +394,10 @@ ALTER TABLE `People_relationships` ADD CONSTRAINT `People_relationships_related_
 ALTER TABLE `Ph_InEco` ADD CONSTRAINT `Ph_InEco_brand_name_id_D_BrandNames_id_fk` FOREIGN KEY (`brand_name_id`) REFERENCES `D_BrandNames`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_item_id_Ph_InEco_id_fk` FOREIGN KEY (`item_id`) REFERENCES `Ph_InEco`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_pharm_id_People_Staff_id_fk` FOREIGN KEY (`pharm_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_pharm_sign_key_S_pb_key_id_fk` FOREIGN KEY (`pharm_sign_key`) REFERENCES `S_pb_key`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_pharm_sign_key_S_pb_keys_id_fk` FOREIGN KEY (`pharm_sign_key`) REFERENCES `S_pb_keys`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_med_plan_id_MedPlan_id_fk` FOREIGN KEY (`med_plan_id`) REFERENCES `MedPlan`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `Ph_InEco_Transactions` ADD CONSTRAINT `Ph_InEco_Transactions_dispensing_nurse_id_People_Staff_id_fk` FOREIGN KEY (`dispensing_nurse_id`) REFERENCES `People_Staff`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `Sys_Sessions` ADD CONSTRAINT `Sys_Sessions_user_id_People_Users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `People_Users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX `ingredient_link_idx` ON `D_AC_use` (`ac_id`);--> statement-breakpoint
 CREATE INDEX `use_link_idx` ON `D_AC_use` (`use_id`);--> statement-breakpoint
 CREATE INDEX `brand_name_formulary_link_idx` ON `D_BrandNames` (`formulary_id`);--> statement-breakpoint
@@ -452,4 +463,5 @@ CREATE INDEX `dispensing_pharm_id_link_idx` ON `Ph_InEco_Transactions` (`pharm_i
 CREATE INDEX `item_id_link_idx` ON `Ph_InEco_Transactions` (`item_id`);--> statement-breakpoint
 CREATE INDEX `med_plan_link_idx` ON `Ph_InEco_Transactions` (`med_plan_id`);--> statement-breakpoint
 CREATE INDEX `nurse_id_link_idx` ON `Ph_InEco_Transactions` (`dispensing_nurse_id`);--> statement-breakpoint
-CREATE INDEX `sign_key_link_idx` ON `Ph_InEco_Transactions` (`pharm_sign_key`);
+CREATE INDEX `sign_key_link_idx` ON `Ph_InEco_Transactions` (`pharm_sign_key`);--> statement-breakpoint
+CREATE INDEX `sessions_user_link` ON `Sys_Sessions` (`user_id`);

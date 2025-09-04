@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1756901252639,
-      "tag": "0000_watery_frightful_four",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1756927172089,
-      "tag": "0001_productive_silver_surfer",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1756927234166,
-      "tag": "0002_breezy_shard",
+      "when": 1756965137619,
+      "tag": "0000_nervous_magdalene",
       "breakpoints": true
     }
   ]

@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4714055b-bb57-430a-9e24-2c2e880a8afa",
+  "id": "50aff213-0163-43b7-ab84-7ef2ff8fb6b8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "D_AC": {
@@ -12,7 +12,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "name": {
           "name": "name",
@@ -97,10 +97,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "D_AC_use_use_id_D_Use_id_fk": {
-          "name": "D_AC_use_use_id_D_Use_id_fk",
+        "D_AC_use_use_id_D_Uses_id_fk": {
+          "name": "D_AC_use_use_id_D_Uses_id_fk",
           "tableFrom": "D_AC_use",
-          "tableTo": "D_Use",
+          "tableTo": "D_Uses",
           "columnsFrom": [
             "use_id"
           ],
@@ -123,7 +123,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "formulary_id": {
           "name": "formulary_id",
@@ -211,7 +211,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "name": {
           "name": "name",
@@ -249,7 +249,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "formulary_id": {
           "name": "formulary_id",
@@ -377,7 +377,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "name": {
           "name": "name",
@@ -400,8 +400,8 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
-    "D_Use": {
-      "name": "D_Use",
+    "D_Uses": {
+      "name": "D_Uses",
       "columns": {
         "id": {
           "name": "id",
@@ -505,7 +505,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "patient_id": {
           "name": "patient_id",
@@ -613,7 +613,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "timestamp": {
           "name": "timestamp",
@@ -777,10 +777,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "MedPlan_discontinue_phys_sign_key_id_S_pb_key_id_fk": {
-          "name": "MedPlan_discontinue_phys_sign_key_id_S_pb_key_id_fk",
+        "MedPlan_discontinue_phys_sign_key_id_S_pb_keys_id_fk": {
+          "name": "MedPlan_discontinue_phys_sign_key_id_S_pb_keys_id_fk",
           "tableFrom": "MedPlan",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "discontinue_phys_sign_key_id"
           ],
@@ -823,7 +823,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "type": {
           "name": "type",
@@ -854,7 +854,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "timestamp": {
           "name": "timestamp",
@@ -976,10 +976,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "MedPlan_notes_author_sign_key_id_S_pb_key_id_fk": {
-          "name": "MedPlan_notes_author_sign_key_id_S_pb_key_id_fk",
+        "MedPlan_notes_author_sign_key_id_S_pb_keys_id_fk": {
+          "name": "MedPlan_notes_author_sign_key_id_S_pb_keys_id_fk",
           "tableFrom": "MedPlan_notes",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "author_sign_key_id"
           ],
@@ -1090,10 +1090,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "MedPlan_sign_nurse_nurse_sign_key_id_S_pb_key_id_fk": {
-          "name": "MedPlan_sign_nurse_nurse_sign_key_id_S_pb_key_id_fk",
+        "MedPlan_sign_nurse_nurse_sign_key_id_S_pb_keys_id_fk": {
+          "name": "MedPlan_sign_nurse_nurse_sign_key_id_S_pb_keys_id_fk",
           "tableFrom": "MedPlan_sign_nurse",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "nurse_sign_key_id"
           ],
@@ -1197,10 +1197,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "MedPlan_sign_pharm_pharm_signature_key_id_S_pb_key_id_fk": {
-          "name": "MedPlan_sign_pharm_pharm_signature_key_id_S_pb_key_id_fk",
+        "MedPlan_sign_pharm_pharm_signature_key_id_S_pb_keys_id_fk": {
+          "name": "MedPlan_sign_pharm_pharm_signature_key_id_S_pb_keys_id_fk",
           "tableFrom": "MedPlan_sign_pharm",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "pharm_signature_key_id"
           ],
@@ -1304,10 +1304,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "MedPlan_sign_phys_phys_signature_key_id_S_pb_key_id_fk": {
-          "name": "MedPlan_sign_phys_phys_signature_key_id_S_pb_key_id_fk",
+        "MedPlan_sign_phys_phys_signature_key_id_S_pb_keys_id_fk": {
+          "name": "MedPlan_sign_phys_phys_signature_key_id_S_pb_keys_id_fk",
           "tableFrom": "MedPlan_sign_phys",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "phys_signature_key_id"
           ],
@@ -1330,7 +1330,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "patient_id": {
           "name": "patient_id",
@@ -1479,10 +1479,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "Patient_Exit_registrar_sign_key_S_pb_key_id_fk": {
-          "name": "Patient_Exit_registrar_sign_key_S_pb_key_id_fk",
+        "Patient_Exit_registrar_sign_key_S_pb_keys_id_fk": {
+          "name": "Patient_Exit_registrar_sign_key_S_pb_keys_id_fk",
           "tableFrom": "Patient_Exit",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "registrar_sign_key"
           ],
@@ -1512,7 +1512,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "patient_id": {
           "name": "patient_id",
@@ -1607,10 +1607,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "Patient_Exit_Orders_phys_sign_key_S_pb_key_id_fk": {
-          "name": "Patient_Exit_Orders_phys_sign_key_S_pb_key_id_fk",
+        "Patient_Exit_Orders_phys_sign_key_S_pb_keys_id_fk": {
+          "name": "Patient_Exit_Orders_phys_sign_key_S_pb_keys_id_fk",
           "tableFrom": "Patient_Exit_Orders",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "phys_sign_key"
           ],
@@ -1870,10 +1870,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "Patient_admissions_admitting_phys_sign_key_id_S_pb_key_id_fk": {
-          "name": "Patient_admissions_admitting_phys_sign_key_id_S_pb_key_id_fk",
+        "Patient_admissions_admitting_phys_sign_key_id_S_pb_keys_id_fk": {
+          "name": "Patient_admissions_admitting_phys_sign_key_id_S_pb_keys_id_fk",
           "tableFrom": "Patient_admissions",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "admitting_phys_sign_key_id"
           ],
@@ -1909,7 +1909,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "reason": {
           "name": "reason",
@@ -1940,7 +1940,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "patient_id": {
           "name": "patient_id",
@@ -2035,10 +2035,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "Patient_trans_nurse_sign_key_id_S_pb_key_id_fk": {
-          "name": "Patient_trans_nurse_sign_key_id_S_pb_key_id_fk",
+        "Patient_trans_nurse_sign_key_id_S_pb_keys_id_fk": {
+          "name": "Patient_trans_nurse_sign_key_id_S_pb_keys_id_fk",
           "tableFrom": "Patient_trans",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "nurse_sign_key_id"
           ],
@@ -2190,10 +2190,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "Patient_trans_orders_phys_sign_key_id_S_pb_key_id_fk": {
-          "name": "Patient_trans_orders_phys_sign_key_id_S_pb_key_id_fk",
+        "Patient_trans_orders_phys_sign_key_id_S_pb_keys_id_fk": {
+          "name": "Patient_trans_orders_phys_sign_key_id_S_pb_keys_id_fk",
           "tableFrom": "Patient_trans_orders",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "phys_sign_key_id"
           ],
@@ -2310,7 +2310,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "first_name": {
           "name": "first_name",
@@ -2404,7 +2404,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "job": {
           "name": "job",
@@ -2519,7 +2519,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "username": {
           "name": "username",
@@ -2561,6 +2561,29 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "active": {
+          "name": "active",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "last_login": {
+          "name": "last_login",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         }
       },
@@ -2614,10 +2637,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "People_Users_public_key_S_pb_key_id_fk": {
-          "name": "People_Users_public_key_S_pb_key_id_fk",
+        "People_Users_public_key_S_pb_keys_id_fk": {
+          "name": "People_Users_public_key_S_pb_keys_id_fk",
           "tableFrom": "People_Users",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "public_key"
           ],
@@ -2889,7 +2912,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "brand_name_id": {
           "name": "brand_name_id",
@@ -2970,7 +2993,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "timestamp": {
           "name": "timestamp",
@@ -3093,10 +3116,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "Ph_InEco_Transactions_pharm_sign_key_S_pb_key_id_fk": {
-          "name": "Ph_InEco_Transactions_pharm_sign_key_S_pb_key_id_fk",
+        "Ph_InEco_Transactions_pharm_sign_key_S_pb_keys_id_fk": {
+          "name": "Ph_InEco_Transactions_pharm_sign_key_S_pb_keys_id_fk",
           "tableFrom": "Ph_InEco_Transactions",
-          "tableTo": "S_pb_key",
+          "tableTo": "S_pb_keys",
           "columnsFrom": [
             "pharm_sign_key"
           ],
@@ -3144,15 +3167,15 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
-    "S_pb_key": {
-      "name": "S_pb_key",
+    "S_pb_keys": {
+      "name": "S_pb_keys",
       "columns": {
         "id": {
           "name": "id",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "key": {
           "name": "key",
@@ -3190,7 +3213,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "key": {
           "name": "key",
@@ -3212,6 +3235,67 @@
       "compositePrimaryKeys": {
         "pv_keys_id": {
           "name": "pv_keys_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "Sys_Sessions": {
+      "name": "Sys_Sessions",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "char(36)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP + INTERVAL 2 HOUR)"
+        }
+      },
+      "indexes": {
+        "sessions_user_link": {
+          "name": "sessions_user_link",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Sys_Sessions_user_id_People_Users_id_fk": {
+          "name": "Sys_Sessions_user_id_People_Users_id_fk",
+          "tableFrom": "Sys_Sessions",
+          "tableTo": "People_Users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Sys_Sessions_id": {
+          "name": "Sys_Sessions_id",
           "columns": [
             "id"
           ]
