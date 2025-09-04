@@ -15,6 +15,13 @@
       "when": 1756990695963,
       "tag": "0001_majestic_romulus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1756991076301,
+      "tag": "0002_milky_typhoid_mary",
+      "breakpoints": true
     }
   ]
 }

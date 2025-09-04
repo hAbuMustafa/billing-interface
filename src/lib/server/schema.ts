@@ -43,7 +43,7 @@ export const S_pv_keys = mysqlTable(
 export const Wards = mysqlTable(
   'Wards',
   {
-    id: int().notNull(),
+    id: int().autoincrement().notNull(),
     name: varchar({ length: 10 }).notNull(),
     floor: int().notNull(),
   },
@@ -147,7 +147,7 @@ export const D_Formulations = mysqlTable(
 export const D_ROA = mysqlTable(
   'D_ROA',
   {
-    id: int().notNull(),
+    id: int().autoincrement().notNull(),
     name: varchar({ length: 15 }).notNull(),
   },
   (table) => [primaryKey({ columns: [table.id], name: 'ROA_id' })]
@@ -232,7 +232,7 @@ export const Patient_Exit_Orders = mysqlTable(
 export const Patient_exit_reasons = mysqlTable(
   'Patient_exit_reasons',
   {
-    id: int().notNull(),
+    id: int().autoincrement().notNull(),
     reason: varchar({ length: 15 }).notNull(),
   },
   (table) => [primaryKey({ columns: [table.id], name: 'Patient_exit_reasons_id' })]
@@ -586,7 +586,7 @@ export const MedPlan_notes = mysqlTable(
 export const MedPlan_NoteTypes = mysqlTable(
   'MedPlan_NoteTypes',
   {
-    id: int().notNull(),
+    id: int().autoincrement().notNull(),
     type: text().notNull(),
   },
   (table) => [primaryKey({ columns: [table.id], name: 'MedPlan_NoteTypes_id' })]
