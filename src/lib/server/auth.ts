@@ -1,43 +1,76 @@
+import { generateKeyPairSync } from 'node:crypto';
 import { PUBLIC_users_spreadsheetId } from '$env/static/public';
-import { dateFromExcelSerial, dateToExcelSerial } from '$lib/utils/date-format';
+import { PV_KEY_ENCR_KEY } from '$env/static/private';
+import { formatDate } from '$lib/utils/date-format';
 import { getGravatarHash } from '$lib/utils/gravatar';
 import bcrypt from 'bcryptjs';
+import { db } from './db';
+import { People, People_Users, S_pb_keys, S_pv_keys } from './schema';
 
 const SALT_ROUNDS = 12;
 
-export async function createUser(
-  username: string,
-  name: string,
-  email: string,
-  phoneNumber: string,
-  password: string,
-  fetchFunc: Function
-) {
-  const userId = crypto.randomUUID();
-  const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-  const response = await fetchFunc('/api/sheets/insert', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      spreadsheetId: PUBLIC_users_spreadsheetId,
-      sheetName: 'users',
-      rows: [
-        [
-          userId,
-          username,
-          name,
-          email,
-          phoneNumber,
-          passwordHash,
-          dateToExcelSerial(new Date().getTime()),
-        ],
-      ],
-    }),
-  });
+type NewUserDataT = {
+  first_name: string;
+  father_name: string;
+  grandfather_name: string;
+  family_name: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+};
 
-  const data = await response.json();
+export async function createUser(newUserData: NewUserDataT) {
+  const passwordHash = await bcrypt.hash(newUserData.password, SALT_ROUNDS);
+
+  const { first_name, father_name, grandfather_name, family_name } = newUserData;
+
+  const response = await db.transaction(async (tx) => {
+    const { publicKey: encryptedPbKey, privateKey: encryptedPvKey } = generateKeyPairSync(
+      'rsa',
+      {
+        modulusLength: 4096,
+        publicKeyEncoding: {
+          type: 'spki',
+          format: 'pem',
+        },
+        privateKeyEncoding: {
+          type: 'pkcs8',
+          format: 'pem',
+          cipher: 'aes-256-cbc',
+          passphrase: PV_KEY_ENCR_KEY,
+        },
+      }
+    );
+
+    const newPbKeyId = await tx.insert(S_pb_keys).values({
+      key: encryptedPbKey,
+    });
+
+    const newPvKeyId = await tx.insert(S_pv_keys).values({
+      key: encryptedPvKey,
+    });
+
+    const newPersonId = await tx
+      .insert(People)
+      .values({
+        first_name,
+        father_name,
+        grandfather_name,
+        family_name,
+      })
+      .$returningId();
+
+    await tx.insert(People_Users).values({
+      username: newUserData.username,
+      hashed_pw: bcrypt.hash(newUserData.password, SALT_ROUNDS),
+      role: 2, // todo: change this when roles are defined
+      person_id: newPersonId,
+      public_key: newPbKeyId,
+      private_key: newPvKeyId,
+      active: 0,
+    });
+  });
 
   return {
     success: true,
@@ -116,7 +149,7 @@ export async function createSession(userId: string, cookies: any, fetchFunc: Fun
     body: JSON.stringify({
       spreadsheetId: PUBLIC_users_spreadsheetId,
       sheetName: 'sessions',
-      rows: [[sessionId, userId, dateToExcelSerial(expiresAt.getTime())]],
+      rows: [[sessionId, userId, formatDate(expiresAt.getTime())]],
     }),
   });
 
@@ -151,7 +184,7 @@ export async function getUserFromSession(sessionId: string, fetchFunc: Function)
 
   if (sessionsData.rows.length === 0) return null;
 
-  if (dateFromExcelSerial(sessionsData.rows[0].expires_at) < Date.now()) {
+  if (sessionsData.rows[0].expires_at < Date.now()) {
     await fetchFunc('/api/sheets/delete', {
       method: 'POST',
       headers: {
