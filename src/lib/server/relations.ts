@@ -22,15 +22,16 @@ import {
   Patient_Exit_Orders,
   Patient_Exit,
   Patient_exit_reasons,
-  Patient_Insurance,
   People,
   Patient_trans,
   Patient_trans_orders,
   Wards,
   People_contact_information,
   People_identifying_documents,
+  People_Insurance,
   People_relationships,
   People_Users,
+  S_pv_keys,
   Ph_InEco,
   Ph_InEco_Transactions,
   Sys_Sessions,
@@ -159,7 +160,6 @@ export const PatientsRelations = relations(Patients, ({ one, many }) => ({
   Patient_admissions: many(Patient_admissions),
   Patient_Exits: many(Patient_Exit),
   Patient_Exit_Orders: many(Patient_Exit_Orders),
-  Patient_Insurances: many(Patient_Insurance),
   Patient_trans: many(Patient_trans),
   Patient_trans_orders: many(Patient_trans_orders),
   Person: one(People, {
@@ -357,13 +357,6 @@ export const Patient_exit_reasonsRelations = relations(
   })
 );
 
-export const Patient_InsuranceRelations = relations(Patient_Insurance, ({ one }) => ({
-  Patient: one(Patients, {
-    fields: [Patient_Insurance.patient_id],
-    references: [Patients.id],
-  }),
-}));
-
 export const Patient_transRelations = relations(Patient_trans, ({ one }) => ({
   Person: one(People, {
     fields: [Patient_trans.nurse_id],
@@ -384,6 +377,7 @@ export const PeopleRelations = relations(People, ({ many }) => ({
   Patients: many(Patients),
   People_contact_information: many(People_contact_information),
   People_identifying_documents: many(People_identifying_documents),
+  People_Insurances: many(People_Insurance),
   People_relationships_person_id: many(People_relationships, {
     relationName: 'People_relationships_person_id_People_id',
   }),
@@ -441,6 +435,13 @@ export const People_identifying_documentsRelations = relations(
   })
 );
 
+export const People_InsuranceRelations = relations(People_Insurance, ({ one }) => ({
+  Person: one(People, {
+    fields: [People_Insurance.person_id],
+    references: [People.id],
+  }),
+}));
+
 export const People_relationshipsRelations = relations(
   People_relationships,
   ({ one }) => ({
@@ -462,6 +463,10 @@ export const People_UsersRelations = relations(People_Users, ({ one, many }) => 
     fields: [People_Users.person_id],
     references: [People.id],
   }),
+  S_pv_key: one(S_pv_keys, {
+    fields: [People_Users.private_key],
+    references: [S_pv_keys.id],
+  }),
   S_pb_key: one(S_pb_keys, {
     fields: [People_Users.public_key],
     references: [S_pb_keys.id],
@@ -471,6 +476,10 @@ export const People_UsersRelations = relations(People_Users, ({ one, many }) => 
     references: [People_Staff.id],
   }),
   Sys_Sessions: many(Sys_Sessions),
+}));
+
+export const S_pv_keysRelations = relations(S_pv_keys, ({ many }) => ({
+  People_Users: many(People_Users),
 }));
 
 export const Ph_InEcoRelations = relations(Ph_InEco, ({ one, many }) => ({
