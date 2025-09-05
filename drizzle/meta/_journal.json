@@ -36,6 +36,13 @@
       "when": 1757068060717,
       "tag": "0004_yellow_blackheart",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1757077023919,
+      "tag": "0005_red_thunderbolt",
+      "breakpoints": true
     }
   ]
 }

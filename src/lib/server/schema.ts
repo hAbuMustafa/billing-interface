@@ -22,16 +22,14 @@ import {
 
 export const S_pb_keys = mysqlTable('S_pb_keys', {
   id: serial().primaryKey(),
-  key: varchar({ length: 256 }).notNull(),
-  since: datetime({ mode: 'string' }).notNull(),
+  key: text().notNull(),
+  since: timestamp().notNull().defaultNow(),
 });
 
 export const S_pv_keys = mysqlTable('S_pv_keys', {
   id: serial().primaryKey(),
   key: text().notNull(),
-  init_vector: text().notNull(),
-  auth_tag: text().notNull(),
-  since: datetime({ mode: 'string' }).notNull(),
+  since: timestamp().notNull().defaultNow(),
 });
 
 export const Wards = mysqlTable('Wards', {
