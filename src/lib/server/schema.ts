@@ -20,35 +20,25 @@ import {
   char,
 } from 'drizzle-orm/mysql-core';
 
-export const S_pb_keys = mysqlTable(
-  'S_pb_keys',
-  {
-    id: serial(),
-    key: varchar({ length: 256 }).notNull(),
-    since: datetime({ mode: 'string' }).notNull(),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'pb_key_id' })]
-);
+export const S_pb_keys = mysqlTable('S_pb_keys', {
+  id: serial().primaryKey(),
+  key: varchar({ length: 256 }).notNull(),
+  since: datetime({ mode: 'string' }).notNull(),
+});
 
-export const S_pv_keys = mysqlTable(
-  'S_pv_keys',
-  {
-    id: serial(),
-    key: varchar({ length: 256 }).notNull(),
-    since: datetime({ mode: 'string' }).notNull(),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'pv_keys_id' })]
-);
+export const S_pv_keys = mysqlTable('S_pv_keys', {
+  id: serial().primaryKey(),
+  key: text().notNull(),
+  init_vector: text().notNull(),
+  auth_tag: text().notNull(),
+  since: datetime({ mode: 'string' }).notNull(),
+});
 
-export const Wards = mysqlTable(
-  'Wards',
-  {
-    id: int().autoincrement().notNull(),
-    name: varchar({ length: 10 }).notNull(),
-    floor: int().notNull(),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'Wards_id' })]
-);
+export const Wards = mysqlTable('Wards', {
+  id: int().autoincrement().primaryKey(),
+  name: varchar({ length: 10 }).notNull(),
+  floor: int().notNull(),
+});
 
 export const D_AC_use = mysqlTable(
   'D_AC_use',
@@ -62,21 +52,17 @@ export const D_AC_use = mysqlTable(
   ]
 );
 
-export const D_AC = mysqlTable(
-  'D_AC',
-  {
-    id: serial(),
-    name: varchar({ length: 100 }).notNull(),
-    name_ar: varchar({ length: 100 }).notNull(),
-    alias: varchar({ length: 45 }),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'AC_id' })]
-);
+export const D_AC = mysqlTable('D_AC', {
+  id: serial().primaryKey(),
+  name: varchar({ length: 100 }).notNull(),
+  name_ar: varchar({ length: 100 }).notNull(),
+  alias: varchar({ length: 45 }),
+});
 
 export const D_BrandNames = mysqlTable(
   'D_BrandNames',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     formulary_id: bigint({ mode: 'bigint', unsigned: true }).references(
       () => D_Formulary.id
     ),
@@ -86,21 +72,14 @@ export const D_BrandNames = mysqlTable(
     size_unit: varchar({ length: 15 }).notNull(),
     producer: varchar({ length: 45 }),
   },
-  (table) => [
-    index('brand_name_formulary_link_idx').on(table.formulary_id),
-    primaryKey({ columns: [table.id], name: 'BrandNames_id' }),
-  ]
+  (table) => [index('brand_name_formulary_link_idx').on(table.formulary_id)]
 );
 
-export const D_Formulary = mysqlTable(
-  'D_Formulary',
-  {
-    id: serial(),
-    name: varchar({ length: 100 }).notNull(),
-    volume_in_ml: decimal({ precision: 5, scale: 2 }),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'Formulary_id' })]
-);
+export const D_Formulary = mysqlTable('D_Formulary', {
+  id: serial().primaryKey(),
+  name: varchar({ length: 100 }).notNull(),
+  volume_in_ml: decimal({ precision: 5, scale: 2 }),
+});
 
 export const D_formulary_roa = mysqlTable(
   'D_formulary_roa',
@@ -121,7 +100,7 @@ export const D_formulary_roa = mysqlTable(
 export const D_Formulations = mysqlTable(
   'D_Formulations',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     formulary_id: bigint({ mode: 'bigint', unsigned: true }).references(
       () => D_Formulary.id
     ),
@@ -140,32 +119,23 @@ export const D_Formulations = mysqlTable(
       foreignColumns: [table.id],
       name: 'ac_role_target_link',
     }),
-    primaryKey({ columns: [table.id], name: 'Formulations_id' }),
   ]
 );
 
-export const D_ROA = mysqlTable(
-  'D_ROA',
-  {
-    id: int().autoincrement().notNull(),
-    name: varchar({ length: 15 }).notNull(),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'ROA_id' })]
-);
+export const D_ROA = mysqlTable('D_ROA', {
+  id: int().autoincrement().primaryKey(),
+  name: varchar({ length: 15 }).notNull(),
+});
 
-export const D_Uses = mysqlTable(
-  'D_Uses',
-  {
-    id: serial(),
-    use: varchar({ length: 45 }).notNull(),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'Use_id' })]
-);
+export const D_Uses = mysqlTable('D_Uses', {
+  id: serial().primaryKey(),
+  use: varchar({ length: 45 }).notNull(),
+});
 
 export const Diagnoses = mysqlTable(
   'Diagnoses',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     patient_id: bigint({ mode: 'bigint', unsigned: true }).references(() => Patients.id),
     diagnosis_time: datetime({ mode: 'string' }).notNull(),
     diagnosis: varchar({ length: 45 }).notNull(),
@@ -178,7 +148,6 @@ export const Diagnoses = mysqlTable(
   (table) => [
     index('diagnosing_phys_link_idx').on(table.diagnosing_phys),
     index('patient_diagnosis_link_idx').on(table.patient_id),
-    primaryKey({ columns: [table.id], name: 'diagnoses_id' }),
   ]
 );
 
@@ -211,7 +180,7 @@ export const Patient_admissions = mysqlTable(
 export const Patient_Exit_Orders = mysqlTable(
   'Patient_Exit_Orders',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     patient_id: bigint({ mode: 'bigint', unsigned: true }).references(() => Patients.id),
     notes: longtext(),
     phys_id: bigint({ mode: 'bigint', unsigned: true }).references(() => People_Staff.id),
@@ -225,23 +194,18 @@ export const Patient_Exit_Orders = mysqlTable(
     index('patient_exit_orders_patient_id_link_idx').on(table.patient_id),
     index('patient_exit_orders_phys_sign_key_id_link_idx').on(table.phys_sign_key),
     index('patient_exit_orders_phys_id_link_idx').on(table.phys_id),
-    primaryKey({ columns: [table.id], name: 'Patient_Exit_Orders_id' }),
   ]
 );
 
-export const Patient_exit_reasons = mysqlTable(
-  'Patient_exit_reasons',
-  {
-    id: int().autoincrement().notNull(),
-    reason: varchar({ length: 15 }).notNull(),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'Patient_exit_reasons_id' })]
-);
+export const Patient_exit_reasons = mysqlTable('Patient_exit_reasons', {
+  id: int().autoincrement().primaryKey(),
+  reason: varchar({ length: 15 }).notNull(),
+});
 
 export const Patient_Exit = mysqlTable(
   'Patient_Exit',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     patient_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => Patients.id),
@@ -267,16 +231,15 @@ export const Patient_Exit = mysqlTable(
     index('patient_exit_reason_id_link_idx').on(table.exit_reason),
     index('patient_exit_registrar_id_link_idx').on(table.registrar),
     index('patient_exit_registrar_sign_key_id_link_idx').on(table.registrar_sign_key),
-    primaryKey({ columns: [table.id], name: 'Patient_Exit_id' }),
   ]
 );
 
-export const Patient_Insurance = mysqlTable(
-  'Patient_Insurance',
+export const People_Insurance = mysqlTable(
+  'People_Insurance',
   {
-    patient_id: bigint({ mode: 'bigint', unsigned: true })
+    person_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
-      .references(() => Patients.id),
+      .references(() => People.id),
     insurance_number: varchar({ length: 45 }).notNull(),
     insurance_entity: varchar({ length: 45 }).notNull(),
     type: varchar({ length: 45 }).notNull(),
@@ -289,13 +252,13 @@ export const Patient_Insurance = mysqlTable(
     dental_deductible_percent: decimal().default('1').notNull(),
     maternal_deductible_percent: decimal().default('1').notNull(),
   },
-  (table) => [index('patient_insurance_link_idx').on(table.patient_id)]
+  (table) => [index('person_insurance_link_idx').on(table.person_id)]
 );
 
 export const Patient_trans_orders = mysqlTable(
   'Patient_trans_orders',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     patient_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => Patients.id),
@@ -317,14 +280,13 @@ export const Patient_trans_orders = mysqlTable(
     index('trans_order_phys_id_link_idx').on(table.phys_id),
     index('trans_order_phys_sign_id_link_idx').on(table.phys_sign_key_id),
     index('trans_order_ward_id_link_idx').on(table.ward),
-    primaryKey({ columns: [table.id], name: 'Patient_trans_orders_id' }),
   ]
 );
 
 export const Patient_trans = mysqlTable(
   'Patient_trans',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     patient_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => Patients.id),
@@ -342,14 +304,13 @@ export const Patient_trans = mysqlTable(
     index('trans_order_nurse_id_link_idx').on(table.nurse_id),
     index('trans_order_nurse_sign_key_id_link_idx').on(table.nurse_sign_key_id),
     index('trans_patient_id_link_idx').on(table.patient_id),
-    primaryKey({ columns: [table.id], name: 'Patient_trans_id' }),
   ]
 );
 
 export const Patients = mysqlTable(
   'Patients',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     person_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
@@ -361,14 +322,13 @@ export const Patients = mysqlTable(
   (table) => [
     index('patients_person_id_link_idx').on(table.person_id),
     index('patients_ward_link_idx').on(table.ward),
-    primaryKey({ columns: [table.id], name: 'Patients_id' }),
   ]
 );
 
 export const People_contact_information = mysqlTable(
   'People_contact_information',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     contact_string: varchar({ length: 100 }).notNull(),
     contact_type: varchar({ length: 45 }).notNull(),
     person_id: bigint({ mode: 'bigint', unsigned: true })
@@ -378,7 +338,6 @@ export const People_contact_information = mysqlTable(
   },
   (table) => [
     index('contact_person_link_idx').on(table.person_id),
-    primaryKey({ columns: [table.id], name: 'contact_information_id' }),
     unique('contact_string_UNIQUE').on(table.contact_string),
     unique('id_contact_information_UNIQUE').on(table.id),
   ]
@@ -387,36 +346,29 @@ export const People_contact_information = mysqlTable(
 export const People_identifying_documents = mysqlTable(
   'People_identifying_documents',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     document_number: varchar({ length: 45 }).notNull(),
     document_type: varchar({ length: 20 }).notNull(),
     person_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => People.id),
   },
-  (table) => [
-    index('document_person_link_idx').on(table.person_id),
-    primaryKey({ columns: [table.id], name: 'identifying_documents_id' }),
-  ]
+  (table) => [index('document_person_link_idx').on(table.person_id)]
 );
 
-export const People = mysqlTable(
-  'People',
-  {
-    id: serial(),
-    first_name: varchar({ length: 45 }).notNull(),
-    father_name: varchar({ length: 45 }).notNull(),
-    grandfather_name: varchar({ length: 45 }).notNull(),
-    family_name: varchar({ length: 45 }),
-    birthdate: date({ mode: 'date' }),
-    race: varchar({ length: 16 }),
-    marital_status: tinyint(),
-    gender: tinyint(),
-    religion: varchar({ length: 15 }),
-    occupation: varchar({ length: 45 }),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'People_id' })]
-);
+export const People = mysqlTable('People', {
+  id: serial().primaryKey(),
+  first_name: varchar({ length: 45 }).notNull(),
+  father_name: varchar({ length: 45 }).notNull(),
+  grandfather_name: varchar({ length: 45 }).notNull(),
+  family_name: varchar({ length: 45 }),
+  birthdate: date({ mode: 'date' }),
+  race: varchar({ length: 16 }),
+  marital_status: tinyint(),
+  gender: tinyint(),
+  religion: varchar({ length: 15 }),
+  occupation: varchar({ length: 45 }),
+});
 
 export const People_relationships = mysqlTable(
   'People_relationships',
@@ -439,7 +391,7 @@ export const People_relationships = mysqlTable(
 export const People_Staff = mysqlTable(
   'People_Staff',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     job: varchar({ length: 45 }).notNull(),
     qualification: varchar({ length: 45 }).notNull(),
     major: varchar({ length: 45 }).notNull(),
@@ -458,14 +410,13 @@ export const People_Staff = mysqlTable(
       foreignColumns: [table.id],
       name: 'staff_manager_link',
     }),
-    primaryKey({ columns: [table.id], name: 'Staff_id' }),
   ]
 );
 
 export const Ph_InEco = mysqlTable(
   'Ph_InEco',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     brand_name_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => D_BrandNames.id),
@@ -474,16 +425,13 @@ export const Ph_InEco = mysqlTable(
     expiry_date: date({ mode: 'date' }),
     batch_number: varchar({ length: 32 }),
   },
-  (table) => [
-    index('drug_id_link_idx').on(table.brand_name_id),
-    primaryKey({ columns: [table.id], name: 'PhInEco_id' }),
-  ]
+  (table) => [index('drug_id_link_idx').on(table.brand_name_id)]
 );
 
 export const Ph_InEco_Transactions = mysqlTable(
   'Ph_InEco_Transactions',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     timestamp: datetime({ mode: 'string' }).notNull(),
     item_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
@@ -507,17 +455,13 @@ export const Ph_InEco_Transactions = mysqlTable(
     index('med_plan_link_idx').on(table.med_plan_id),
     index('nurse_id_link_idx').on(table.dispensing_nurse_id),
     index('sign_key_link_idx').on(table.pharm_sign_key),
-    primaryKey({
-      columns: [table.id],
-      name: 'PhInEco_Transactions_id',
-    }),
   ]
 );
 
 export const MedPlan = mysqlTable(
   'MedPlan',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     timestamp: datetime({ mode: 'string' }).notNull(),
     patient_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
@@ -550,14 +494,13 @@ export const MedPlan = mysqlTable(
       foreignColumns: [table.id],
       name: 'mixture_link',
     }),
-    primaryKey({ columns: [table.id], name: 'MedPlan_id' }),
   ]
 );
 
 export const MedPlan_notes = mysqlTable(
   'MedPlan_notes',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     timestamp: datetime({ mode: 'string' }).notNull(),
     med_plan_id: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
@@ -579,18 +522,13 @@ export const MedPlan_notes = mysqlTable(
     index('author_sign_key_id_link_idx').on(table.author_sign_key_id),
     index('note_type_link_idx').on(table.note_type),
     index('treatment_plan_link_idx').on(table.med_plan_id),
-    primaryKey({ columns: [table.id], name: 'MedPlan_notes_id' }),
   ]
 );
 
-export const MedPlan_NoteTypes = mysqlTable(
-  'MedPlan_NoteTypes',
-  {
-    id: int().autoincrement().notNull(),
-    type: text().notNull(),
-  },
-  (table) => [primaryKey({ columns: [table.id], name: 'MedPlan_NoteTypes_id' })]
-);
+export const MedPlan_NoteTypes = mysqlTable('MedPlan_NoteTypes', {
+  id: int().autoincrement().primaryKey(),
+  type: text().notNull(),
+});
 
 export const MedPlan_sign_nurse = mysqlTable(
   'MedPlan_sign_nurse',
@@ -661,7 +599,7 @@ export const MedPlan_sign_phys = mysqlTable(
 export const People_Users = mysqlTable(
   'People_Users',
   {
-    id: serial(),
+    id: serial().primaryKey(),
     username: varchar({ length: 45 }).notNull(),
     hashed_pw: longtext().notNull(),
     role: int().notNull(),
@@ -674,6 +612,9 @@ export const People_Users = mysqlTable(
     public_key: bigint({ mode: 'bigint', unsigned: true })
       .notNull()
       .references(() => S_pb_keys.id),
+    private_key: bigint({ mode: 'bigint', unsigned: true })
+      .notNull()
+      .references(() => S_pv_keys.id),
     created_at: timestamp().notNull().defaultNow(),
     active: tinyint().notNull().default(0),
     last_login: timestamp(),
@@ -682,7 +623,6 @@ export const People_Users = mysqlTable(
     index('person_link_idx').on(table.person_id),
     index('public_key_link_idx').on(table.public_key),
     index('user_staff_id_link_idx').on(table.staff_id),
-    primaryKey({ columns: [table.id], name: 'Users_id' }),
     unique('username_UNIQUE').on(table.username),
   ]
 );
