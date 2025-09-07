@@ -5,7 +5,13 @@ import { formatDate } from '$lib/utils/date-format';
 import { getGravatarHash } from '$lib/utils/gravatar';
 import bcrypt from 'bcryptjs';
 import { db } from './db';
-import { People, Sys_Users, S_pb_keys, S_pv_keys } from './schema';
+import {
+  People,
+  Sys_Users,
+  S_pb_keys,
+  S_pv_keys,
+  People_contact_information,
+} from './schema';
 import { eq } from 'drizzle-orm';
 
 const SALT_ROUNDS = 12;
@@ -67,7 +73,25 @@ export async function createUser(newUserData: NewUserDataT) {
         })
         .$returningId();
 
-      // todo: add contact information to `People_contact_information`
+      const [phoneNumberRow] = await tx
+        .insert(People_contact_information)
+        .values({
+          contact_string: newUserData.phoneNumber,
+          contact_type: 'phone-number',
+          is_verified: 0,
+          person_id: BigInt(newPerson.id),
+        })
+        .$returningId();
+
+      const [emailRow] = await tx
+        .insert(People_contact_information)
+        .values({
+          contact_string: newUserData.email,
+          contact_type: 'email',
+          is_verified: 0,
+          person_id: BigInt(newPerson.id),
+        })
+        .$returningId();
 
       const [newUser] = await tx
         .insert(Sys_Users)
