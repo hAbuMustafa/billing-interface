@@ -7,6 +7,7 @@ import {
   usernamePattern,
 } from '$lib/stores/patterns';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
+import type { DrizzleQueryError } from 'drizzle-orm/errors';
 
 export function load() {
   return {
@@ -107,7 +108,9 @@ export const actions: Actions = {
 
     if (!registrationResult.success) {
       return fail(401, {
-        message: registrationResult.error,
+        message: (registrationResult.error as DrizzleQueryError).cause?.message.split(
+          ' for '
+        )[0],
 
         first_name,
         father_name,
