@@ -30,11 +30,11 @@ import {
   People_identifying_documents,
   People_Insurance,
   People_relationships,
-  People_Users,
-  S_pv_keys,
   Ph_InEco,
   Ph_InEco_Transactions,
+  Sys_Users,
   Sys_Sessions,
+  S_pv_keys,
 } from './schema';
 
 export const D_AC_useRelations = relations(D_AC_use, ({ one }) => ({
@@ -145,13 +145,13 @@ export const People_StaffRelations = relations(People_Staff, ({ one, many }) => 
   People_Staffs: many(People_Staff, {
     relationName: 'People_Staff_manager_id_People_Staff_id',
   }),
-  People_Users: many(People_Users),
   Ph_InEco_Transactions_dispensing_nurse_id: many(Ph_InEco_Transactions, {
     relationName: 'Ph_InEco_Transactions_dispensing_nurse_id_People_Staff_id',
   }),
   Ph_InEco_Transactions_pharm_id: many(Ph_InEco_Transactions, {
     relationName: 'Ph_InEco_Transactions_pharm_id_People_Staff_id',
   }),
+  Sys_Users: many(Sys_Users),
 }));
 
 export const PatientsRelations = relations(Patients, ({ one, many }) => ({
@@ -215,8 +215,8 @@ export const S_pb_keysRelations = relations(S_pb_keys, ({ many }) => ({
   Patient_Exit_Orders: many(Patient_Exit_Orders),
   Patient_trans: many(Patient_trans),
   Patient_trans_orders: many(Patient_trans_orders),
-  People_Users: many(People_Users),
   Ph_InEco_Transactions: many(Ph_InEco_Transactions),
+  Sys_Users: many(Sys_Users),
 }));
 
 export const MedPlan_notesRelations = relations(MedPlan_notes, ({ one }) => ({
@@ -385,7 +385,7 @@ export const PeopleRelations = relations(People, ({ many }) => ({
     relationName: 'People_relationships_related_to_id_People_id',
   }),
   People_Staffs: many(People_Staff),
-  People_Users: many(People_Users),
+  Sys_Users: many(Sys_Users),
 }));
 
 export const Patient_trans_ordersRelations = relations(
@@ -458,30 +458,6 @@ export const People_relationshipsRelations = relations(
   })
 );
 
-export const People_UsersRelations = relations(People_Users, ({ one, many }) => ({
-  Person: one(People, {
-    fields: [People_Users.person_id],
-    references: [People.id],
-  }),
-  S_pv_key: one(S_pv_keys, {
-    fields: [People_Users.private_key],
-    references: [S_pv_keys.id],
-  }),
-  S_pb_key: one(S_pb_keys, {
-    fields: [People_Users.public_key],
-    references: [S_pb_keys.id],
-  }),
-  People_Staff: one(People_Staff, {
-    fields: [People_Users.staff_id],
-    references: [People_Staff.id],
-  }),
-  Sys_Sessions: many(Sys_Sessions),
-}));
-
-export const S_pv_keysRelations = relations(S_pv_keys, ({ many }) => ({
-  People_Users: many(People_Users),
-}));
-
 export const Ph_InEcoRelations = relations(Ph_InEco, ({ one, many }) => ({
   D_BrandName: one(D_BrandNames, {
     fields: [Ph_InEco.brand_name_id],
@@ -519,8 +495,32 @@ export const Ph_InEco_TransactionsRelations = relations(
 );
 
 export const Sys_SessionsRelations = relations(Sys_Sessions, ({ one }) => ({
-  People_User: one(People_Users, {
+  Sys_User: one(Sys_Users, {
     fields: [Sys_Sessions.user_id],
-    references: [People_Users.id],
+    references: [Sys_Users.id],
   }),
+}));
+
+export const Sys_UsersRelations = relations(Sys_Users, ({ one, many }) => ({
+  Sys_Sessions: many(Sys_Sessions),
+  Person: one(People, {
+    fields: [Sys_Users.person_id],
+    references: [People.id],
+  }),
+  S_pv_key: one(S_pv_keys, {
+    fields: [Sys_Users.private_key],
+    references: [S_pv_keys.id],
+  }),
+  S_pb_key: one(S_pb_keys, {
+    fields: [Sys_Users.public_key],
+    references: [S_pb_keys.id],
+  }),
+  People_Staff: one(People_Staff, {
+    fields: [Sys_Users.staff_id],
+    references: [People_Staff.id],
+  }),
+}));
+
+export const S_pv_keysRelations = relations(S_pv_keys, ({ many }) => ({
+  Sys_Users: many(Sys_Users),
 }));
