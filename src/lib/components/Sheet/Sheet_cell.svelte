@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dateFromExcelSerial, formatDate } from '$lib/utils/date-format';
+  import { formatDate } from '$lib/utils/date-format';
   import { getContext } from 'svelte';
 
   type PropsT = {
@@ -14,7 +14,7 @@
   >{#if dateColumns && dateColumns().some((c) => dataTuple[0] === (typeof c === 'string' ? c : c.name))}
     {#if dataTuple[1]}
       {formatDate(
-        dateFromExcelSerial(dataTuple[1] as number) as number,
+        dataTuple[1] as number,
         dateColumns().find(
           (c): c is { name: string; format: string } =>
             typeof c !== 'string' && c.name === dataTuple[0]
