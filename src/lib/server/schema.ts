@@ -1,10 +1,8 @@
 import { sql } from 'drizzle-orm';
 import {
   mysqlTable,
-  type AnyMySqlColumn,
   index,
   foreignKey,
-  primaryKey,
   int,
   bigint,
   serial,
