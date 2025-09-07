@@ -13,6 +13,9 @@ const connection = mysql.createPool({
   connectionLimit: 15,
   queueLimit: 0,
   connectTimeout: 60000,
+
+  bigNumberStrings: false,
+  supportBigNumbers: true,
 });
 
 export const db = drizzle({ client: connection, schema, mode: 'default' });
