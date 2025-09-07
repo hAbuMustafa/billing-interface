@@ -158,13 +158,14 @@
   fieldset {
     display: flex;
     flex-direction: column;
-
-    border-color: light-dark(#333, #ccc);
-    border-radius: 0.25rem;
   }
 
   label {
     margin-block: 1rem 0.25rem;
+
+    &:first-of-type {
+      margin-block-start: 0;
+    }
   }
 
   input {
@@ -190,13 +191,11 @@
   }
 
   input[type='submit'] {
-    background-color: royalblue;
-    color: light-dark(#ccc, #ccc);
     font-weight: 700;
     font-size: 1.25rem;
     grid-column: 1/-1;
 
-    height: 3rem;
+    height: 100%;
   }
 
   label:has(+ input[required])::after {

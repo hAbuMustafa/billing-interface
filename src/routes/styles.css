@@ -24,4 +24,16 @@ main > form {
   border: 1px solid light-dark(#333, #ccc);
 
   box-shadow: black 10px 10px 10px;
+
+  fieldset {
+    padding-block: 1rem;
+
+    border-color: light-dark(#333, #ccc);
+    border-radius: 0.25rem;
+  }
+}
+
+input[type='submit'] {
+  background-color: royalblue;
+  color: #ccc;
 }
