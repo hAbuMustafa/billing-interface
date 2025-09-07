@@ -1,7 +1,8 @@
-import { createUser, isUniqueUser } from '$lib/server/auth';
+import { createUser } from '$lib/server/auth';
 import {
-  arabicTetradicNamesPattern,
+  arabicNamePattern,
   egyptianMobileNumberPattern,
+  emailPattern,
   passwordPattern,
   usernamePattern,
 } from '$lib/stores/patterns';
@@ -14,19 +15,37 @@ export function load() {
 }
 
 export const actions: Actions = {
-  default: async ({ request, fetch }) => {
+  default: async ({ request }) => {
     const formData = await request.formData();
+
+    let first_name = formData.get('first-name');
+    let father_name = formData.get('father-name');
+    let grandfather_name = formData.get('grandfather-name');
+    let family_name = formData.get('family-name');
     let username = formData.get('username');
-    let name = formData.get('name');
-    let mobile = formData.get('mobile');
+    let phoneNumber = formData.get('phone-number');
+    let email = formData.get('email');
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm-password');
 
-    username = (username as string).trim();
-    name = (name as string).trim();
-    mobile = (mobile as string).trim();
+    first_name = (first_name as string)?.trim();
+    father_name = (father_name as string)?.trim();
+    grandfather_name = (grandfather_name as string)?.trim();
+    family_name = (family_name as string)?.trim();
+    username = (username as string)?.trim();
+    phoneNumber = (phoneNumber as string)?.trim();
+    email = (email as string)?.trim();
 
-    if (!username || !password || !name || !mobile || !confirmPassword) {
+    if (
+      !username ||
+      !password ||
+      !confirmPassword ||
+      !first_name ||
+      !father_name ||
+      !grandfather_name ||
+      !phoneNumber ||
+      !email
+    ) {
       return fail(400, {
         message: 'برجاء إدخال جميع البيانات المطلوبة',
       });
@@ -52,27 +71,55 @@ export const actions: Actions = {
       });
     }
 
-    if (!arabicTetradicNamesPattern.test(name as string)) {
+    if (
+      !arabicNamePattern.test(first_name) ||
+      !arabicNamePattern.test(father_name) ||
+      !arabicNamePattern.test(grandfather_name)
+    ) {
       return fail(401, {
-        message: 'اسم الموظف بصيغة غير صحيحة. يجب أن يكون اسما ثلاثيا على الأقل',
+        message:
+          'اسم الموظف بصيغة غير صحيحة. يجب أن يكون اسما ثلاثيا على الأقل بحروف عربية فقط',
       });
     }
 
-    if (!egyptianMobileNumberPattern.test(mobile as string)) {
+    if (!egyptianMobileNumberPattern.test(phoneNumber)) {
       return fail(401, {
         message: 'رقم الموبايل بصيغة غير صحيحة',
       });
     }
 
-    const isUnique = await isUniqueUser(username as string, fetch);
-
-    if (!isUnique) {
+    if (!emailPattern.test(email)) {
       return fail(401, {
-        message: 'المستخدم مسجل مسبقا',
+        message: 'البريد الإلكتروني بصيغة غير صحيحة',
       });
     }
 
-    const result = await createUser(username, name, mobile, password as string, fetch);
+    const registrationResult = await createUser({
+      username,
+      password: password as string,
+      first_name,
+      father_name,
+      grandfather_name,
+      family_name,
+      email,
+      phoneNumber,
+    });
+
+    if (!registrationResult.success) {
+      return fail(401, {
+        message: registrationResult.error,
+
+        first_name,
+        father_name,
+        grandfather_name,
+        family_name,
+        username,
+        phoneNumber,
+        email,
+      });
+    }
+
+    // todo: bind user object from `registrationResult.user`
 
     return redirect(303, '/');
   },

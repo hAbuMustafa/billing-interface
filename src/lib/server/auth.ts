@@ -5,7 +5,8 @@ import { formatDate } from '$lib/utils/date-format';
 import { getGravatarHash } from '$lib/utils/gravatar';
 import bcrypt from 'bcryptjs';
 import { db } from './db';
-import { People, People_Users, S_pb_keys, S_pv_keys } from './schema';
+import { People, Sys_Users, S_pb_keys, S_pv_keys } from './schema';
+import { eq } from 'drizzle-orm';
 
 const SALT_ROUNDS = 12;
 
@@ -25,56 +26,80 @@ export async function createUser(newUserData: NewUserDataT) {
 
   const { first_name, father_name, grandfather_name, family_name } = newUserData;
 
-  const response = await db.transaction(async (tx) => {
-    const { publicKey: encryptedPbKey, privateKey: encryptedPvKey } = generateKeyPairSync(
-      'rsa',
-      {
-        modulusLength: 4096,
-        publicKeyEncoding: {
-          type: 'spki',
-          format: 'pem',
-        },
-        privateKeyEncoding: {
-          type: 'pkcs8',
-          format: 'pem',
-          cipher: 'aes-256-cbc',
-          passphrase: PV_KEY_ENCR_KEY,
-        },
-      }
-    );
+  try {
+    const response = await db.transaction(async (tx) => {
+      const { publicKey: encryptedPbKey, privateKey: encryptedPvKey } =
+        generateKeyPairSync('rsa', {
+          modulusLength: 4096,
+          publicKeyEncoding: {
+            type: 'spki',
+            format: 'pem',
+          },
+          privateKeyEncoding: {
+            type: 'pkcs8',
+            format: 'pem',
+            cipher: 'aes-256-cbc',
+            passphrase: PV_KEY_ENCR_KEY,
+          },
+        });
 
-    const newPbKeyId = await tx.insert(S_pb_keys).values({
-      key: encryptedPbKey,
+      const [newPbKey] = await tx
+        .insert(S_pb_keys)
+        .values({
+          key: encryptedPbKey,
+        })
+        .$returningId();
+
+      const [newPvKey] = await tx
+        .insert(S_pv_keys)
+        .values({
+          key: encryptedPvKey,
+        })
+        .$returningId();
+
+      const [newPerson] = await tx
+        .insert(People)
+        .values({
+          first_name,
+          father_name,
+          grandfather_name,
+          family_name,
+        })
+        .$returningId();
+
+      // todo: add contact information to `People_contact_information`
+
+      const [newUser] = await tx
+        .insert(Sys_Users)
+        .values({
+          username: newUserData.username,
+          hashed_pw: passwordHash,
+          role: 2, // todo: change this when roles are defined
+          person_id: BigInt(newPerson.id),
+          public_key: BigInt(newPbKey.id),
+          private_key: BigInt(newPvKey.id),
+          active: 0,
+        })
+        .$returningId();
+
+      const [user] = await tx
+        .select()
+        .from(Sys_Users)
+        .where(eq(Sys_Users.id, newUser.id));
+
+      return user;
     });
 
-    const newPvKeyId = await tx.insert(S_pv_keys).values({
-      key: encryptedPvKey,
-    });
-
-    const newPersonId = await tx
-      .insert(People)
-      .values({
-        first_name,
-        father_name,
-        grandfather_name,
-        family_name,
-      })
-      .$returningId();
-
-    await tx.insert(People_Users).values({
-      username: newUserData.username,
-      hashed_pw: bcrypt.hash(newUserData.password, SALT_ROUNDS),
-      role: 2, // todo: change this when roles are defined
-      person_id: newPersonId,
-      public_key: newPbKeyId,
-      private_key: newPvKeyId,
-      active: 0,
-    });
-  });
-
-  return {
-    success: true,
-  };
+    return {
+      success: true,
+      user: response,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error,
+    };
+  }
 }
 
 export async function isUniqueUser(

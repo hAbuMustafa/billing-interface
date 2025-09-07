@@ -6,6 +6,8 @@
     usernamePattern,
   } from '$lib/stores/patterns';
 
+  let { form } = $props();
+
   let userPassword = $state('');
   let userConfirmPassword = $state('');
 </script>
@@ -26,6 +28,7 @@
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
+      value={form?.first_name ?? ''}
     />
 
     <label for="father-name">اسم الأب</label>
@@ -39,6 +42,7 @@
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
+      value={form?.father_name ?? ''}
     />
 
     <label for="grandfather-name">اسم الجد</label>
@@ -52,6 +56,7 @@
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
+      value={form?.grandfather_name ?? ''}
     />
 
     <label for="family-name">اسم العائلة</label>
@@ -64,6 +69,7 @@
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
+      value={form?.family_name ?? ''}
     />
   </fieldset>
 
@@ -79,17 +85,19 @@
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
+      value={form?.username ?? ''}
     />
-    <label for="mobile">رقم الموبايل</label>
+    <label for="phone-number">رقم الموبايل</label>
     <input
-      id="mobile"
-      name="mobile"
+      id="phone-number"
+      name="phone-number"
       type="text"
       required
       pattern={egyptianMobileNumberPattern.source}
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
+      value={form?.phoneNumber ?? ''}
     />
     <label for="email">البريد الإلكتروني</label>
     <input
@@ -100,6 +108,7 @@
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
+      value={form?.email ?? ''}
     />
     <label for="password">كلمة السر</label>
     <input
