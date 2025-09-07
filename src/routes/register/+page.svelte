@@ -1,7 +1,6 @@
 <script lang="ts">
   import {
     arabicNamePattern,
-    arabicTetradicNamesPattern,
     egyptianMobileNumberPattern,
     passwordPattern,
     usernamePattern,
@@ -15,12 +14,14 @@
   <fieldset>
     <legend>البيانات الشخصية</legend>
     <label for="first-name">الاسم الأول</label>
+    <!-- svelte-ignore a11y_autofocus -->
     <input
       id="first-name"
       name="first-name"
       type="text"
       style:direction="rtl"
       required
+      autofocus
       pattern={arabicNamePattern.source}
       autocomplete="off"
       autocorrect="off"
@@ -69,14 +70,12 @@
   <fieldset>
     <legend>بيانات المستخدم</legend>
     <label for="username">اسم المستخدم</label>
-    <!-- svelte-ignore a11y_autofocus -->
     <input
       id="username"
       name="username"
       type="text"
       required
       pattern={usernamePattern.source}
-      autofocus
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
