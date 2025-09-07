@@ -43,6 +43,13 @@
       "when": 1757077023919,
       "tag": "0005_red_thunderbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1757241556922,
+      "tag": "0006_great_onslaught",
+      "breakpoints": true
     }
   ]
 }
