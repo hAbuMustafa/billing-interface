@@ -11,6 +11,12 @@
 
 <Nav user={page.data.user} />
 
+{#if page.data.title}
+  <h1>
+    {page.data.title}
+  </h1>
+{/if}
+
 {#if page.status >= 400 && page?.form?.message}
   <div class="error">{page.form.message}</div>
 {/if}
