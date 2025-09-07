@@ -2,11 +2,10 @@
   import { PUBLIC_invoice_spreadsheetId } from '$env/static/public';
 
   import Sheet from '$lib/components/Sheet/Sheet.svelte';
-  import { getData } from '$lib/utils/request';
+  // import { getData } from '$lib/utils/request';
 </script>
 
-<h1>إصدار فاتورة</h1>
-{#await getData(PUBLIC_invoice_spreadsheetId, 'Names!C:M', 'اسم المريض', 'عبود')}
+<!-- {#await getData(PUBLIC_invoice_spreadsheetId, 'Names!C:M', 'اسم المريض', 'عبود')}
   <p>جاري تحميل بيانات المرضى...</p>
 {:then patients}
   {#if patients.rows}
@@ -21,7 +20,7 @@
   {/if}
 {:catch error}
   <p>حدث عطل ما: <br />{error.message}</p>
-{/await}
+{/await} -->
 
 <style>
   h1 {
