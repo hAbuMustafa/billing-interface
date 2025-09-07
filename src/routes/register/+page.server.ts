@@ -122,8 +122,6 @@ export const actions: Actions = {
       });
     }
 
-    // todo: bind user object from `registrationResult.user`
-
     return redirect(303, '/');
   },
 };
