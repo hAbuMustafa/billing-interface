@@ -36,7 +36,7 @@
   }
 
   .error {
-    margin-block-start: 1rem;
+    margin-block: 1rem;
     padding-block: 1rem;
     text-align: center;
     border: 1px solid light-dark(maroon, salmon);
