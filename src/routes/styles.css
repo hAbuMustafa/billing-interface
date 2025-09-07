@@ -15,3 +15,13 @@ body {
   background-color: var(--main-bg-color);
   color: var(--main-text-color);
 }
+
+main > form {
+  width: clamp(500px, 50vw, 600px);
+  padding: 2rem;
+
+  border-radius: 0.25rem;
+  border: 1px solid light-dark(#333, #ccc);
+
+  box-shadow: black 10px 10px 10px;
+}

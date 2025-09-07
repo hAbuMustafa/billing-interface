@@ -26,8 +26,13 @@
 </main>
 
 <style>
+  h1 {
+    text-align: center;
+  }
+
   main {
-    place-items: center;
+    display: flex;
+    justify-content: center;
   }
 
   .error {

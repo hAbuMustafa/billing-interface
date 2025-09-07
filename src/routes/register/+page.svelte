@@ -142,14 +142,6 @@
 
 <style>
   form {
-    width: clamp(500px, 50vw, 600px);
-    padding: 2rem;
-
-    border-radius: 0.25rem;
-    border: 1px solid light-dark(#333, #ccc);
-
-    box-shadow: black 10px 10px 10px;
-
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 6fr 1fr;
