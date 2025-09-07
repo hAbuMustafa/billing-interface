@@ -27,6 +27,13 @@ type NewUserDataT = {
   password: string;
 };
 
+function dropPasswordHash(
+  userObject: typeof Sys_Users.$inferSelect
+): Omit<typeof Sys_Users.$inferSelect, 'hashed_pw'> {
+  const { hashed_pw, ...otherFields } = userObject;
+  return otherFields;
+}
+
 export async function createUser(newUserData: NewUserDataT) {
   const passwordHash = await bcrypt.hash(newUserData.password, SALT_ROUNDS);
 
@@ -116,7 +123,7 @@ export async function createUser(newUserData: NewUserDataT) {
 
     return {
       success: true,
-      user: response,
+      user: dropPasswordHash(response),
     };
   } catch (error) {
     return {
@@ -126,65 +133,23 @@ export async function createUser(newUserData: NewUserDataT) {
   }
 }
 
-export async function isUniqueUser(
-  username: string,
-  fetchFunc: Function
-): Promise<boolean> {
-  const response = await fetchFunc('/api/sheets/get', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      spreadsheetId: PUBLIC_users_spreadsheetId,
-      range: 'users!A:H',
-      filterBy: 'username',
-      filterValue: username,
-      filterMethod: 'equal',
-      withTableHeader: false,
-    }),
-  });
-
-  const data = await response.json();
-
-  return data.rows.length === 0;
-}
-
-export async function validateUser(
-  username: string,
-  password: string,
-  fetchFunc: Function
-) {
-  const response = await fetchFunc('/api/sheets/get', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      spreadsheetId: PUBLIC_users_spreadsheetId,
-      range: 'users!A:H',
-      filterBy: 'username',
-      filterValue: username,
-      filterMethod: 'equal',
-      withTableHeader: false,
-    }),
-  });
-
-  const data = await response.json();
-
-  const user = data.rows[0];
+export async function validateUser(username: string, password: string) {
+  const [user] = await db
+    .select()
+    .from(Sys_Users)
+    .where(eq(Sys_Users.username, username));
 
   if (!user) {
     return null;
   }
 
-  const isValid = await bcrypt.compare(password, user.password_hash);
+  const isValid = await bcrypt.compare(password, user.hashed_pw);
 
   if (!isValid) {
     return null;
   }
 
-  return user.id;
+  return dropPasswordHash(user);
 }
 
 export async function createSession(userId: string, cookies: any, fetchFunc: Function) {
