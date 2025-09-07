@@ -18,7 +18,7 @@
 {/if}
 
 {#if page.status >= 400 && page?.form?.message}
-  <div class="error">{page.form.message}</div>
+  <div class="error" dir="auto">{page.form.message}</div>
 {/if}
 
 <main>
