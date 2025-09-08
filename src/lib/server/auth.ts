@@ -11,8 +11,9 @@ import {
   S_pb_keys,
   S_pv_keys,
   People_contact_information,
+  Sys_Sessions,
 } from './schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 
 const SALT_ROUNDS = 12;
 
@@ -154,70 +155,41 @@ export async function validateUser(username: string, password: string) {
   return cleanedUser;
 }
 
-export async function getUserFromSession(sessionId: string, fetchFunc: Function) {
-  const sessionsResponse = await fetchFunc('/api/sheets/get', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      spreadsheetId: PUBLIC_users_spreadsheetId,
-      range: 'sessions!A:C',
-      filterBy: 'id',
-      filterValue: sessionId,
-      filterMethod: 'equal',
-      withTableHeader: false,
-    }),
-  });
+export async function getUserFromSession(sessionId: string) {
+  const sessionsData = await db
+    .select()
+    .from(Sys_Sessions)
+    .innerJoin(Sys_Users, eq(Sys_Sessions.user_id, Sys_Users.id))
+    .innerJoin(
+      People_contact_information,
+      eq(People_contact_information.person_id, Sys_Users.person_id)
+    )
+    .where(
+      and(
+        eq(Sys_Sessions.id, sessionId),
+        eq(People_contact_information.contact_type, 'email')
+      )
+    );
+  if (sessionsData.length === 0) return null;
 
-  const sessionsData = await sessionsResponse.json();
+  if (sessionsData[0].Sys_Sessions.expires_at < new Date()) {
+    try {
+      await db.delete(Sys_Sessions).where(eq(Sys_Sessions.id, sessionId));
+    } catch (error) {
+      console.error(error);
+    }
 
-  if (sessionsData.rows.length === 0) return null;
-
-  if (sessionsData.rows[0].expires_at < Date.now()) {
-    await fetchFunc('/api/sheets/delete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        spreadsheetId: PUBLIC_users_spreadsheetId,
-        sheetName: 'sessions',
-        sheetRange: 'A:C',
-        columnIndex: 0,
-        targetValue: sessionsData.rows[0].id,
-      }),
-    });
-    // todo: delete cookies first, or simply: await fetchFunc('/logout');
+    // todo: delete cookies
     return null;
   }
 
-  const usersResponse = await fetchFunc('/api/sheets/get', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      spreadsheetId: PUBLIC_users_spreadsheetId,
-      range: 'users!A:H',
-      filterBy: 'id',
-      filterValue: sessionsData.rows[0].user_id,
-      filterMethod: 'equal',
-      withTableHeader: false,
-    }),
-  });
+  const user = dropPasswordHash(sessionsData[0].Sys_Users);
 
-  const usersData = await usersResponse.json();
-
-  if (usersData.rows.length === 0) return null;
-
-  const user = usersData.rows[0];
-
-  user.gravatar = user.email
-    ? `https://0.gravatar.com/avatar/${getGravatarHash(user.email)}`
+  user.gravatar = sessionsData[0].People_contact_information.contact_string
+    ? `https://0.gravatar.com/avatar/${getGravatarHash(
+        sessionsData[0].People_contact_information.contact_string
+      )}`
     : '/default-profile.jpg';
-
-  delete user.password_hash;
 
   return user;
 }

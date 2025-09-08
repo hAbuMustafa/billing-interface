@@ -10,20 +10,6 @@ export async function GET({ cookies, fetch }) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
     });
-
-    await fetch('/api/sheets/delete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        spreadsheetId: PUBLIC_users_spreadsheetId,
-        sheetName: 'sessions',
-        sheetRange: 'A:C',
-        columnIndex: 0,
-        targetValue: currentSessionId,
-      }),
-    });
   }
 
   return redirect(303, '/');
