@@ -1,6 +1,9 @@
-import { createSession, validateUser } from '$lib/server/auth';
+import { validateUser } from '$lib/server/auth';
+import { db } from '$lib/server/db.js';
+import { Sys_Sessions, Sys_Users } from '$lib/server/schema.js';
 import { passwordPattern, usernamePattern } from '$lib/stores/patterns';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { eq, sql } from 'drizzle-orm';
 
 export function load({ locals }) {
   if (locals.user) return redirect(303, '/');
@@ -11,7 +14,7 @@ export function load({ locals }) {
 }
 
 export const actions: Actions = {
-  default: async ({ request, cookies, fetch }) => {
+  default: async ({ request, cookies }) => {
     const formData = await request.formData();
     const username = formData.get('username');
     const password = formData.get('password');
@@ -31,15 +34,40 @@ export const actions: Actions = {
       });
     }
 
-    const userId = await validateUser(username as string, password as string, fetch);
+    const userData = await validateUser(username as string, password as string);
 
-    if (!userId) {
+    if (!userData) {
       return fail(401, {
         message: 'اسم المستخدم أو كلمة المرور غير صحيحة',
       });
     }
 
-    await createSession(userId as string, cookies, fetch);
+    // create session
+    const sessionId = crypto.randomUUID();
+    await db.insert(Sys_Sessions).values({
+      id: sessionId,
+      user_id: userData.id,
+    });
+
+    const [newSessionData] = await db
+      .select()
+      .from(Sys_Sessions)
+      .where(eq(Sys_Sessions.id, sessionId));
+
+    cookies.set('session_id', sessionId, {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      expires: newSessionData.expires_at,
+    });
+
+    // update user's last_login field
+    try {
+      await db.update(Sys_Users).set({ last_login: sql`CURRENT_TIMESTAMP` });
+    } catch (error) {
+      console.error(error);
+    }
 
     throw redirect(303, '/');
   },

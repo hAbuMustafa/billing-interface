@@ -149,33 +149,9 @@ export async function validateUser(username: string, password: string) {
     return null;
   }
 
-  return dropPasswordHash(user);
-}
+  const cleanedUser = dropPasswordHash(user);
 
-export async function createSession(userId: string, cookies: any, fetchFunc: Function) {
-  const sessionId = crypto.randomUUID();
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 60);
-  const response = await fetchFunc('/api/sheets/insert', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      spreadsheetId: PUBLIC_users_spreadsheetId,
-      sheetName: 'sessions',
-      rows: [[sessionId, userId, formatDate(expiresAt.getTime())]],
-    }),
-  });
-
-  const data = await response.json();
-
-  cookies.set('session_id', sessionId, {
-    path: '/',
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    expires: expiresAt,
-  });
+  return cleanedUser;
 }
 
 export async function getUserFromSession(sessionId: string, fetchFunc: Function) {
