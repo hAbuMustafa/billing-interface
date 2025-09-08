@@ -1,4 +1,6 @@
 import { createUser } from '$lib/server/auth';
+import { db } from '$lib/server/db';
+import { People_contact_information, Sys_Users } from '$lib/server/schema';
 import {
   arabicNamePattern,
   egyptianMobileNumberPattern,
@@ -7,6 +9,7 @@ import {
   usernamePattern,
 } from '$lib/stores/patterns';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 import type { DrizzleQueryError } from 'drizzle-orm/errors';
 
 export function load() {
@@ -36,6 +39,16 @@ export const actions: Actions = {
     username = (username as string)?.trim();
     phoneNumber = (phoneNumber as string)?.trim();
     email = (email as string)?.trim();
+
+    const failWithMessage = failWithFormFieldsAndMessageBuilder({
+      first_name,
+      father_name,
+      grandfather_name,
+      family_name,
+      username,
+      phoneNumber,
+      email,
+    });
 
     if (
       !username ||
@@ -95,6 +108,39 @@ export const actions: Actions = {
       });
     }
 
+    // username used before?
+    const usersWithSameUsername = (
+      await db.select().from(Sys_Users).where(eq(Sys_Users.username, username))
+    ).length;
+
+    if (usersWithSameUsername) {
+      return failWithMessage('اسم المستخدم مسجل مسبقا.');
+    }
+
+    // email registered before?
+    const usersWithSameEmail = (
+      await db
+        .select()
+        .from(People_contact_information)
+        .where(eq(People_contact_information.contact_string, email))
+    ).length;
+
+    if (usersWithSameEmail) {
+      return failWithMessage('البريد الإلكتروني مسجل مسبقا.');
+    }
+
+    // phone-number registered before?
+    const usersWithSamePhoneNumber = (
+      await db
+        .select()
+        .from(People_contact_information)
+        .where(eq(People_contact_information.contact_string, phoneNumber))
+    ).length;
+
+    if (usersWithSamePhoneNumber) {
+      return failWithMessage('رقم الهاتف مسجل مسبقا.');
+    }
+
     const registrationResult = await createUser({
       username,
       password: password as string,
@@ -107,21 +153,19 @@ export const actions: Actions = {
     });
 
     if (!registrationResult.success) {
-      return fail(401, {
-        message: (registrationResult.error as DrizzleQueryError).cause?.message.split(
-          ' for '
-        )[0],
-
-        first_name,
-        father_name,
-        grandfather_name,
-        family_name,
-        username,
-        phoneNumber,
-        email,
-      });
+      return failWithMessage(
+        (registrationResult.error as DrizzleQueryError).cause!.message.split(' for ')[0]
+      );
     }
 
     return redirect(303, '/');
   },
 };
+
+function failWithFormFieldsAndMessageBuilder(fields: { [k: string]: string | number }) {
+  return (failMessage: string) =>
+    fail(401, {
+      message: failMessage,
+      ...fields,
+    });
+}
