@@ -1,7 +1,7 @@
 import { validateUser } from '$lib/server/auth';
 import { db } from '$lib/server/db.js';
 import { Sys_Sessions, Sys_Users } from '$lib/server/schema.js';
-import { passwordPattern, usernamePattern } from '$lib/stores/patterns';
+import { usernamePattern } from '$lib/stores/patterns';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { eq, sql } from 'drizzle-orm';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { passwordPattern, usernamePattern } from '$lib/stores/patterns';
+  import { usernamePattern } from '$lib/stores/patterns';
 </script>
 
 <form action="/login" method="post">
