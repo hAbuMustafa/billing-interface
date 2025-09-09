@@ -80,7 +80,7 @@ export const actions: Actions = {
 
     if (!passwordPattern.test(password as string)) {
       return failWithMessage(
-        'كلمة المرور بصيغة غير صحيحة. أحرف وأرقام ورموز (@$!%*?&) فقط. ومن 8 أحرف على الأقل.'
+        'كلمة المرور بصيغة غير صحيحة. أحرف وأرقام ورموز (@$!%*?&) فقط. ومن 7 أحرف على الأقل.'
       );
     }
 
