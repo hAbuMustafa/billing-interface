@@ -12,8 +12,9 @@ import {
   S_pv_keys,
   People_contact_information,
   Sys_Sessions,
+  People_identifying_documents,
 } from './schema';
-import { and, eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 const SALT_ROUNDS = 12;
 
@@ -21,10 +22,11 @@ type NewUserDataT = {
   first_name: string;
   father_name: string;
   grandfather_name: string;
-  family_name: string;
+  family_name?: string;
+  national_id: string;
   username: string;
   email: string;
-  phoneNumber: string;
+  phone_number: string;
   password: string;
 };
 
@@ -84,22 +86,32 @@ export async function createUser(newUserData: NewUserDataT) {
       const [phoneNumberRow] = await tx
         .insert(People_contact_information)
         .values({
-          contact_string: newUserData.phoneNumber,
+          contact_string: newUserData.phone_number,
           contact_type: 'phone-number',
           is_verified: 0,
           person_id: BigInt(newPerson.id),
         })
         .$returningId();
 
-      const [emailRow] = await tx
-        .insert(People_contact_information)
-        .values({
-          contact_string: newUserData.email,
-          contact_type: 'email',
-          is_verified: 0,
+      if (newUserData.email) {
+        const [emailRow] = await tx
+          .insert(People_contact_information)
+          .values({
+            contact_string: newUserData.email,
+            contact_type: 'email',
+            is_verified: 0,
+            person_id: BigInt(newPerson.id),
+          })
+          .$returningId();
+      }
+
+      if (newUserData.national_id) {
+        const [nationalIdRefId] = await tx.insert(People_identifying_documents).values({
+          document_number: newUserData.national_id,
+          document_type: 'national-id',
           person_id: BigInt(newPerson.id),
-        })
-        .$returningId();
+        });
+      }
 
       const [newUser] = await tx
         .insert(Sys_Users)

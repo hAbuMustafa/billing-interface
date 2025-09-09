@@ -1,10 +1,15 @@
 import { createUser } from '$lib/server/auth';
 import { db } from '$lib/server/db';
-import { People_contact_information, Sys_Users } from '$lib/server/schema';
+import {
+  People_contact_information,
+  People_identifying_documents,
+  Sys_Users,
+} from '$lib/server/schema';
 import {
   arabicNamePattern,
   egyptianMobileNumberPattern,
   emailPattern,
+  nationalIdPattern,
   passwordPattern,
   usernamePattern,
 } from '$lib/stores/patterns';
@@ -26,8 +31,9 @@ export const actions: Actions = {
     let father_name = formData.get('father-name');
     let grandfather_name = formData.get('grandfather-name');
     let family_name = formData.get('family-name');
+    let national_id = formData.get('national-id');
     let username = formData.get('username');
-    let phoneNumber = formData.get('phone-number');
+    let phone_number = formData.get('phone-number');
     let email = formData.get('email');
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm-password');
@@ -36,8 +42,9 @@ export const actions: Actions = {
     father_name = (father_name as string)?.trim();
     grandfather_name = (grandfather_name as string)?.trim();
     family_name = (family_name as string)?.trim();
+    national_id = (national_id as string)?.trim();
     username = (username as string)?.trim();
-    phoneNumber = (phoneNumber as string)?.trim();
+    phone_number = (phone_number as string)?.trim();
     email = (email as string)?.trim();
 
     const failWithMessage = failWithFormFieldsAndMessageBuilder({
@@ -45,8 +52,9 @@ export const actions: Actions = {
       father_name,
       grandfather_name,
       family_name,
+      national_id,
       username,
-      phoneNumber,
+      phone_number,
       email,
     });
 
@@ -57,32 +65,27 @@ export const actions: Actions = {
       !first_name ||
       !father_name ||
       !grandfather_name ||
-      !phoneNumber ||
+      !national_id ||
+      !phone_number ||
       !email
     ) {
-      return fail(400, {
-        message: 'برجاء إدخال جميع البيانات المطلوبة',
-      });
+      return failWithMessage('برجاء إدخال جميع البيانات المطلوبة');
     }
 
     if (!usernamePattern.test(username as string)) {
-      return fail(401, {
-        message:
-          'اسم المستخدم بصيغة غير صحيحة. يمكنك استخدام الأحرف والشرطات (-) فقط. ويجب أن يكون من 5 أحرف على الأقل',
-      });
+      return failWithMessage(
+        'اسم المستخدم بصيغة غير صحيحة. يمكنك استخدام الأحرف والشرطات (-) فقط. ويجب أن يكون من 5 أحرف على الأقل'
+      );
     }
 
     if (!passwordPattern.test(password as string)) {
-      return fail(401, {
-        message:
-          'كلمة المرور بصيغة غير صحيحة. أحرف وأرقام ورموز (@$!%*?&) فقط. ومن 8 أحرف على الأقل.',
-      });
+      return failWithMessage(
+        'كلمة المرور بصيغة غير صحيحة. أحرف وأرقام ورموز (@$!%*?&) فقط. ومن 8 أحرف على الأقل.'
+      );
     }
 
     if (password !== confirmPassword) {
-      return fail(401, {
-        message: 'كلمة السر وتأكيدها غير متطابقان',
-      });
+      return failWithMessage('كلمة السر وتأكيدها غير متطابقان');
     }
 
     if (
@@ -90,22 +93,21 @@ export const actions: Actions = {
       !arabicNamePattern.test(father_name) ||
       !arabicNamePattern.test(grandfather_name)
     ) {
-      return fail(401, {
-        message:
-          'اسم الموظف بصيغة غير صحيحة. يجب أن يكون اسما ثلاثيا على الأقل بحروف عربية فقط',
-      });
+      return failWithMessage(
+        'اسم الموظف بصيغة غير صحيحة. يجب أن يكون اسما ثلاثيا على الأقل بحروف عربية فقط'
+      );
     }
 
-    if (!egyptianMobileNumberPattern.test(phoneNumber)) {
-      return fail(401, {
-        message: 'رقم الموبايل بصيغة غير صحيحة',
-      });
+    if (!egyptianMobileNumberPattern.test(phone_number)) {
+      return failWithMessage('رقم الموبايل بصيغة غير صحيحة');
     }
 
     if (!emailPattern.test(email)) {
-      return fail(401, {
-        message: 'البريد الإلكتروني بصيغة غير صحيحة',
-      });
+      return failWithMessage('البريد الإلكتروني بصيغة غير صحيحة');
+    }
+
+    if (!nationalIdPattern.test(national_id)) {
+      return failWithMessage('الرقم القومي غير صحيح');
     }
 
     // username used before?
@@ -130,17 +132,30 @@ export const actions: Actions = {
     }
 
     // phone-number registered before?
-    const usersWithSamePhoneNumber = (
+    const usersWithSamePhone_number = (
       await db
         .select()
         .from(People_contact_information)
-        .where(eq(People_contact_information.contact_string, phoneNumber))
+        .where(eq(People_contact_information.contact_string, phone_number))
     ).length;
 
-    if (usersWithSamePhoneNumber) {
+    if (usersWithSamePhone_number) {
       return failWithMessage('رقم الهاتف مسجل مسبقا.');
     }
 
+    // national id registered before?
+    const usersWithSameNationalId = (
+      await db
+        .select()
+        .from(People_identifying_documents)
+        .where(eq(People_identifying_documents.document_number, national_id))
+    ).length;
+
+    if (usersWithSameNationalId) {
+      return failWithMessage('الرقم القومي مسجل مسبقا.');
+    }
+
+    // EXECUTE Registration
     const registrationResult = await createUser({
       username,
       password: password as string,
@@ -148,8 +163,9 @@ export const actions: Actions = {
       father_name,
       grandfather_name,
       family_name,
+      national_id,
       email,
-      phoneNumber,
+      phone_number,
     });
 
     if (!registrationResult.success) {
@@ -162,7 +178,9 @@ export const actions: Actions = {
   },
 };
 
-function failWithFormFieldsAndMessageBuilder(fields: { [k: string]: string | number }) {
+function failWithFormFieldsAndMessageBuilder<T extends Record<string, string | number>>(
+  fields: T
+) {
   return (failMessage: string) =>
     fail(401, {
       message: failMessage,

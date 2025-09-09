@@ -2,6 +2,7 @@
   import {
     arabicNamePattern,
     egyptianMobileNumberPattern,
+    nationalIdPattern,
     passwordPattern,
     usernamePattern,
   } from '$lib/stores/patterns';
@@ -71,6 +72,19 @@
       spellcheck="false"
       value={form?.family_name ?? ''}
     />
+
+    <label for="national-id">الرقم القومي</label>
+    <input
+      id="national-id"
+      name="national-id"
+      type="text"
+      required
+      pattern={nationalIdPattern.source}
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+      value={form?.national_id ?? ''}
+    />
   </fieldset>
 
   <fieldset>
@@ -97,7 +111,7 @@
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
-      value={form?.phoneNumber ?? ''}
+      value={form?.phone_number ?? ''}
     />
     <label for="email">البريد الإلكتروني</label>
     <input
