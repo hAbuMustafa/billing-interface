@@ -9,9 +9,16 @@ export async function handle({ event, resolve }) {
 
   if (!sessionId) return redirect(303, '/login');
 
-  const user = await getUserFromSession(sessionId, event.fetch);
+  const user = await getUserFromSession(sessionId);
 
-  if (!user) return redirect(303, '/login');
+  if (!user) {
+    event.cookies.delete('session-id', {
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+    return redirect(303, '/login');
+  }
 
   event.locals.user = user;
 

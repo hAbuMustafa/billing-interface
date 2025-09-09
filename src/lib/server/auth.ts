@@ -164,12 +164,7 @@ export async function getUserFromSession(sessionId: string) {
       People_contact_information,
       eq(People_contact_information.person_id, Sys_Users.person_id)
     )
-    .where(
-      and(
-        eq(Sys_Sessions.id, sessionId),
-        eq(People_contact_information.contact_type, 'email')
-      )
-    );
+    .where(eq(Sys_Sessions.id, sessionId));
   if (sessionsData.length === 0) return null;
 
   if (sessionsData[0].Sys_Sessions.expires_at < new Date()) {
@@ -179,17 +174,25 @@ export async function getUserFromSession(sessionId: string) {
       console.error(error);
     }
 
-    // todo: delete cookies
     return null;
   }
 
+  const user = dropPasswordHash(sessionsData[0].Sys_Users);
+  const userContacts = Object.fromEntries(
+    sessionsData.map((row) => [
+      row.People_contact_information.contact_type,
+      row.People_contact_information.contact_string,
+    ])
+  );
+
   const userObj = {
-    ...dropPasswordHash(sessionsData[0].Sys_Users),
+    ...user,
     gravatar: sessionsData[0].People_contact_information.contact_string
       ? `https://0.gravatar.com/avatar/${getGravatarHash(
           sessionsData[0].People_contact_information.contact_string
         )}`
       : '/default-profile.jpg',
+    contacts: userContacts,
   };
 
   return userObj;

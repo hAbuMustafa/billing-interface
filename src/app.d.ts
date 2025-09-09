@@ -7,9 +7,16 @@ declare global {
       user: {
         id: number;
         username: string;
-        name: string;
-        phone_number: string;
-        password_hash: string;
+        role: number;
+        person_id: bigint;
+        staff_id: number | null;
+        public_key: bigint;
+        private_key: bigint;
+        created_at: Date;
+        active: number;
+        last_login: Date | null;
+        gravatar: string;
+        contacts?: { [key: string]: string };
       } | null;
     }
     // interface PageData {}
