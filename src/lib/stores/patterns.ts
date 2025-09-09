@@ -1,4 +1,4 @@
-export const usernamePattern = /^[\w\-]{5,16}$/;
+export const usernamePattern = /^[\w\-]{4,16}$/;
 export const passwordPattern =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 export const arabicTetradicNamesPattern = /^([ء-ي]+ ){2,}[ء-ي]+$/;
