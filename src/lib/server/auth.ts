@@ -183,13 +183,14 @@ export async function getUserFromSession(sessionId: string) {
     return null;
   }
 
-  const user = dropPasswordHash(sessionsData[0].Sys_Users);
+  const userObj = {
+    ...dropPasswordHash(sessionsData[0].Sys_Users),
+    gravatar: sessionsData[0].People_contact_information.contact_string
+      ? `https://0.gravatar.com/avatar/${getGravatarHash(
+          sessionsData[0].People_contact_information.contact_string
+        )}`
+      : '/default-profile.jpg',
+  };
 
-  user.gravatar = sessionsData[0].People_contact_information.contact_string
-    ? `https://0.gravatar.com/avatar/${getGravatarHash(
-        sessionsData[0].People_contact_information.contact_string
-      )}`
-    : '/default-profile.jpg';
-
-  return user;
+  return userObj;
 }
