@@ -3,6 +3,7 @@ import { redirect } from '@sveltejs/kit';
 
 export async function handle({ event, resolve }) {
   if (event.url.pathname.startsWith('/api')) return await resolve(event);
+  if (event.url.pathname.startsWith('/log')) return await resolve(event);
 
   const sessionId = event.cookies.get('session_id');
   if (!sessionId && !event.route.id?.startsWith('/(authed)')) return await resolve(event);
