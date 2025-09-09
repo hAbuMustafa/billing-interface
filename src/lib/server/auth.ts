@@ -187,10 +187,8 @@ export async function getUserFromSession(sessionId: string) {
 
   const userObj = {
     ...user,
-    gravatar: sessionsData[0].People_contact_information.contact_string
-      ? `https://0.gravatar.com/avatar/${getGravatarHash(
-          sessionsData[0].People_contact_information.contact_string
-        )}`
+    gravatar: userContacts.email
+      ? `https://0.gravatar.com/avatar/${getGravatarHash(userContacts.email)}`
       : '/default-profile.jpg',
     contacts: userContacts,
   };
