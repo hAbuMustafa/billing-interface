@@ -16,8 +16,8 @@ export function load({ locals }) {
 export const actions: Actions = {
   default: async ({ request, cookies }) => {
     const formData = await request.formData();
-    const username = formData.get('username');
-    const password = formData.get('password');
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
 
     if (!username || !password) {
       return fail(400, {
@@ -26,15 +26,15 @@ export const actions: Actions = {
     }
 
     if (
-      !usernamePattern.test(username as string) ||
-      !passwordPattern.test(password as string)
+      !usernamePattern.test(username) ||
+      !(password.length > 6 || password.length < 33)
     ) {
       return fail(401, {
         message: 'اسم المستخدم أو كلمة المرور غير صحيحة',
       });
     }
 
-    const userData = await validateUser(username as string, password as string);
+    const userData = await validateUser(username, password);
 
     if (!userData) {
       return fail(401, {

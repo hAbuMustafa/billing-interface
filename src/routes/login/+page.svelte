@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { passwordPattern, usernamePattern } from "$lib/stores/patterns";
+  import { passwordPattern, usernamePattern } from '$lib/stores/patterns';
 </script>
 
 <form action="/login" method="post">
@@ -23,7 +23,8 @@
     name="password"
     type="password"
     required
-    pattern={passwordPattern.source}
+    min="7"
+    max="32"
     autocomplete="off"
   />
 
@@ -52,21 +53,15 @@
 
   input:user-invalid {
     border-color: light-dark(maroon, salmon);
-    background-color: light-dark(
-      hsl(from salmon h s 80%),
-      hsl(from salmon h s 20%)
-    );
+    background-color: light-dark(hsl(from salmon h s 80%), hsl(from salmon h s 20%));
   }
 
   input:user-valid {
     border-color: light-dark(#008080, green);
-    background-color: light-dark(
-      hsl(from green h s 80%),
-      hsl(from green h s 20%)
-    );
+    background-color: light-dark(hsl(from green h s 80%), hsl(from green h s 20%));
   }
 
-  input[type="submit"] {
+  input[type='submit'] {
     margin-block-start: 1rem;
     background-color: royalblue;
     color: light-dark(#ccc, #ccc);
