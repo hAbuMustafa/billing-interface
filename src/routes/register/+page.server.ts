@@ -1,12 +1,8 @@
-import { createUser } from '$lib/server/auth';
+import { createUser } from '$lib/server/db/operations/auth';
 import { db } from '$lib/server/db';
+import { Sys_Users } from '$lib/server/db/schema';
 import {
-  People_contact_information,
-  People_identifying_documents,
-  Sys_Users,
-} from '$lib/server/schema';
-import {
-  arabicNamePattern,
+  arabicTetradicNamesPattern,
   egyptianMobileNumberPattern,
   emailPattern,
   nationalIdPattern,
@@ -27,31 +23,22 @@ export const actions: Actions = {
   default: async ({ request }) => {
     const formData = await request.formData();
 
-    let first_name = formData.get('first-name');
-    let father_name = formData.get('father-name');
-    let grandfather_name = formData.get('grandfather-name');
-    let family_name = formData.get('family-name');
-    let national_id = formData.get('national-id');
-    let username = formData.get('username');
-    let phone_number = formData.get('phone-number');
-    let email = formData.get('email');
-    const password = formData.get('password');
-    const confirmPassword = formData.get('confirm-password');
+    let name = formData.get('name') as string;
+    let national_id = formData.get('national-id') as string;
+    let username = formData.get('username') as string;
+    let phone_number = formData.get('phone-number') as string;
+    let email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const confirmPassword = formData.get('confirm-password') as string;
 
-    first_name = (first_name as string)?.trim();
-    father_name = (father_name as string)?.trim();
-    grandfather_name = (grandfather_name as string)?.trim();
-    family_name = (family_name as string)?.trim();
-    national_id = (national_id as string)?.trim();
-    username = (username as string)?.trim();
-    phone_number = (phone_number as string)?.trim();
-    email = (email as string)?.trim();
+    name = name?.trim();
+    national_id = national_id?.trim();
+    username = username?.trim();
+    phone_number = phone_number?.trim();
+    email = email?.trim();
 
     const failWithMessage = failWithFormFieldsAndMessageBuilder({
-      first_name,
-      father_name,
-      grandfather_name,
-      family_name,
+      name,
       national_id,
       username,
       phone_number,
@@ -62,9 +49,7 @@ export const actions: Actions = {
       !username ||
       !password ||
       !confirmPassword ||
-      !first_name ||
-      !father_name ||
-      !grandfather_name ||
+      !name ||
       !national_id ||
       !phone_number ||
       !email
@@ -88,11 +73,7 @@ export const actions: Actions = {
       return failWithMessage('كلمة السر وتأكيدها غير متطابقان');
     }
 
-    if (
-      !arabicNamePattern.test(first_name) ||
-      !arabicNamePattern.test(father_name) ||
-      !arabicNamePattern.test(grandfather_name)
-    ) {
+    if (!arabicTetradicNamesPattern.test(name)) {
       return failWithMessage(
         'اسم الموظف بصيغة غير صحيحة. يجب أن يكون اسما ثلاثيا على الأقل بحروف عربية فقط'
       );
@@ -121,10 +102,7 @@ export const actions: Actions = {
 
     // email registered before?
     const usersWithSameEmail = (
-      await db
-        .select()
-        .from(People_contact_information)
-        .where(eq(People_contact_information.contact_string, email))
+      await db.select().from(Sys_Users).where(eq(Sys_Users.email, email))
     ).length;
 
     if (usersWithSameEmail) {
@@ -133,10 +111,7 @@ export const actions: Actions = {
 
     // phone-number registered before?
     const usersWithSamePhone_number = (
-      await db
-        .select()
-        .from(People_contact_information)
-        .where(eq(People_contact_information.contact_string, phone_number))
+      await db.select().from(Sys_Users).where(eq(Sys_Users.phone_number, phone_number))
     ).length;
 
     if (usersWithSamePhone_number) {
@@ -145,10 +120,7 @@ export const actions: Actions = {
 
     // national id registered before?
     const usersWithSameNationalId = (
-      await db
-        .select()
-        .from(People_identifying_documents)
-        .where(eq(People_identifying_documents.document_number, national_id))
+      await db.select().from(Sys_Users).where(eq(Sys_Users.national_id, national_id))
     ).length;
 
     if (usersWithSameNationalId) {
@@ -159,10 +131,7 @@ export const actions: Actions = {
     const registrationResult = await createUser({
       username,
       password: password as string,
-      first_name,
-      father_name,
-      grandfather_name,
-      family_name,
+      name,
       national_id,
       email,
       phone_number,

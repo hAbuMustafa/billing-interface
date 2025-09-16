@@ -21,9 +21,3 @@
 {:catch error}
   <p>حدث عطل ما: <br />{error.message}</p>
 {/await} -->
-
-<style>
-  h1 {
-    text-align: center;
-  }
-</style>

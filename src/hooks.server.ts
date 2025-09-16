@@ -1,4 +1,4 @@
-import { getUserFromSession } from '$lib/server/auth';
+import { getUserFromSession } from '$lib/server/db/operations/auth';
 import { redirect } from '@sveltejs/kit';
 
 export async function handle({ event, resolve }) {

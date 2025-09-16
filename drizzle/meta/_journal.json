@@ -1,54 +1,12 @@
 {
   "version": "7",
-  "dialect": "mysql",
+  "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1756965137619,
-      "tag": "0000_nervous_magdalene",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1756990695963,
-      "tag": "0001_majestic_romulus",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1756991076301,
-      "tag": "0002_milky_typhoid_mary",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1757067939416,
-      "tag": "0003_large_mattie_franklin",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1757068060717,
-      "tag": "0004_yellow_blackheart",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1757077023919,
-      "tag": "0005_red_thunderbolt",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "5",
-      "when": 1757241556922,
-      "tag": "0006_great_onslaught",
+      "version": "6",
+      "when": 1758030504285,
+      "tag": "0000_robust_thanos",
       "breakpoints": true
     }
   ]

@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    arabicNamePattern,
+    arabicTetradicNamesPattern,
     egyptianMobileNumberPattern,
     nationalIdPattern,
     passwordPattern,
@@ -16,61 +16,20 @@
 <form action="/register" method="post">
   <fieldset>
     <legend>البيانات الشخصية</legend>
-    <label for="first-name">الاسم الأول</label>
+    <label for="name">الاسم كاملا</label>
     <!-- svelte-ignore a11y_autofocus -->
     <input
-      id="first-name"
-      name="first-name"
+      id="name"
+      name="name"
       type="text"
       style:direction="rtl"
       required
       autofocus
-      pattern={arabicNamePattern.source}
+      pattern={arabicTetradicNamesPattern.source}
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
       value={form?.first_name ?? ''}
-    />
-
-    <label for="father-name">اسم الأب</label>
-    <input
-      id="father-name"
-      name="father-name"
-      type="text"
-      style:direction="rtl"
-      required
-      pattern={arabicNamePattern.source}
-      autocomplete="off"
-      autocorrect="off"
-      spellcheck="false"
-      value={form?.father_name ?? ''}
-    />
-
-    <label for="grandfather-name">اسم الجد</label>
-    <input
-      id="grandfather-name"
-      name="grandfather-name"
-      type="text"
-      style:direction="rtl"
-      required
-      pattern={arabicNamePattern.source}
-      autocomplete="off"
-      autocorrect="off"
-      spellcheck="false"
-      value={form?.grandfather_name ?? ''}
-    />
-
-    <label for="family-name">اسم العائلة</label>
-    <input
-      id="family-name"
-      name="family-name"
-      type="text"
-      style:direction="rtl"
-      pattern={arabicNamePattern.source}
-      autocomplete="off"
-      autocorrect="off"
-      spellcheck="false"
-      value={form?.family_name ?? ''}
     />
 
     <label for="national-id">الرقم القومي</label>

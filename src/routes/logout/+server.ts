@@ -1,5 +1,5 @@
-import { db } from '$lib/server/db.js';
-import { Sys_Sessions } from '$lib/server/schema.js';
+import { db } from '$lib/server/db';
+import { Sys_Sessions } from '$lib/server/db/schema.js';
 import { redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 

@@ -1,9 +1,8 @@
-import { validateUser } from '$lib/server/auth';
-import { db } from '$lib/server/db.js';
-import { Sys_Sessions, Sys_Users } from '$lib/server/schema.js';
+import { validateUser } from '$lib/server/db/operations/auth';
+import { db } from '$lib/server/db';
+import { Sys_Sessions, Sys_Users } from '$lib/server/db/schema.js';
 import { usernamePattern } from '$lib/stores/patterns';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { eq, sql } from 'drizzle-orm';
 
 export function load({ locals }) {
   if (locals.user) return redirect(303, '/');
@@ -42,17 +41,21 @@ export const actions: Actions = {
       });
     }
 
+    if (!userData.active) {
+      return fail(401, {
+        message: 'حسابك لم يتم تفعيله بعد',
+      });
+    }
+
     // create session
     const sessionId = crypto.randomUUID();
-    await db.insert(Sys_Sessions).values({
-      id: sessionId,
-      user_id: userData.id,
-    });
-
     const [newSessionData] = await db
-      .select()
-      .from(Sys_Sessions)
-      .where(eq(Sys_Sessions.id, sessionId));
+      .insert(Sys_Sessions)
+      .values({
+        id: sessionId,
+        user_id: userData.id,
+      })
+      .returning();
 
     cookies.set('session_id', sessionId, {
       path: '/',
@@ -64,7 +67,7 @@ export const actions: Actions = {
 
     // update user's last_login field
     try {
-      await db.update(Sys_Users).set({ last_login: sql`CURRENT_TIMESTAMP` });
+      await db.update(Sys_Users).set({ last_login: new Date() });
     } catch (error) {
       console.error(error);
     }

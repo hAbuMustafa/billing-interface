@@ -1,15 +1,9 @@
 import { defineConfig } from 'drizzle-kit';
 export default defineConfig({
-  dialect: 'mysql',
-  schema: './src/lib/server/schema.ts',
+  dialect: 'sqlite',
+  schema: './src/lib/server/db/schema.ts',
   out: './drizzle',
-  dbCredentials: {
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: process.env.DATABASE_Connection_PW!,
-    database: 'J23rdHospital_TEST',
-  },
+  dbCredentials: { url: 'file:data.db' },
   introspect: {
     casing: 'preserve',
   },

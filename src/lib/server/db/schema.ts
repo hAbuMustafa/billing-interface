@@ -1,0 +1,178 @@
+import { sql } from 'drizzle-orm';
+import { sqliteTable, index, integer, text, unique, real } from 'drizzle-orm/sqlite-core';
+
+export const Wards = sqliteTable('Wards', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+  floor: integer().notNull(),
+});
+
+export const Patient_dismissal_reasons = sqliteTable('Patient_dismissal_reasons', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+});
+
+export const Patient_id_doc_type = sqliteTable('Patient_id_doc_type', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+});
+
+export const Patient_wards = sqliteTable(
+  'Patient_wards',
+  {
+    id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+    patient_id: text()
+      .notNull()
+      .references(() => Patients.id),
+    ward: integer()
+      .notNull()
+      .references(() => Wards.id),
+    notes: text(),
+    timestamp: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+  },
+  (table) => [index('trans_patient_id_link_idx').on(table.patient_id)]
+);
+
+export const Patients = sqliteTable('Patients', {
+  id: text().notNull().primaryKey(),
+  name: text().notNull(),
+  id_doc_type: integer({ mode: 'number' }).references(() => Patient_id_doc_type.id),
+  id_doc_num: text(),
+  diagnosis: text().notNull(),
+  admission_date: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+  admission_notes: text(),
+  dismissal_date: integer({ mode: 'timestamp' }),
+  dismissal_reason: integer().references(() => Patient_dismissal_reasons.id),
+  dismissal_notes: text(),
+  gender: integer({ mode: 'boolean' }),
+  birthdate: integer({ mode: 'timestamp' }),
+  health_insurance: integer({ mode: 'boolean' }),
+});
+
+export const Drugs_unit = sqliteTable('Drugs_unit', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+});
+
+export const Drugs_category = sqliteTable('Drugs_category', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+});
+
+export const Drugs_page_number = sqliteTable('Drugs_page_number', {
+  drug_id: integer({ mode: 'number' }).notNull(),
+  record_id: integer({ mode: 'number' }).notNull(),
+  record_page_number: integer().notNull(),
+});
+
+export const Drugs_amb_name = sqliteTable('Drugs_amb_name', {
+  drug_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Drugs.id),
+  sound_like_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Drugs.id),
+});
+
+export const Drugs_amb_look = sqliteTable('Drugs_amb_look', {
+  drug_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Drugs.id),
+  look_like_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Drugs.id),
+});
+
+export const Drugs = sqliteTable('Drugs', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  name_ar: text().notNull(),
+  name_en: text().notNull(),
+  trade_name_ar: text(),
+  trade_name_en: text(),
+  unit: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Drugs_unit.id),
+  category: integer()
+    .notNull()
+    .references(() => Drugs_category.id),
+  smc_code: integer(),
+  cat_strategy: integer({ mode: 'boolean' }),
+  cat_high_concentration_electrolyte: integer({ mode: 'boolean' }),
+  cat_dangerous: integer({ mode: 'boolean' }),
+  cat_upa_quota: integer({ mode: 'boolean' }),
+});
+
+export const Ph_InEco_Stock = sqliteTable(
+  'Ph_InEco_Stock',
+  {
+    id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+    drug_id: integer({ mode: 'number' })
+      .notNull()
+      .references(() => Drugs.id),
+    amount: integer({ mode: 'number' }).notNull().default(0),
+    price_purchase: real().notNull(),
+    expiry_date: integer({ mode: 'timestamp' }),
+    batch_number: text(),
+  },
+  (table) => [index('drug_id_stock_link').on(table.drug_id)]
+);
+
+export const Ph_InEco_Transactions = sqliteTable(
+  'Ph_InEco_Transactions',
+  {
+    id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+    timestamp: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+    item_id: integer({ mode: 'number' })
+      .notNull()
+      .references(() => Ph_InEco_Stock.id),
+    amount: integer().notNull(),
+    patient_id: text()
+      .notNull()
+      .references(() => Patients.id),
+    user_id: integer()
+      .notNull()
+      .references(() => Sys_Users.id),
+  },
+  (table) => [
+    index('item_id_tx_link_idx').on(table.item_id),
+    index('patient_id_tx_link').on(table.patient_id),
+    index('user_id_tx_link').on(table.user_id),
+  ]
+);
+
+export const Sys_Users = sqliteTable(
+  'Sys_Users',
+  {
+    id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+    username: text().notNull(),
+    hashed_pw: text().notNull(),
+    name: text().notNull(),
+    phone_number: text().notNull(),
+    email: text(),
+    national_id: text(),
+    role: integer().notNull(),
+    created_at: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+    active: integer({ mode: 'boolean' }).notNull().default(false),
+    last_login: integer({ mode: 'timestamp' }),
+  },
+  (table) => [
+    unique('username_UNIQUE').on(table.username),
+    unique('user_mobile_UNIQUE').on(table.phone_number),
+    unique('user_email_UNIQUE').on(table.email),
+    unique('user_national_id_UNIQUE').on(table.national_id),
+  ]
+);
+
+export const Sys_Sessions = sqliteTable(
+  'Sys_Sessions',
+  {
+    id: text().primaryKey(),
+    user_id: integer({ mode: 'number' })
+      .notNull()
+      .references(() => Sys_Users.id),
+    expires_at: integer({ mode: 'timestamp' })
+      .notNull()
+      .default(sql`(DATETIME('now', '+2 hours'))`),
+  },
+  (table) => [index('sessions_user_link').on(table.user_id)]
+);
