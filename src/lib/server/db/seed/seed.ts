@@ -59,10 +59,8 @@ function beginSeed() {
   // Seed Initial Data
   seed(new_Users, createUser);
   seed(new_Drugs, createDrug);
-  seed(new_Patients, createPatient);
-  seed(new_PatientTransfers, transferPatient);
+  seed(new_Patients, (patient: any) => createPatient(patient, true));
+  seed(new_PatientTransfers, (transfer: any) => transferPatient(transfer, true));
 }
 
 // beginSeed()
-
-// fix: convert google sheets date serial to JS epoch time: (serial - 25569) * 24 * 60 * 60 * 1000

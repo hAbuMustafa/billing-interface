@@ -7,6 +7,7 @@ import {
   People_Patients,
   Wards,
 } from '$lib/server/db/schema';
+import { convertGoogleSheetsDateToJSDate } from '$lib/utils/date-format';
 import { eq } from 'drizzle-orm';
 
 export async function createWard(ward: typeof Wards.$inferInsert) {
@@ -36,8 +37,27 @@ export async function createDismissalReason(
 }
 
 export async function createPatient(
-  patient: typeof People_Patients.$inferInsert & typeof People.$inferInsert
+  patient: typeof People_Patients.$inferInsert & typeof People.$inferInsert,
+  fromGoogleSheet = false
 ) {
+  if (fromGoogleSheet) {
+    patient.admission_date = new Date(
+      convertGoogleSheetsDateToJSDate(patient.admission_date as unknown as number)
+    );
+
+    if (patient.dismissal_date) {
+      patient.dismissal_date = new Date(
+        convertGoogleSheetsDateToJSDate(patient.dismissal_date as unknown as number)
+      );
+    }
+
+    if (patient.birthdate) {
+      patient.birthdate = new Date(
+        convertGoogleSheetsDateToJSDate(patient.birthdate as unknown as number)
+      );
+    }
+  }
+
   const [new_patient] = await db.transaction(async (tx) => {
     let foundPerson;
 
@@ -60,7 +80,15 @@ export async function createPatient(
   return new_patient;
 }
 
-export async function transferPatient(transfer: typeof Patient_wards.$inferInsert) {
+export async function transferPatient(
+  transfer: typeof Patient_wards.$inferInsert,
+  fromGoogleSheet = false
+) {
+  if (fromGoogleSheet) {
+    transfer.timestamp = new Date(
+      convertGoogleSheetsDateToJSDate(transfer.timestamp as unknown as number)
+    );
+  }
   const [new_transfer] = await db.insert(Patient_wards).values(transfer).returning();
 
   return new_transfer;
