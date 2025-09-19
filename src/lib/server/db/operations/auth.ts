@@ -1,8 +1,15 @@
 import { getGravatarHash } from '$lib/utils/gravatar';
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
-import { Sys_Users, Sys_Sessions } from '$lib/server/db/schema';
+import {
+  Sys_Users,
+  Sys_Sessions,
+  Sys_Sec_pb_key,
+  Sys_Sec_pv_key,
+} from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { generateKeyPairSync } from 'node:crypto';
+import { PV_KEY_ENCR_KEY } from '$env/static/private';
 
 const SALT_ROUNDS = 12;
 
@@ -18,14 +25,43 @@ type NewUserDataT = {
 export async function createUser(newUserData: NewUserDataT) {
   const passwordHash = await bcrypt.hash(newUserData.password, SALT_ROUNDS);
 
+  const { publicKey: encryptedPbKey, privateKey: encryptedPvKey } = generateKeyPairSync(
+    'rsa',
+    {
+      modulusLength: 4096,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem',
+      },
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem',
+        cipher: 'aes-256-cbc',
+        passphrase: PV_KEY_ENCR_KEY,
+      },
+    }
+  );
+
   try {
     const response = await db.transaction(async (tx) => {
+      const [new_pb_key] = await tx
+        .insert(Sys_Sec_pb_key)
+        .values({ key: encryptedPbKey })
+        .returning();
+
+      const [new_pv_key] = await tx
+        .insert(Sys_Sec_pv_key)
+        .values({ key: encryptedPvKey })
+        .returning();
+
       const [user] = await tx
         .insert(Sys_Users)
         .values({
           hashed_pw: passwordHash,
           active: false,
           role: 2, // todo: change this when roles are defined
+          pb_key_id: new_pb_key.id,
+          pv_key_id: new_pv_key.id,
           ...newUserData,
         })
         .returning();
