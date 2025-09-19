@@ -11,29 +11,53 @@ import { convertGoogleSheetsDateToJSDate } from '$lib/utils/date-format';
 import { eq } from 'drizzle-orm';
 
 export async function createWard(ward: typeof Wards.$inferInsert) {
-  const [new_ward] = await db.insert(Wards).values(ward).returning();
+  try {
+    const [new_ward] = await db.insert(Wards).values(ward).returning();
 
-  return new_ward;
+    return {
+      success: true,
+      data: new_ward,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
 }
 
 export async function createIdDocType(docType: typeof Patient_id_doc_type.$inferInsert) {
-  const [new_id_doc_type] = await db
-    .insert(Patient_id_doc_type)
-    .values(docType)
-    .returning();
+  try {
+    const [new_id_doc_type] = await db
+      .insert(Patient_id_doc_type)
+      .values(docType)
+      .returning();
 
-  return new_id_doc_type;
+    return { success: true, data: new_id_doc_type };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
 }
 
 export async function createDismissalReason(
   dismissalReason: typeof Patient_dismissal_reasons.$inferInsert
 ) {
-  const [new_dismissal_reason] = await db
-    .insert(Patient_dismissal_reasons)
-    .values(dismissalReason)
-    .returning();
+  try {
+    const [new_dismissal_reason] = await db
+      .insert(Patient_dismissal_reasons)
+      .values(dismissalReason)
+      .returning();
 
-  return new_dismissal_reason;
+    return {
+      success: true,
+      data: new_dismissal_reason,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
 }
 
 export async function createPatient(
@@ -57,27 +81,35 @@ export async function createPatient(
       );
     }
   }
+  try {
+    const [new_patient] = await db.transaction(async (tx) => {
+      let foundPerson;
 
-  const [new_patient] = await db.transaction(async (tx) => {
-    let foundPerson;
+      if (!patient.person_id) {
+        [foundPerson] = await db
+          .select()
+          .from(People)
+          .where(eq(People.id_doc_num, patient.id_doc_num!));
 
-    if (!patient.person_id) {
-      [foundPerson] = await db
-        .select()
-        .from(People)
-        .where(eq(People.id_doc_num, patient.id_doc_num!));
+        if (!foundPerson) {
+          [foundPerson] = await db.insert(People).values(patient).returning();
+        }
 
-      if (!foundPerson) {
-        [foundPerson] = await db.insert(People).values(patient).returning();
+        patient.person_id = foundPerson.id;
       }
 
-      patient.person_id = foundPerson.id;
-    }
+      return await db.insert(People_Patients).values(patient).returning();
+    });
 
-    return await db.insert(People_Patients).values(patient).returning();
-  });
-
-  return new_patient;
+    return {
+      success: true,
+      data: new_patient,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
 }
 
 export async function transferPatient(
@@ -89,7 +121,15 @@ export async function transferPatient(
       convertGoogleSheetsDateToJSDate(transfer.timestamp as unknown as number)
     );
   }
-  const [new_transfer] = await db.insert(Patient_wards).values(transfer).returning();
-
-  return new_transfer;
+  try {
+    const [new_transfer] = await db.insert(Patient_wards).values(transfer).returning();
+    return {
+      success: true,
+      data: new_transfer,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
 }

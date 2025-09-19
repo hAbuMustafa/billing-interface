@@ -73,11 +73,10 @@ export async function createUser(newUserData: NewUserDataT) {
 
     return {
       success: true,
-      user: otherUserData,
+      data: otherUserData,
     };
   } catch (error) {
     return {
-      success: false,
       error,
     };
   }
