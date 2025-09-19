@@ -19,6 +19,9 @@ Thumbs.db
 !.env.example
 !.env.test
 
+# Seed Data
+/src/lib/server/db/seed/data/*
+
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*

@@ -1,9 +1,8 @@
-import {
-  USERS_SEED_STRING,
-  PATIENTS_SEED_STRING,
-  DRUGS_SEED_STRING,
-  PATIENT_TRANSFER_SEED_STRING,
-} from '$env/static/private';
+import { patients as new_Patients } from './data/patients';
+import { drugs as new_Drugs } from './data/drugs';
+import { users as new_Users } from './data/users';
+import { transfers as new_PatientTransfers } from './data/patient_transfers';
+
 import { createUser } from '$lib/server/db/operations/auth';
 import {
   createWard,
@@ -17,6 +16,7 @@ import {
   createDrugCategory,
   createDrug,
 } from '$lib/server/db/operations/drugs';
+
 import {
   new_Wards,
   new_id_doc_type,
@@ -24,11 +24,6 @@ import {
   new_Drugs_unit,
   new_Drugs_category,
 } from '$lib/server/db/menus';
-
-const new_Users = JSON.parse(USERS_SEED_STRING);
-const new_Patients = JSON.parse(PATIENTS_SEED_STRING);
-const new_Drugs = JSON.parse(DRUGS_SEED_STRING);
-const new_PatientTransfers = JSON.parse(PATIENT_TRANSFER_SEED_STRING);
 
 export function seed(items: any[], insertFunction: Function) {
   console.warn('Starting seed..');
