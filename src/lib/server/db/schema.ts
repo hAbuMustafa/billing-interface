@@ -183,3 +183,29 @@ export const Sys_Sessions = sqliteTable(
   },
   (table) => [index('sessions_user_link').on(table.user_id)]
 );
+
+export const Invoice = sqliteTable('Invoice', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  patient_id: text()
+    .notNull()
+    .references(() => People_Patients.id),
+  created_by: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Sys_Users.id),
+  created_at: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+  from: integer({ mode: 'timestamp' }).notNull(),
+  till: integer({ mode: 'timestamp' }).notNull(),
+  total: real().notNull(),
+});
+
+export const Invoice_Items = sqliteTable('Invoice_Items', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  invoice_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Invoice.id),
+  item_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Ph_InEco_Stock.id),
+  amount: integer({ mode: 'number' }).notNull().default(1),
+  unit_price: real().notNull(),
+});
