@@ -83,7 +83,7 @@ export async function createUser(newUserData: NewUserDataT) {
   }
 }
 
-export async function validateUser(username: string, password: string) {
+export async function validateLogin(username: string, password: string) {
   const [user] = await db
     .select()
     .from(Sys_Users)

@@ -1,4 +1,4 @@
-import { validateUser } from '$lib/server/db/operations/auth';
+import { validateLogin } from '$lib/server/db/operations/auth';
 import { db } from '$lib/server/db';
 import { Sys_Sessions, Sys_Users } from '$lib/server/db/schema.js';
 import { usernamePattern } from '$lib/stores/patterns';
@@ -33,7 +33,7 @@ export const actions: Actions = {
       });
     }
 
-    const userData = await validateUser(username, password);
+    const userData = await validateLogin(username, password);
 
     if (!userData) {
       return fail(401, {
