@@ -139,11 +139,16 @@ export const Ph_InEco_Transactions = sqliteTable(
     user_id: integer()
       .notNull()
       .references(() => Sys_Users.id),
+    pb_key_id: integer({ mode: 'number' })
+      .notNull()
+      .references(() => Sys_Sec_pb_key.id),
+    signature: text().notNull(),
   },
   (table) => [
     index('item_id_tx_link_idx').on(table.item_id),
     index('patient_id_tx_link').on(table.patient_id),
     index('user_id_tx_link').on(table.user_id),
+    index('user_pb_key_id_tx_link').on(table.pb_key_id),
   ]
 );
 
@@ -218,10 +223,15 @@ export const Invoice = sqliteTable(
     from: integer({ mode: 'timestamp' }).notNull(),
     till: integer({ mode: 'timestamp' }).notNull(),
     total: real().notNull(),
+    pb_key_id: integer({ mode: 'number' })
+      .notNull()
+      .references(() => Sys_Sec_pb_key.id),
+    signature: text().notNull(),
   },
   (table) => [
     index('invoice_creator_link').on(table.created_by),
     index('invoice_patient_link').on(table.patient_id),
+    index('invoice_pb_key_link').on(table.pb_key_id),
   ]
 );
 
