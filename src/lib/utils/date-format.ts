@@ -5,5 +5,8 @@ export function formatDate(dateSerial: number, format = 'YYYY-MM-DD') {
 }
 
 export function convertGoogleSheetsDateToJSDate(serial: number) {
-  return (serial - 25569) * 24 * 60 * 60 * 1000;
+  const sheetsEpoch = new Date(1899, 11, 30); // December 30, 1899
+  const jsDate = new Date(sheetsEpoch.getTime() + serial * 24 * 60 * 60 * 1000);
+
+  return jsDate;
 }
