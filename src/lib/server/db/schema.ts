@@ -161,12 +161,20 @@ export const Sys_Users = sqliteTable(
     created_at: integer({ mode: 'timestamp' }).notNull().default(new Date()),
     active: integer({ mode: 'boolean' }).notNull().default(false),
     last_login: integer({ mode: 'timestamp' }),
+    pb_key_id: integer({ mode: 'number' })
+      .notNull()
+      .references(() => Sys_Sec_pb_key.id),
+    pv_key_id: integer({ mode: 'number' })
+      .notNull()
+      .references(() => Sys_Sec_pv_key.id),
   },
   (table) => [
     unique('username_UNIQUE').on(table.username),
     unique('user_mobile_UNIQUE').on(table.phone_number),
     unique('user_email_UNIQUE').on(table.email),
     unique('user_national_id_UNIQUE').on(table.national_id),
+    index('pb_key_for_user_link').on(table.pb_key_id),
+    index('pv_key_for_user_link').on(table.pv_key_id),
   ]
 );
 
@@ -183,6 +191,18 @@ export const Sys_Sessions = sqliteTable(
   },
   (table) => [index('sessions_user_link').on(table.user_id)]
 );
+
+export const Sys_Sec_pb_key = sqliteTable('Sys_Sec_pb_key', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  key: text().notNull(),
+  timestamp: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+});
+
+export const Sys_Sec_pv_key = sqliteTable('Sys_Sec_pv_key', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  key: text().notNull(),
+  timestamp: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+});
 
 export const Invoice = sqliteTable('Invoice', {
   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
