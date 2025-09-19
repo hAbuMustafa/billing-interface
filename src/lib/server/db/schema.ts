@@ -48,7 +48,7 @@ export const People_Patients = sqliteTable('People_Patients', {
   person_id: integer({ mode: 'number' })
     .notNull()
     .references(() => People.id),
-  diagnosis: text().notNull(),
+  diagnosis: text(),
   admission_date: integer({ mode: 'timestamp' }).notNull().default(new Date()),
   admission_notes: text(),
   dismissal_date: integer({ mode: 'timestamp' }),
@@ -67,8 +67,10 @@ export const Drugs_category = sqliteTable('Drugs_category', {
 });
 
 export const Drugs_page_number = sqliteTable('Drugs_page_number', {
-  drug_id: integer({ mode: 'number' }).notNull(),
-  record_id: integer({ mode: 'number' }).notNull(),
+  drug_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Ph_InEco_Stock.id),
+  record_id: integer({ mode: 'number' }).notNull(), // رقم الدفتر
   record_page_number: integer().notNull(),
 });
 
