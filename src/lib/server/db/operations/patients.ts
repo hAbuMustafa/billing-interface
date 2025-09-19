@@ -86,19 +86,20 @@ export async function createPatient(
       let foundPerson;
 
       if (!patient.person_id) {
-        [foundPerson] = await db
+        [foundPerson] = await tx
           .select()
           .from(People)
           .where(eq(People.id_doc_num, patient.id_doc_num!));
 
         if (!foundPerson) {
-          [foundPerson] = await db.insert(People).values(patient).returning();
+          const { id: droppedPatientId, ...restOfPatientData } = patient;
+          [foundPerson] = await tx.insert(People).values(restOfPatientData).returning();
         }
 
         patient.person_id = foundPerson.id;
       }
 
-      return await db.insert(People_Patients).values(patient).returning();
+      return await tx.insert(People_Patients).values(patient).returning();
     });
 
     return {
