@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "d1745596-3c7a-4e28-9b1b-73b11b4d6a57",
+  "id": "718b2476-2886-42b8-b7ba-29f38475fc72",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "Drugs": {
@@ -306,6 +306,230 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
+    "Invoice": {
+      "name": "Invoice",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'\"2025-09-19T13:57:07.972Z\"'"
+        },
+        "from": {
+          "name": "from",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "till": {
+          "name": "till",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "total": {
+          "name": "total",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "pb_key_id": {
+          "name": "pb_key_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "signature": {
+          "name": "signature",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "invoice_creator_link": {
+          "name": "invoice_creator_link",
+          "columns": [
+            "created_by"
+          ],
+          "isUnique": false
+        },
+        "invoice_patient_link": {
+          "name": "invoice_patient_link",
+          "columns": [
+            "patient_id"
+          ],
+          "isUnique": false
+        },
+        "invoice_pb_key_link": {
+          "name": "invoice_pb_key_link",
+          "columns": [
+            "pb_key_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Invoice_patient_id_People_Patients_id_fk": {
+          "name": "Invoice_patient_id_People_Patients_id_fk",
+          "tableFrom": "Invoice",
+          "tableTo": "People_Patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Invoice_created_by_Sys_Users_id_fk": {
+          "name": "Invoice_created_by_Sys_Users_id_fk",
+          "tableFrom": "Invoice",
+          "tableTo": "Sys_Users",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Invoice_pb_key_id_Sys_Sec_pb_key_id_fk": {
+          "name": "Invoice_pb_key_id_Sys_Sec_pb_key_id_fk",
+          "tableFrom": "Invoice",
+          "tableTo": "Sys_Sec_pb_key",
+          "columnsFrom": [
+            "pb_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "Invoice_Items": {
+      "name": "Invoice_Items",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "invoice_id": {
+          "name": "invoice_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "item_id": {
+          "name": "item_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 1
+        },
+        "unit_price": {
+          "name": "unit_price",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "invoice_items_link": {
+          "name": "invoice_items_link",
+          "columns": [
+            "item_id"
+          ],
+          "isUnique": false
+        },
+        "invoice_invoice_id_link": {
+          "name": "invoice_invoice_id_link",
+          "columns": [
+            "invoice_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Invoice_Items_invoice_id_Invoice_id_fk": {
+          "name": "Invoice_Items_invoice_id_Invoice_id_fk",
+          "tableFrom": "Invoice_Items",
+          "tableTo": "Invoice",
+          "columnsFrom": [
+            "invoice_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Invoice_Items_item_id_Ph_InEco_Stock_id_fk": {
+          "name": "Invoice_Items_item_id_Ph_InEco_Stock_id_fk",
+          "tableFrom": "Invoice_Items",
+          "tableTo": "Ph_InEco_Stock",
+          "columnsFrom": [
+            "item_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "Patient_dismissal_reasons": {
       "name": "Patient_dismissal_reasons",
       "columns": {
@@ -391,7 +615,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2025-09-16T13:48:24.266Z\"'"
+          "default": "'\"2025-09-19T13:57:07.968Z\"'"
         }
       },
       "indexes": {
@@ -404,10 +628,10 @@
         }
       },
       "foreignKeys": {
-        "Patient_wards_patient_id_Patients_id_fk": {
-          "name": "Patient_wards_patient_id_Patients_id_fk",
+        "Patient_wards_patient_id_People_Patients_id_fk": {
+          "name": "Patient_wards_patient_id_People_Patients_id_fk",
           "tableFrom": "Patient_wards",
-          "tableTo": "Patients",
+          "tableTo": "People_Patients",
           "columnsFrom": [
             "patient_id"
           ],
@@ -435,15 +659,15 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "Patients": {
-      "name": "Patients",
+    "People": {
+      "name": "People",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "name": {
           "name": "name",
@@ -461,49 +685,6 @@
         },
         "id_doc_num": {
           "name": "id_doc_num",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "diagnosis": {
-          "name": "diagnosis",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "admission_date": {
-          "name": "admission_date",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'\"2025-09-16T13:48:24.266Z\"'"
-        },
-        "admission_notes": {
-          "name": "admission_notes",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "dismissal_date": {
-          "name": "dismissal_date",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "dismissal_reason": {
-          "name": "dismissal_reason",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "dismissal_notes": {
-          "name": "dismissal_notes",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -533,9 +714,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "Patients_id_doc_type_Patient_id_doc_type_id_fk": {
-          "name": "Patients_id_doc_type_Patient_id_doc_type_id_fk",
-          "tableFrom": "Patients",
+        "People_id_doc_type_Patient_id_doc_type_id_fk": {
+          "name": "People_id_doc_type_Patient_id_doc_type_id_fk",
+          "tableFrom": "People",
           "tableTo": "Patient_id_doc_type",
           "columnsFrom": [
             "id_doc_type"
@@ -545,10 +726,91 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "People_Patients": {
+      "name": "People_Patients",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
         },
-        "Patients_dismissal_reason_Patient_dismissal_reasons_id_fk": {
-          "name": "Patients_dismissal_reason_Patient_dismissal_reasons_id_fk",
-          "tableFrom": "Patients",
+        "person_id": {
+          "name": "person_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "diagnosis": {
+          "name": "diagnosis",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "admission_date": {
+          "name": "admission_date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'\"2025-09-19T13:57:07.970Z\"'"
+        },
+        "admission_notes": {
+          "name": "admission_notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dismissal_date": {
+          "name": "dismissal_date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dismissal_reason": {
+          "name": "dismissal_reason",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dismissal_notes": {
+          "name": "dismissal_notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "People_Patients_person_id_People_id_fk": {
+          "name": "People_Patients_person_id_People_id_fk",
+          "tableFrom": "People_Patients",
+          "tableTo": "People",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "People_Patients_dismissal_reason_Patient_dismissal_reasons_id_fk": {
+          "name": "People_Patients_dismissal_reason_Patient_dismissal_reasons_id_fk",
+          "tableFrom": "People_Patients",
           "tableTo": "Patient_dismissal_reasons",
           "columnsFrom": [
             "dismissal_reason"
@@ -655,7 +917,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2025-09-16T13:48:24.267Z\"'"
+          "default": "'\"2025-09-19T13:57:07.971Z\"'"
         },
         "item_id": {
           "name": "item_id",
@@ -684,6 +946,20 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "pb_key_id": {
+          "name": "pb_key_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "signature": {
+          "name": "signature",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -707,6 +983,13 @@
             "user_id"
           ],
           "isUnique": false
+        },
+        "user_pb_key_id_tx_link": {
+          "name": "user_pb_key_id_tx_link",
+          "columns": [
+            "pb_key_id"
+          ],
+          "isUnique": false
         }
       },
       "foreignKeys": {
@@ -723,10 +1006,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "Ph_InEco_Transactions_patient_id_Patients_id_fk": {
-          "name": "Ph_InEco_Transactions_patient_id_Patients_id_fk",
+        "Ph_InEco_Transactions_patient_id_People_Patients_id_fk": {
+          "name": "Ph_InEco_Transactions_patient_id_People_Patients_id_fk",
           "tableFrom": "Ph_InEco_Transactions",
-          "tableTo": "Patients",
+          "tableTo": "People_Patients",
           "columnsFrom": [
             "patient_id"
           ],
@@ -748,8 +1031,85 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "Ph_InEco_Transactions_pb_key_id_Sys_Sec_pb_key_id_fk": {
+          "name": "Ph_InEco_Transactions_pb_key_id_Sys_Sec_pb_key_id_fk",
+          "tableFrom": "Ph_InEco_Transactions",
+          "tableTo": "Sys_Sec_pb_key",
+          "columnsFrom": [
+            "pb_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "Sys_Sec_pb_key": {
+      "name": "Sys_Sec_pb_key",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'\"2025-09-19T13:57:07.972Z\"'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "Sys_Sec_pv_key": {
+      "name": "Sys_Sec_pv_key",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'\"2025-09-19T13:57:07.972Z\"'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
@@ -873,7 +1233,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2025-09-16T13:48:24.267Z\"'"
+          "default": "'\"2025-09-19T13:57:07.971Z\"'"
         },
         "active": {
           "name": "active",
@@ -889,9 +1249,37 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "pb_key_id": {
+          "name": "pb_key_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "pv_key_id": {
+          "name": "pv_key_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {
+        "pb_key_for_user_link": {
+          "name": "pb_key_for_user_link",
+          "columns": [
+            "pb_key_id"
+          ],
+          "isUnique": false
+        },
+        "pv_key_for_user_link": {
+          "name": "pv_key_for_user_link",
+          "columns": [
+            "pv_key_id"
+          ],
+          "isUnique": false
+        },
         "username_UNIQUE": {
           "name": "username_UNIQUE",
           "columns": [
@@ -921,7 +1309,34 @@
           "isUnique": true
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "Sys_Users_pb_key_id_Sys_Sec_pb_key_id_fk": {
+          "name": "Sys_Users_pb_key_id_Sys_Sec_pb_key_id_fk",
+          "tableFrom": "Sys_Users",
+          "tableTo": "Sys_Sec_pb_key",
+          "columnsFrom": [
+            "pb_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Sys_Users_pv_key_id_Sys_Sec_pv_key_id_fk": {
+          "name": "Sys_Users_pv_key_id_Sys_Sec_pv_key_id_fk",
+          "tableFrom": "Sys_Users",
+          "tableTo": "Sys_Sec_pv_key",
+          "columnsFrom": [
+            "pv_key_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}

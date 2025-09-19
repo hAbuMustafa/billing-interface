@@ -45,6 +45,36 @@ CREATE TABLE `Drugs_unit` (
 	`name` text NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE `Invoice` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`patient_id` text NOT NULL,
+	`created_by` integer NOT NULL,
+	`created_at` integer DEFAULT '"2025-09-19T13:57:07.972Z"' NOT NULL,
+	`from` integer NOT NULL,
+	`till` integer NOT NULL,
+	`total` real NOT NULL,
+	`pb_key_id` integer NOT NULL,
+	`signature` text NOT NULL,
+	FOREIGN KEY (`patient_id`) REFERENCES `People_Patients`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`created_by`) REFERENCES `Sys_Users`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`pb_key_id`) REFERENCES `Sys_Sec_pb_key`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE INDEX `invoice_creator_link` ON `Invoice` (`created_by`);--> statement-breakpoint
+CREATE INDEX `invoice_patient_link` ON `Invoice` (`patient_id`);--> statement-breakpoint
+CREATE INDEX `invoice_pb_key_link` ON `Invoice` (`pb_key_id`);--> statement-breakpoint
+CREATE TABLE `Invoice_Items` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`invoice_id` integer NOT NULL,
+	`item_id` integer NOT NULL,
+	`amount` integer DEFAULT 1 NOT NULL,
+	`unit_price` real NOT NULL,
+	FOREIGN KEY (`invoice_id`) REFERENCES `Invoice`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`item_id`) REFERENCES `Ph_InEco_Stock`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE INDEX `invoice_items_link` ON `Invoice_Items` (`item_id`);--> statement-breakpoint
+CREATE INDEX `invoice_invoice_id_link` ON `Invoice_Items` (`invoice_id`);--> statement-breakpoint
 CREATE TABLE `Patient_dismissal_reasons` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL
@@ -60,27 +90,33 @@ CREATE TABLE `Patient_wards` (
 	`patient_id` text NOT NULL,
 	`ward` integer NOT NULL,
 	`notes` text,
-	`timestamp` integer DEFAULT '"2025-09-16T13:48:24.266Z"' NOT NULL,
-	FOREIGN KEY (`patient_id`) REFERENCES `Patients`(`id`) ON UPDATE no action ON DELETE no action,
+	`timestamp` integer DEFAULT '"2025-09-19T13:57:07.968Z"' NOT NULL,
+	FOREIGN KEY (`patient_id`) REFERENCES `People_Patients`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`ward`) REFERENCES `Wards`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE INDEX `trans_patient_id_link_idx` ON `Patient_wards` (`patient_id`);--> statement-breakpoint
-CREATE TABLE `Patients` (
-	`id` text PRIMARY KEY NOT NULL,
+CREATE TABLE `People` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
 	`id_doc_type` integer,
 	`id_doc_num` text,
+	`gender` integer,
+	`birthdate` integer,
+	`health_insurance` integer,
+	FOREIGN KEY (`id_doc_type`) REFERENCES `Patient_id_doc_type`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `People_Patients` (
+	`id` text PRIMARY KEY NOT NULL,
+	`person_id` integer NOT NULL,
 	`diagnosis` text NOT NULL,
-	`admission_date` integer DEFAULT '"2025-09-16T13:48:24.266Z"' NOT NULL,
+	`admission_date` integer DEFAULT '"2025-09-19T13:57:07.970Z"' NOT NULL,
 	`admission_notes` text,
 	`dismissal_date` integer,
 	`dismissal_reason` integer,
 	`dismissal_notes` text,
-	`gender` integer,
-	`birthdate` integer,
-	`health_insurance` integer,
-	FOREIGN KEY (`id_doc_type`) REFERENCES `Patient_id_doc_type`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`person_id`) REFERENCES `People`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`dismissal_reason`) REFERENCES `Patient_dismissal_reasons`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -97,19 +133,35 @@ CREATE TABLE `Ph_InEco_Stock` (
 CREATE INDEX `drug_id_stock_link` ON `Ph_InEco_Stock` (`drug_id`);--> statement-breakpoint
 CREATE TABLE `Ph_InEco_Transactions` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`timestamp` integer DEFAULT '"2025-09-16T13:48:24.267Z"' NOT NULL,
+	`timestamp` integer DEFAULT '"2025-09-19T13:57:07.971Z"' NOT NULL,
 	`item_id` integer NOT NULL,
 	`amount` integer NOT NULL,
 	`patient_id` text NOT NULL,
 	`user_id` integer NOT NULL,
+	`pb_key_id` integer NOT NULL,
+	`signature` text NOT NULL,
 	FOREIGN KEY (`item_id`) REFERENCES `Ph_InEco_Stock`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`patient_id`) REFERENCES `Patients`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`user_id`) REFERENCES `Sys_Users`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`patient_id`) REFERENCES `People_Patients`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`user_id`) REFERENCES `Sys_Users`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`pb_key_id`) REFERENCES `Sys_Sec_pb_key`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE INDEX `item_id_tx_link_idx` ON `Ph_InEco_Transactions` (`item_id`);--> statement-breakpoint
 CREATE INDEX `patient_id_tx_link` ON `Ph_InEco_Transactions` (`patient_id`);--> statement-breakpoint
 CREATE INDEX `user_id_tx_link` ON `Ph_InEco_Transactions` (`user_id`);--> statement-breakpoint
+CREATE INDEX `user_pb_key_id_tx_link` ON `Ph_InEco_Transactions` (`pb_key_id`);--> statement-breakpoint
+CREATE TABLE `Sys_Sec_pb_key` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`key` text NOT NULL,
+	`timestamp` integer DEFAULT '"2025-09-19T13:57:07.972Z"' NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `Sys_Sec_pv_key` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`key` text NOT NULL,
+	`timestamp` integer DEFAULT '"2025-09-19T13:57:07.972Z"' NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE `Sys_Sessions` (
 	`id` text PRIMARY KEY NOT NULL,
 	`user_id` integer NOT NULL,
@@ -127,11 +179,17 @@ CREATE TABLE `Sys_Users` (
 	`email` text,
 	`national_id` text,
 	`role` integer NOT NULL,
-	`created_at` integer DEFAULT '"2025-09-16T13:48:24.267Z"' NOT NULL,
+	`created_at` integer DEFAULT '"2025-09-19T13:57:07.971Z"' NOT NULL,
 	`active` integer DEFAULT false NOT NULL,
-	`last_login` integer
+	`last_login` integer,
+	`pb_key_id` integer NOT NULL,
+	`pv_key_id` integer NOT NULL,
+	FOREIGN KEY (`pb_key_id`) REFERENCES `Sys_Sec_pb_key`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`pv_key_id`) REFERENCES `Sys_Sec_pv_key`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE INDEX `pb_key_for_user_link` ON `Sys_Users` (`pb_key_id`);--> statement-breakpoint
+CREATE INDEX `pv_key_for_user_link` ON `Sys_Users` (`pv_key_id`);--> statement-breakpoint
 CREATE UNIQUE INDEX `username_UNIQUE` ON `Sys_Users` (`username`);--> statement-breakpoint
 CREATE UNIQUE INDEX `user_mobile_UNIQUE` ON `Sys_Users` (`phone_number`);--> statement-breakpoint
 CREATE UNIQUE INDEX `user_email_UNIQUE` ON `Sys_Users` (`email`);--> statement-breakpoint
