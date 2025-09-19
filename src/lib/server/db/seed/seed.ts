@@ -25,30 +25,32 @@ import {
   new_Drugs_category,
 } from '$lib/server/db/menus';
 
-export function seed(items: any[], insertFunction: Function) {
-  console.warn('Starting seed..');
-  console.time('seed');
+export async function seed(items: any[], insertFunction: Function) {
+  const seedName = insertFunction.name.replace('create', '');
 
-  items.forEach(async (itm: any) => {
-    console.info('Seeding:', itm.username);
+  console.warn('\nStarting ' + seedName + ' seed..');
 
-    const i = await insertFunction(itm);
+  console.time('seed ' + seedName);
 
-    if (!i.success) {
+  for (let i = 0; i < items.length; i++) {
+    const itemReturn = await insertFunction(items[i]);
+
+    if (!itemReturn.success) {
       console.error(
         'Failed adding',
-        JSON.stringify(itm, null, 4),
+        JSON.stringify(items[i], null, 4),
         'with error:\n',
-        i.error
+        itemReturn.error
       );
+      break;
     }
-  });
+  }
 
-  console.timeEnd('seed');
-  console.info('Done Seeding');
+  console.timeEnd('seed ' + seedName);
+  console.info('Done Seeding ' + seedName);
 }
 
-async function beginSeed() {
+export async function beginSeed() {
   // Seed Menu Lists
   seed(new_Wards, createWard);
   seed(new_id_doc_type, createIdDocType);
@@ -61,8 +63,6 @@ async function beginSeed() {
   // Seed Initial Data
   seed(new_Users, createUser);
   seed(new_Drugs, createDrug);
-  seed(new_Patients, (patient: any) => createPatient(patient, true));
-  seed(new_PatientTransfers, (transfer: any) => transferPatient(transfer, true));
+  seed(new_Patients, createPatient);
+  seed(new_PatientTransfers, transferPatient);
 }
-
-// beginSeed()
