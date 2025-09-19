@@ -48,13 +48,15 @@ export function seed(items: any[], insertFunction: Function) {
   console.info('Done Seeding');
 }
 
-function beginSeed() {
+async function beginSeed() {
   // Seed Menu Lists
   seed(new_Wards, createWard);
   seed(new_id_doc_type, createIdDocType);
   seed(new_Patient_dismissal_reasons, createDismissalReason);
   seed(new_Drugs_unit, createDrugUnit);
   seed(new_Drugs_category, createDrugCategory);
+
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   // Seed Initial Data
   seed(new_Users, createUser);
