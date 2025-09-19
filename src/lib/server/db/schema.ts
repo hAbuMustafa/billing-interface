@@ -23,7 +23,7 @@ export const Patient_wards = sqliteTable(
     id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
     patient_id: text()
       .notNull()
-      .references(() => Patients.id),
+      .references(() => People_Patients.id),
     ward: integer()
       .notNull()
       .references(() => Wards.id),
@@ -33,20 +33,27 @@ export const Patient_wards = sqliteTable(
   (table) => [index('trans_patient_id_link_idx').on(table.patient_id)]
 );
 
-export const Patients = sqliteTable('Patients', {
-  id: text().notNull().primaryKey(),
+export const People = sqliteTable('People', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   id_doc_type: integer({ mode: 'number' }).references(() => Patient_id_doc_type.id),
   id_doc_num: text(),
+  gender: integer({ mode: 'boolean' }),
+  birthdate: integer({ mode: 'timestamp' }),
+  health_insurance: integer({ mode: 'boolean' }),
+});
+
+export const People_Patients = sqliteTable('People_Patients', {
+  id: text().notNull().primaryKey(),
+  person_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => People.id),
   diagnosis: text().notNull(),
   admission_date: integer({ mode: 'timestamp' }).notNull().default(new Date()),
   admission_notes: text(),
   dismissal_date: integer({ mode: 'timestamp' }),
   dismissal_reason: integer().references(() => Patient_dismissal_reasons.id),
   dismissal_notes: text(),
-  gender: integer({ mode: 'boolean' }),
-  birthdate: integer({ mode: 'timestamp' }),
-  health_insurance: integer({ mode: 'boolean' }),
 });
 
 export const Drugs_unit = sqliteTable('Drugs_unit', {
@@ -128,7 +135,7 @@ export const Ph_InEco_Transactions = sqliteTable(
     amount: integer().notNull(),
     patient_id: text()
       .notNull()
-      .references(() => Patients.id),
+      .references(() => People_Patients.id),
     user_id: integer()
       .notNull()
       .references(() => Sys_Users.id),
