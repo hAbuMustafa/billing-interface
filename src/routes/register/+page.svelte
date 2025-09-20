@@ -29,7 +29,7 @@
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
-      value={form?.first_name ?? ''}
+      value={form?.name ?? ''}
     />
 
     <label for="national-id">الرقم القومي</label>
