@@ -35,6 +35,8 @@
   form {
     display: grid;
     grid-template-rows: repeat(4, 1fr) 2fr;
+
+    padding-block-end: 3rem;
   }
 
   label {
@@ -63,7 +65,5 @@
     margin-block-start: 1rem;
     background-color: royalblue;
     color: light-dark(#ccc, #ccc);
-    font-weight: 700;
-    font-size: 1.25rem;
   }
 </style>
