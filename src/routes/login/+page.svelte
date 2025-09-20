@@ -33,8 +33,6 @@
 
 <style>
   form {
-    width: 50vw;
-
     display: grid;
     grid-template-rows: repeat(4, 1fr) 2fr;
   }
