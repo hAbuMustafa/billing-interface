@@ -6,7 +6,7 @@
   import NoData from '$lib/components/Sheet/Sheet_no_data.svelte';
 
   type PropsT = {
-    rows: { [key: string]: string | number }[];
+    rows: { [key: string]: string | number | Date }[];
     dateColumns?: App.PageState['DateColumnT'][];
   };
 

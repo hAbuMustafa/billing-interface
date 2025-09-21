@@ -3,7 +3,7 @@
   import { getContext } from 'svelte';
 
   type PropsT = {
-    dataTuple: [string, string | number];
+    dataTuple: [string, string | number | Date];
   };
 
   const { dataTuple }: PropsT = $props();

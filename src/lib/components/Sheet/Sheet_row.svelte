@@ -2,7 +2,7 @@
   import Cell from '$lib/components/Sheet/Sheet_cell.svelte';
 
   type PropsT = {
-    dataObj: { [key: string]: string | number };
+    dataObj: { [key: string]: string | number | Date };
   };
 
   const { dataObj }: PropsT = $props();
