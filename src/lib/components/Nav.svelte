@@ -20,7 +20,7 @@
       <li>
         <img
           class="gravatar"
-          src={user.gravatar}
+          src={'/api/proxy-images/?url=' + user.gravatar}
           alt={`صورة حساب ${user.name}`}
           width="40px"
           height="40px"
