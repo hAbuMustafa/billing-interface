@@ -14,6 +14,7 @@ export const new_Wards = [
   { name: 'رابع ج', floor: 4, id: 13 },
   { name: 'رابع د', floor: 4, id: 14 },
 ];
+
 export const new_id_doc_type = [
   { name: 'رقم قومي', id: 1 },
   { name: 'جواز سفر', id: 2 },
@@ -21,6 +22,7 @@ export const new_id_doc_type = [
   { name: 'بطاقة لجوء', id: 4 },
   { name: 'بدون', id: 5 },
 ];
+
 export const new_Patient_dismissal_reasons = [
   { name: 'تحسن', id: 1 },
   { name: 'حسب الطلب', id: 2 },
@@ -31,6 +33,7 @@ export const new_Patient_dismissal_reasons = [
   { name: 'إلغاء حجز', id: 7 },
   { name: 'نقل إلى مساكن العبور', id: 8 },
 ];
+
 export const new_Drugs_unit = [
   { name: 'قرص', id: 1 },
   { name: 'كبسول', id: 2 },
@@ -47,6 +50,7 @@ export const new_Drugs_unit = [
   { name: 'شريحة', id: 13 },
   { name: 'علبة', id: 14 },
 ];
+
 export const new_Drugs_category = [
   { name: 'أقراص/كبسولات', id: 1 },
   { name: 'حقن', id: 2 },
@@ -58,3 +62,34 @@ export const new_Drugs_category = [
   { name: 'مكملات غذائية', id: 8 },
   { name: 'منوعات', id: 9 },
 ];
+
+export const provinceCodesInNationalId = {
+  '01': 'القاهرة',
+  '02': 'الإسكندرية',
+  '03': 'بورسعيد',
+  '04': 'السويس',
+  '11': 'دمياط',
+  '12': 'الدقهلية',
+  '13': 'الشرقية',
+  '14': 'القليوبية',
+  '15': 'كفر الشيخ',
+  '16': 'الغربية',
+  '17': 'المنوفية',
+  '18': 'البحيرة',
+  '19': 'الإسماعيلية',
+  '21': 'الجيزة',
+  '22': 'بني سويف',
+  '23': 'الفيوم',
+  '24': 'المنيا',
+  '25': 'أسيوط',
+  '26': 'سوهاج',
+  '27': 'قنا',
+  '28': 'أسوان',
+  '29': 'الأقصر',
+  '31': 'البحر الأحمر',
+  '32': 'الوادي الجديد',
+  '33': 'مطروح',
+  '34': 'شمال سيناء',
+  '35': 'جنوب سيناء',
+  '88': 'خارج الجمهورية',
+};
