@@ -52,17 +52,17 @@ export async function seed(items: any[], insertFunction: Function) {
 
 export async function beginSeed() {
   // Seed Menu Lists
-  seed(new_Wards, createWard);
-  seed(new_id_doc_type, createIdDocType);
-  seed(new_Patient_dismissal_reasons, createDismissalReason);
-  seed(new_Drugs_unit, createDrugUnit);
-  seed(new_Drugs_category, createDrugCategory);
-
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  await seed(new_Wards, createWard);
+  await seed(new_id_doc_type, createIdDocType);
+  await seed(new_Patient_dismissal_reasons, createDismissalReason);
+  await seed(new_Drugs_unit, createDrugUnit);
+  await seed(new_Drugs_category, createDrugCategory);
 
   // Seed Initial Data
-  seed(new_Users, createUser);
-  seed(new_Drugs, createDrug);
-  seed(new_Patients, createPatient);
-  seed(new_PatientTransfers, transferPatient);
+  await seed(new_Users, createUser);
+  await seed(new_Drugs, createDrug);
+  await seed(new_Patients, createPatient);
+  await seed(new_PatientTransfers, transferPatient);
+
+  console.log('\nALL SEEDING IS DONE!');
 }
