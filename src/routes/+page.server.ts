@@ -1,23 +1,7 @@
-import { patients } from '$lib/server/db/seed/data/patients';
+import { new_Wards } from '$lib/server/db/menus.js';
 
-export function load({
-  url,
-  depends,
-  fetch,
-  params,
-  parent,
-  route,
-  setHeaders,
-  untrack,
-  cookies,
-  getClientAddress,
-  isDataRequest,
-  isSubRequest,
-  locals,
-  platform,
-  request,
-}) {
+export function load() {
   return {
-    patients,
+    table: new_Wards,
   };
 }
