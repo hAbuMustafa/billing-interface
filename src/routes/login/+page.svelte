@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import { usernamePattern } from '$lib/stores/patterns';
+
+  const redirectTo = page.url.searchParams.get('redirectTo');
 </script>
 
 <form action="/login" method="post">
@@ -27,6 +30,10 @@
     max="32"
     autocomplete="off"
   />
+
+  {#if redirectTo}
+    <input type="hidden" name="redirectTo" value={redirectTo} />
+  {/if}
 
   <input type="submit" value="تسجيل الدخول" />
 </form>

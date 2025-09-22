@@ -13,10 +13,12 @@ export function load({ locals }) {
 }
 
 export const actions: Actions = {
-  default: async ({ request, cookies }) => {
+  default: async ({ request, cookies, url }) => {
     const formData = await request.formData();
     const username = formData.get('username') as string;
     const password = formData.get('password') as string;
+
+    const redirectTo = formData.get('redirectTo');
 
     if (!username || !password) {
       return fail(400, {
@@ -72,6 +74,10 @@ export const actions: Actions = {
       console.error(error);
     }
 
-    throw redirect(303, '/');
+    if (!redirectTo) {
+      return redirect(303, '/');
+    } else {
+      return redirect(303, redirectTo as string);
+    }
   },
 };
