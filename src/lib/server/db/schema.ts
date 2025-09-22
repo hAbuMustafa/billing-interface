@@ -193,7 +193,7 @@ export const Sys_Sessions = sqliteTable(
       .references(() => Sys_Users.id),
     expires_at: integer({ mode: 'timestamp' })
       .notNull()
-      .default(new Date(new Date().getTime() + 60 * 60 * 1000 * 6)),
+      .default(new Date(new Date().getTime() + 60 * 60 * 1000 * 2)),
   },
   (table) => [index('sessions_user_link').on(table.user_id)]
 );
