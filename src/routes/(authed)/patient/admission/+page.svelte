@@ -47,8 +47,8 @@
     <label for="admission_ward">قسم الدخول</label>
     <select name="admission_ward" id="admission_ward">
       {#each [{ number: 1, title: 'الرعاية المركزة' }, { number: 2, title: 'الدور الثاني' }, { number: 3, title: 'الدور الثالث' }, { number: 4, title: 'الدور الرابع' }] as floor (floor.number)}
-        <optgroup title={floor.title}>
-          {#each page.data.wards_list.filter((w) => w.floor === floor.number) as ward (ward.id)}
+        <optgroup label={floor.title}>
+          {#each page.data.wards_list.filter((w: { id: number; floor: number; name: string }) => w.floor === floor.number) as ward (ward.id)}
             <option value={ward.id}>{ward.name}</option>
           {/each}
         </optgroup>
