@@ -15,7 +15,7 @@
 <style>
   thead {
     position: sticky;
-    inset-block-start: -1px;
+    inset-block-start: 0;
   }
 
   tr {

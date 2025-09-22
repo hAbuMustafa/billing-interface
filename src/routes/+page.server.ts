@@ -1,7 +1,7 @@
-import { new_Wards } from '$lib/server/db/menus.js';
+import { transfers } from '$lib/server/db/seed/data/patient_transfers';
 
 export function load() {
   return {
-    table: new_Wards,
+    table: transfers,
   };
 }
