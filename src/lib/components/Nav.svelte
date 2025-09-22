@@ -12,6 +12,15 @@
   </a>
   {#if user}
     <ul>
+      <li>
+        <input type="checkbox" id="patients-nav-list" />
+        <label for="patients-nav-list">المرضى</label>
+
+        <ul>
+          <li><a href="/patient/admission">تسجيل حالة دخول</a></li>
+          <li><a href="/patient/discharge">تسجيل خروج مريض</a></li>
+        </ul>
+      </li>
       <li><a href="/patient-search">تسعير فاتورة</a></li>
     </ul>
     <ul>
@@ -57,15 +66,82 @@
     text-decoration: none;
   }
 
-  a:hover {
-    text-decoration: overline underline;
+  li:is(:hover, :focus) {
+    background-color: hsl(from var(--main-bg-color) h s 50%);
   }
 
   nav > ul {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     list-style: none;
     align-items: center;
+  }
+
+  nav a:focus {
+    outline: 2px solid;
+    outline-offset: 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  li:has(ul) {
+    position: relative;
+
+    & > input {
+      display: none;
+    }
+
+    &::after {
+      content: '▼';
+      font-size: 0.7rem;
+      margin-inline-start: 0.25rem;
+      position: absolute;
+      inset-block: 40%;
+      height: fit-content;
+    }
+
+    ul {
+      display: grid;
+      grid-template-columns: 1fr;
+      row-gap: 1rem;
+    }
+
+    & > ul > li {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  li > ul {
+    visibility: hidden;
+
+    list-style: none;
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    transform: translateY(-10px);
+
+    padding: 1rem;
+
+    background-color: var(--main-bg-color);
+    border: 1px solid var(--main-text-color);
+    border-radius: 0.25rem;
+    opacity: 0;
+    box-shadow: black 10px 10px 25px;
+
+    transition-property: position, opacity;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+
+    li {
+      text-wrap: nowrap;
+    }
+  }
+
+  li:has(:hover, :focus-within, :focus) > ul,
+  li > ul:hover {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .gravatar {
