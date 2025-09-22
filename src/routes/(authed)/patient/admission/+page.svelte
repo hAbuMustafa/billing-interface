@@ -1,16 +1,5 @@
 <script lang="ts">
   import { page } from '$app/state';
-
-  const sample = {
-    name: 'أحمد أحمد أبودهب أحمد',
-    id_doc_type: 1,
-    id_doc_num: '26211292602358',
-    diagnosis: 'سدة رئوية',
-    gender: 1,
-    birthdate: 22979,
-    health_insurance: '0',
-    admission_ward: 8,
-  };
 </script>
 
 <main>
