@@ -13,7 +13,7 @@ export function load({ locals }) {
 }
 
 export const actions: Actions = {
-  default: async ({ request, cookies, url }) => {
+  default: async ({ request, cookies }) => {
     const formData = await request.formData();
     const username = formData.get('username') as string;
     const password = formData.get('password') as string;
