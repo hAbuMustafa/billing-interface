@@ -103,6 +103,7 @@
       display: grid;
       grid-template-columns: 1fr;
       row-gap: 1rem;
+      z-index: 1;
     }
 
     & > ul > li {
