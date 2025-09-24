@@ -2,9 +2,25 @@
   import { page } from '$app/state';
   import { formatDate } from '$lib/utils/date-format';
 
-  let idDocType = 5;
-  let gender = 1;
-  let healthInsurance = 1;
+  let idDocType = $state(1);
+  let idDocNum = $state('');
+  let isNationalId = $derived(idDocType === 1 && idDocNum.length === 14);
+  let gender = $derived.by(() => {
+    if (isNationalId) {
+      return Number(idDocNum.slice(12, 13)) % 2 ? 1 : 0;
+    }
+  });
+  let birthdate = $derived.by(() => {
+    if (isNationalId) {
+      const modifier = idDocNum[0];
+      const year = (modifier === '2' ? '19' : '20') + idDocNum.slice(1, 3);
+      const month = idDocNum.slice(3, 5);
+      const day = idDocNum.slice(5, 7);
+
+      return [year, month, day].join('-');
+    }
+  });
+  let healthInsurance = $state(1);
 </script>
 
 <main>
@@ -27,7 +43,13 @@
     </fieldset>
 
     <label for="id_doc_num">رقم الهوية</label>
-    <input name="id_doc_num" id="id_doc_num" type="text" placeholder="22222222222222" />
+    <input
+      name="id_doc_num"
+      id="id_doc_num"
+      type="text"
+      placeholder="22222222222222"
+      bind:value={idDocNum}
+    />
 
     <label for="diagnosis">التشخيص الأولي</label>
     <input name="diagnosis" id="diagnosis" type="text" />
@@ -41,7 +63,7 @@
     </fieldset>
 
     <label for="birthdate">تاريخ الميلاد</label>
-    <input name="birthdate" id="birthdate" type="date" />
+    <input name="birthdate" id="birthdate" type="date" bind:value={birthdate} />
 
     <fieldset>
       <legend>التأمين الصحي</legend>
