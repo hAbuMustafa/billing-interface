@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
-export function formatDate(dateSerial: number, format = 'YYYY-MM-DD') {
-  return dayjs(dateSerial).format(format);
+export function formatDate(date: number | Date, format = 'YYYY-MM-DD') {
+  return dayjs(date).format(format);
 }
 
 export function convertGoogleSheetsDateToJSDate(serial: number) {
