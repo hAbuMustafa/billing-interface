@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import { sqliteTable, index, integer, text, unique, real } from 'drizzle-orm/sqlite-core';
 
 export const Wards = sqliteTable('Wards', {
@@ -193,7 +194,7 @@ export const Sys_Sessions = sqliteTable(
       .references(() => Sys_Users.id),
     expires_at: integer({ mode: 'timestamp' })
       .notNull()
-      .default(new Date(new Date().getTime() + 60 * 60 * 1000 * 2)),
+      .default(sql`STRFTIME('%s', 'now', '+2 hours')`),
   },
   (table) => [index('sessions_user_link').on(table.user_id)]
 );
