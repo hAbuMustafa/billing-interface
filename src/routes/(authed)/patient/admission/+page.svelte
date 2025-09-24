@@ -63,6 +63,7 @@
 
     <label for="diagnosis">التشخيص الأولي</label>
     <input name="diagnosis" id="diagnosis" type="text" />
+    <!-- todo: make this input a form with no bubbling on submit, and create a list of  input:check with name="diagnosis" as the output of this form -->
 
     <fieldset>
       <legend>النوع</legend>
