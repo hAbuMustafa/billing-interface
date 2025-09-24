@@ -1,6 +1,10 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { formatDate } from '$lib/utils/date-format';
+
+  let idDocType = 5;
+  let gender = 1;
+  let healthInsurance = 1;
 </script>
 
 <main>
@@ -11,22 +15,28 @@
     <fieldset>
       <legend>نوع الهوية</legend>
       {#each page.data.id_doc_type_list as d_type, i (d_type.id)}
-        <input name="id_doc_type" id="id_doc_type_{i}" type="radio" value={d_type.id} />
+        <input
+          name="id_doc_type"
+          id="id_doc_type_{i}"
+          type="radio"
+          value={d_type.id}
+          bind:group={idDocType}
+        />
         <label for="id_doc_type_{i}">{d_type.name}</label>
       {/each}
     </fieldset>
 
     <label for="id_doc_num">رقم الهوية</label>
-    <input name="id_doc_num" id="id_doc_num" type="text" />
+    <input name="id_doc_num" id="id_doc_num" type="text" placeholder="22222222222222" />
 
     <label for="diagnosis">التشخيص الأولي</label>
     <input name="diagnosis" id="diagnosis" type="text" />
 
     <fieldset>
       <legend>النوع</legend>
-      <input name="gender" id="male" type="radio" value="male" />
+      <input name="gender" id="male" type="radio" value={1} bind:group={gender} />
       <label for="male">ذكر</label>
-      <input name="gender" id="female" type="radio" value="female" />
+      <input name="gender" id="female" type="radio" value={0} bind:group={gender} />
       <label for="female">أنثى</label>
     </fieldset>
 
@@ -35,9 +45,21 @@
 
     <fieldset>
       <legend>التأمين الصحي</legend>
-      <input name="health_insurance" id="insured" type="radio" value={1} />
+      <input
+        name="health_insurance"
+        id="insured"
+        type="radio"
+        value={1}
+        bind:group={healthInsurance}
+      />
       <label for="insured">مؤمن عليه</label>
-      <input name="health_insurance" id="uninsured" type="radio" value={0} />
+      <input
+        name="health_insurance"
+        id="uninsured"
+        type="radio"
+        value={0}
+        bind:group={healthInsurance}
+      />
       <label for="insured">غير مؤمن عليه</label>
     </fieldset>
 
@@ -72,6 +94,10 @@
 
     input:is([type='text'], [type*='date']) {
       font-size: 1.5rem;
+    }
+
+    input[type='radio'] {
+      margin-inline-end: 1rem;
     }
   }
 </style>
