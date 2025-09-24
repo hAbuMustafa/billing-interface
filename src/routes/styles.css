@@ -63,7 +63,10 @@ input.equal {
   background-color: light-dark(hsl(from green h s 80%), hsl(from green h s 20%));
 }
 
-label:has(+ input[required])::after {
+:is(
+    label:has(+ input[required]:not([type='radio'])),
+    legend:has(+ input[type='radio'][required])
+  )::after {
   content: '*';
 
   -webkit-margin-start: 0.25rem;
