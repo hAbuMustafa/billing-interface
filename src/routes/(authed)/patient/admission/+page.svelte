@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { arabicTetradicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
   import { formatDate } from '$lib/utils/date-format';
 
   let idDocType = $state(1);
@@ -20,13 +21,19 @@
       return [year, month, day].join('-');
     }
   });
-  let healthInsurance = $state(1);
+  let healthInsurance = $state(0);
 </script>
 
 <main>
   <form method="POST">
     <label for="name"> اسم المريض </label>
-    <input name="name" id="name" type="text" />
+    <input
+      name="name"
+      id="name"
+      type="text"
+      pattern={arabicTetradicNamesPattern.source}
+      required
+    />
 
     <fieldset>
       <legend>نوع الهوية</legend>
@@ -37,6 +44,7 @@
           type="radio"
           value={d_type.id}
           bind:group={idDocType}
+          required
         />
         <label for="id_doc_type_{i}">{d_type.name}</label>
       {/each}
@@ -49,6 +57,8 @@
       type="text"
       placeholder="22222222222222"
       bind:value={idDocNum}
+      pattern={nationalIdPattern.source}
+      required
     />
 
     <label for="diagnosis">التشخيص الأولي</label>
@@ -56,14 +66,28 @@
 
     <fieldset>
       <legend>النوع</legend>
-      <input name="gender" id="male" type="radio" value={1} bind:group={gender} />
+      <input
+        name="gender"
+        id="male"
+        type="radio"
+        value={1}
+        bind:group={gender}
+        required
+      />
       <label for="male">ذكر</label>
-      <input name="gender" id="female" type="radio" value={0} bind:group={gender} />
+      <input
+        name="gender"
+        id="female"
+        type="radio"
+        value={0}
+        bind:group={gender}
+        required
+      />
       <label for="female">أنثى</label>
     </fieldset>
 
     <label for="birthdate">تاريخ الميلاد</label>
-    <input name="birthdate" id="birthdate" type="date" bind:value={birthdate} />
+    <input name="birthdate" id="birthdate" type="date" bind:value={birthdate} required />
 
     <fieldset>
       <legend>التأمين الصحي</legend>
@@ -73,6 +97,7 @@
         type="radio"
         value={1}
         bind:group={healthInsurance}
+        required
       />
       <label for="insured">مؤمن عليه</label>
       <input
@@ -81,12 +106,13 @@
         type="radio"
         value={0}
         bind:group={healthInsurance}
+        required
       />
       <label for="insured">غير مؤمن عليه</label>
     </fieldset>
 
     <label for="admission_ward">قسم الدخول</label>
-    <select name="admission_ward" id="admission_ward">
+    <select name="admission_ward" id="admission_ward" required>
       {#each [{ number: 1, title: 'الرعاية المركزة' }, { number: 2, title: 'الدور الثاني' }, { number: 3, title: 'الدور الثالث' }, { number: 4, title: 'الدور الرابع' }] as floor (floor.number)}
         <optgroup label={floor.title}>
           {#each page.data.wards_list.filter((w: { id: number; floor: number; name: string }) => w.floor === floor.number) as ward (ward.id)}
@@ -95,12 +121,14 @@
         </optgroup>
       {/each}
     </select>
+
     <label for="admission_date">وقت وتاريخ الدخول</label>
     <input
       type="datetime-local"
       name="admission_date"
       id="admission_date"
       defaultValue={formatDate(new Date(), 'YYYY-MM-DDTHH:mm')}
+      required
     />
   </form>
 </main>
@@ -114,7 +142,8 @@
       margin-block-start: 1rem;
     }
 
-    input:is([type='text'], [type*='date']) {
+    input:is([type='text'], [type*='date']),
+    select {
       font-size: 1.5rem;
     }
 
