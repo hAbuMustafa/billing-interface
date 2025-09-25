@@ -13,7 +13,12 @@ export async function GET({ url }) {
 
   // perform database fuzzy search using extend-arabic-query on `People` table
   const matchedPeople = await db
-    .select({ id: People.id, name: People.name, national_id: People.id_doc_num })
+    .select({
+      id: People.id,
+      name: People.name,
+      national_id: People.id_doc_num,
+      birthdate: People.birthdate,
+    })
     .from(People)
     .where(regexp('name', personPattern));
 
