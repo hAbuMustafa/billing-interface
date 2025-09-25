@@ -180,9 +180,11 @@
                 {formatDate(new Date(person.birthdate), 'YYYY/MM/DD')}
                 ({getAge(person.birthdate)} سنة)
               </span>
+              <!-- todo: onclick go to page /admission?pId={this Patient}-->
             {/if}
           </button>
         {/each}
+        <!-- todo: button to add new Person -->
       </div>
     {/await}
   </form>
