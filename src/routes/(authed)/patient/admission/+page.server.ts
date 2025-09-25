@@ -8,3 +8,8 @@ export function load() {
     wards_list: new_Wards,
   };
 }
+
+export const actions = {
+  admitPatient: () => {},
+  getPerson: () => {},
+};
