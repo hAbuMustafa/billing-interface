@@ -10,3 +10,14 @@ export function convertGoogleSheetsDateToJSDate(serial: number) {
 
   return jsDate;
 }
+
+export function getAge(birthdate: number | Date | string) {
+  let dateSerial =
+    typeof birthdate === 'number' ? birthdate : new Date(birthdate).getTime();
+
+  if (isNaN(dateSerial)) return 0;
+
+  const msInADay = 60 * 60 * 24 * 1000;
+
+  return Math.floor((new Date().getTime() - dateSerial) / (msInADay * 365.25));
+}
