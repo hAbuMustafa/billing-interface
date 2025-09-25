@@ -1,0 +1,7 @@
+import { sql } from 'drizzle-orm';
+
+export function regexp(columnName: string, pattern: string | RegExp) {
+  return sql.raw(
+    `regexp('${pattern instanceof RegExp ? pattern.source : pattern}', ${columnName})`
+  );
+}
