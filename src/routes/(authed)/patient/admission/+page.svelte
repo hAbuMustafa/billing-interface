@@ -23,17 +23,17 @@
   });
   let healthInsurance = $state(0);
 
-  let personNameText = $state('');
-  let personNameQuery = $state('');
+  let personText = $state('');
+  let personQuery = $state('');
 
-  let fetchedPeople = $derived(getPeopleByName(personNameQuery) || []);
+  let fetchedPeople = $derived(getPeopleByQuery(personQuery) || []);
 
-  async function getPeopleByName(
-    personName: string
+  async function getPeopleByQuery(
+    query: string
   ): Promise<{ id: number; name: string; national_id: string; birthdate?: number }[]> {
-    if (personName.trim() === '') return [];
+    if (query.trim() === '') return [];
 
-    const response = await fetch(`/api/people/?q=${personName}`);
+    const response = await fetch(`/api/people/?q=${query}`);
 
     return await response.json();
   }
@@ -153,16 +153,16 @@
   <form
     onsubmit={(e) => {
       e.preventDefault();
-      personNameQuery = personNameText;
+      personQuery = personText;
     }}
   >
-    <label for="person_name_query">اسم المريض</label>
+    <label for="person_query">اسم المريض/رقم الهوية</label>
     <input
       type="search"
-      name="person_name_query"
-      id="person_name_query"
+      name="person_query"
+      id="person_query"
       autocomplete="off"
-      bind:value={personNameText}
+      bind:value={personText}
     />
 
     <input type="submit" value="بحث" />
