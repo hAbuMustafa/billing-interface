@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import {
-  Patient_dismissal_reasons,
+  Patient_discharge_reasons,
   Patient_id_doc_type,
   Patient_wards,
   People,
@@ -39,18 +39,18 @@ export async function createIdDocType(docType: typeof Patient_id_doc_type.$infer
   }
 }
 
-export async function createDismissalReason(
-  dismissalReason: typeof Patient_dismissal_reasons.$inferInsert
+export async function createDischargeReason(
+  dischargeReason: typeof Patient_discharge_reasons.$inferInsert
 ) {
   try {
-    const [new_dismissal_reason] = await db
-      .insert(Patient_dismissal_reasons)
-      .values(dismissalReason)
+    const [new_discharge_reason] = await db
+      .insert(Patient_discharge_reasons)
+      .values(dischargeReason)
       .returning();
 
     return {
       success: true,
-      data: new_dismissal_reason,
+      data: new_discharge_reason,
     };
   } catch (error) {
     return {

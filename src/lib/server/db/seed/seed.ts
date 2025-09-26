@@ -7,7 +7,7 @@ import { createUser } from '$lib/server/db/operations/auth';
 import {
   createWard,
   createIdDocType,
-  createDismissalReason,
+  createDischargeReason,
   createPatient,
   transferPatient,
 } from '$lib/server/db/operations/patients';
@@ -20,7 +20,7 @@ import {
 import {
   new_Wards,
   new_id_doc_type,
-  new_Patient_dismissal_reasons,
+  new_Patient_discharge_reasons,
   new_Drugs_unit,
   new_Drugs_category,
 } from '$lib/server/db/menus';
@@ -54,7 +54,7 @@ export async function beginSeed() {
   // Seed Menu Lists
   await seed(new_Wards, createWard);
   await seed(new_id_doc_type, createIdDocType);
-  await seed(new_Patient_dismissal_reasons, createDismissalReason);
+  await seed(new_Patient_discharge_reasons, createDischargeReason);
   await seed(new_Drugs_unit, createDrugUnit);
   await seed(new_Drugs_category, createDrugCategory);
 

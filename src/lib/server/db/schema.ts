@@ -7,7 +7,7 @@ export const Wards = sqliteTable('Wards', {
   floor: integer().notNull(),
 });
 
-export const Patient_dismissal_reasons = sqliteTable('Patient_dismissal_reasons', {
+export const Patient_discharge_reasons = sqliteTable('Patient_discharge_reasons', {
   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
   name: text().notNull(),
 });
@@ -51,9 +51,9 @@ export const People_Patients = sqliteTable('People_Patients', {
   diagnosis: text(),
   admission_date: integer({ mode: 'timestamp' }).notNull().default(new Date()),
   admission_notes: text(),
-  dismissal_date: integer({ mode: 'timestamp' }),
-  dismissal_reason: integer().references(() => Patient_dismissal_reasons.id),
-  dismissal_notes: text(),
+  discharge_date: integer({ mode: 'timestamp' }),
+  discharge_reason: integer().references(() => Patient_discharge_reasons.id),
+  discharge_notes: text(),
 });
 
 export const Drugs_unit = sqliteTable('Drugs_unit', {

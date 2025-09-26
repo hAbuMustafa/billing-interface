@@ -23,7 +23,7 @@ export const new_id_doc_type = [
   { name: 'بدون', id: 5 },
 ];
 
-export const new_Patient_dismissal_reasons = [
+export const new_Patient_discharge_reasons = [
   { name: 'تحسن', id: 1 },
   { name: 'حسب الطلب', id: 2 },
   { name: 'تحويل لمستشفى آخر', id: 3 },
