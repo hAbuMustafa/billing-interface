@@ -177,7 +177,7 @@
           <div class="person-results">
             {#each foundPeople as person, i (person.id)}
               <button class="person-card">
-                <strong>{person.name}</strong><br />
+                <strong>{person.name}</strong>
                 <span class="faded">{person.national_id}</span>
                 {#if person.birthdate}
                   <span class="birthdate">
