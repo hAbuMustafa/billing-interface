@@ -167,26 +167,30 @@
 
     <input type="submit" value="بحث" />
 
-    {#await fetchedPeople}
-      <p>جار البحث...</p>
-    {:then foundPeople}
-      <div class="person-results">
-        {#each foundPeople as person, i (person.id)}
-          <button class="person-card">
-            <strong>{person.name}</strong><br />
-            <span class="faded">{person.national_id}</span>
-            {#if person.birthdate}
-              <span class="birthdate">
-                {formatDate(new Date(person.birthdate), 'YYYY/MM/DD')}
-                ({getAge(person.birthdate)} سنة)
-              </span>
-              <!-- todo: onclick go to page /admission?pId={this Patient}-->
-            {/if}
-          </button>
-        {/each}
-        <!-- todo: button to add new Person -->
-      </div>
-    {/await}
+    {#if personQuery}
+      {#await fetchedPeople}
+        <p>جار البحث...</p>
+      {:then foundPeople}
+        {#if foundPeople.length}
+          <div class="person-results">
+            {#each foundPeople as person, i (person.id)}
+              <button class="person-card">
+                <strong>{person.name}</strong><br />
+                <span class="faded">{person.national_id}</span>
+                {#if person.birthdate}
+                  <span class="birthdate">
+                    {formatDate(new Date(person.birthdate), 'YYYY/MM/DD')}
+                    ({getAge(person.birthdate)} سنة)
+                  </span>
+                  <!-- todo: onclick go to page /admission?pId={this Patient}-->
+                {/if}
+              </button>
+            {/each}
+            <!-- todo: button to add new Person -->
+          </div>
+        {/if}
+      {/await}
+    {/if}
   </form>
 {/if}
 
