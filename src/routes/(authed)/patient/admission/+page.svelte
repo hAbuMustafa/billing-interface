@@ -40,7 +40,7 @@
 </script>
 
 {#if page.url.searchParams.has('pId') && page.data.person}
-  <form method="POST" action="?/admitPatient">
+  <form method="POST">
     <label for="name"> اسم المريض </label>
     <input
       name="name"

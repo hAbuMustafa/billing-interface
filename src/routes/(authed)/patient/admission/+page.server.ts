@@ -10,6 +10,5 @@ export function load() {
 }
 
 export const actions = {
-  admitPatient: () => {},
-  getPerson: () => {},
+  default: () => {},
 };
