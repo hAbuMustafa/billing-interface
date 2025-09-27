@@ -43,7 +43,7 @@ label {
 }
 
 input {
-  direction: ltr;
+  direction: rtl;
   position: relative;
   border-radius: 4px;
   border: 1px solid light-dark(#333, #ccc);
