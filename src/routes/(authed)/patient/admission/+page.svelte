@@ -171,6 +171,7 @@
     {#if personQuery}
       {#await fetchedPeople}
         <p>جار البحث...</p>
+        <!-- todo: make app wide 'loading...' overlay -->
       {:then foundPeople}
         {#if foundPeople.length}
           <div class="person-results">
