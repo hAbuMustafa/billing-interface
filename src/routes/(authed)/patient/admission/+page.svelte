@@ -162,6 +162,7 @@
       name="person_query"
       id="person_query"
       autocomplete="off"
+      minlength="10"
       bind:value={personText}
     />
 
