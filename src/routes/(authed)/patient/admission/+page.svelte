@@ -146,6 +146,12 @@
       fieldset:first-of-type {
         margin-block-start: 0;
       }
+
+      &:has(> [type='radio'] + label) {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
     }
 
     input:is([type='text'], [type*='date']) {
@@ -159,6 +165,26 @@
     input:is([type='submit']) {
       margin-block-start: 2rem;
       padding-block: 0.5rem;
+    }
+
+    input[type='radio'] {
+      display: none;
+
+      & + label {
+        background-color: lightslategray;
+        color: var(--main-bg-color);
+        padding: 0.25rem 0.5rem;
+        text-align: center;
+        text-wrap: nowrap;
+
+        border-radius: 0.25rem;
+      }
+
+      &:checked + label {
+        background-color: royalblue;
+        font-weight: 700;
+        color: unset;
+      }
     }
   }
 </style>

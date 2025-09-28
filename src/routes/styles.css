@@ -33,7 +33,7 @@ main > form {
   }
 }
 
-label {
+:not([type='radio']) + label {
   margin-block: 1rem 0.25rem;
 
   &:first-of-type {
