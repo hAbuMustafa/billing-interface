@@ -108,7 +108,6 @@
     <legend>قسم الدخول</legend>
     {#each page.data.floors_list as floor (floor.number)}
       <fieldset class={floor.title}>
-        <legend>{floor.title}</legend>
         {#each page.data.wards_list.filter((w: { id: number; floor: number; name: string }) => w.floor === floor.number) as ward (ward.id)}
           <input
             type="radio"
@@ -143,14 +142,25 @@
     fieldset {
       margin-block-start: 1rem;
 
-      fieldset:first-of-type {
-        margin-block-start: 0;
-      }
-
       &:has(> [type='radio'] + label) {
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
+      }
+
+      & > fieldset {
+        margin-block-start: unset;
+
+        border: none;
+        border-radius: unset;
+
+        &:first-of-type {
+          padding-block-start: unset;
+        }
+
+        &:not(:last-of-type) {
+          border-block-end: 1px solid;
+        }
       }
     }
 
