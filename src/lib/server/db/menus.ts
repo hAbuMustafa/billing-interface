@@ -15,6 +15,13 @@ export const new_Wards = [
   { name: 'رابع د', floor: 4, id: 14 },
 ];
 
+export const floors = [
+  { number: 1, title: 'الرعاية المركزة' },
+  { number: 2, title: 'الدور الثاني' },
+  { number: 3, title: 'الدور الثالث' },
+  { number: 4, title: 'الدور الرابع' },
+];
+
 export const new_id_doc_type = [
   { name: 'رقم قومي', id: 1 },
   { name: 'جواز سفر', id: 2 },

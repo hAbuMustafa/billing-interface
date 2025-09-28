@@ -104,16 +104,24 @@
     <label for="insured">غير مؤمن عليه</label>
   </fieldset>
 
-  <label for="admission_ward">قسم الدخول</label>
-  <select name="admission_ward" id="admission_ward" required>
-    {#each [{ number: 1, title: 'الرعاية المركزة' }, { number: 2, title: 'الدور الثاني' }, { number: 3, title: 'الدور الثالث' }, { number: 4, title: 'الدور الرابع' }] as floor (floor.number)}
-      <optgroup label={floor.title}>
+  <fieldset>
+    <legend>قسم الدخول</legend>
+    {#each page.data.floors_list as floor (floor.number)}
+      <fieldset class={floor.title}>
+        <legend>{floor.title}</legend>
         {#each page.data.wards_list.filter((w: { id: number; floor: number; name: string }) => w.floor === floor.number) as ward (ward.id)}
-          <option value={ward.id}>{ward.name}</option>
+          <input
+            type="radio"
+            id="admission_ward_{ward.id}"
+            name="admission_ward"
+            value={ward.id}
+            required
+          />
+          <label for="admission_ward_{ward.id}">{ward.name}</label>
         {/each}
-      </optgroup>
+      </fieldset>
     {/each}
-  </select>
+  </fieldset>
 
   <label for="admission_date">وقت وتاريخ الدخول</label>
   <input
@@ -134,15 +142,18 @@
 
     fieldset {
       margin-block-start: 1rem;
+
+      fieldset:first-of-type {
+        margin-block-start: 0;
+      }
     }
 
-    input:is([type='text'], [type*='date']),
-    select {
+    input:is([type='text'], [type*='date']) {
       font-size: 1.5rem;
     }
 
-    input[type='radio'] {
-      margin-inline-end: 1rem;
+    input[type='radio']:not(:first-of-type) {
+      margin-inline-start: 1.5rem;
     }
 
     input:is([type='submit']) {

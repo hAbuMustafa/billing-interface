@@ -65,8 +65,8 @@ input.equal {
 
 :is(
     label:has(+ input:required:not([type='radio'])),
-    legend:has(+ input:required),
-    label:has(+ select:required)
+    label:has(+ select:required),
+    :not(fieldset) > fieldset:has(:required) > legend
   )::after {
   content: '*';
 
