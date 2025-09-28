@@ -33,7 +33,7 @@ main > form {
   }
 }
 
-:not([type='radio']) + label {
+:not([type='radio']):not([type='checkbox']) + label {
   margin-block: 1rem 0.25rem;
 
   &:first-of-type {
@@ -64,7 +64,7 @@ input.equal {
 }
 
 :is(
-    label:has(+ input:required:not([type='radio'])),
+    label:has(+ input:required:not([type='radio']):not([type='checkbox'])),
     label:has(+ select:required),
     :not(fieldset) > fieldset:has(:required) > legend
   )::after {

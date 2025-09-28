@@ -2,6 +2,7 @@
   import { page } from '$app/state';
   import { arabicTetradicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
   import { formatDate } from '$lib/utils/date-format';
+  import { scale } from 'svelte/transition';
 
   let idDocType = $state(1);
   let idDocNum = $state('');
@@ -22,6 +23,9 @@
     }
   });
   let healthInsurance = $state(0);
+
+  let diagnoses = $state<string[]>([]);
+  let diagnosisText = $state('');
 </script>
 
 <form method="POST">
@@ -60,9 +64,48 @@
     required
   />
 
-  <label for="diagnosis">التشخيص الأولي</label>
-  <input name="diagnosis" id="diagnosis" type="text" />
-  <!-- todo: make this input a form with no bubbling on submit, and create a list of  input:check with name="diagnosis" as the output of this form -->
+  <fieldset class="diagnosis_box">
+    <legend>التشخيص الأولي</legend>
+    <input
+      id="diagnosis"
+      type="text"
+      bind:value={diagnosisText}
+      onkeydown={(e) => {
+        if (e.key === 'Enter' && diagnosisText.length > 2) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          diagnoses.push(diagnosisText.trim());
+          diagnosisText = '';
+        }
+      }}
+      list="diagnosis_suggestions"
+    />
+    <datalist id="diagnosis_suggestions">
+      {#each page.data.diagnoses_list as d, i (i)}
+        <option value={d}></option>
+      {/each}
+    </datalist>
+
+    {#if diagnoses.length}
+      <div class="diagnoses_list" transition:scale>
+        {#each diagnoses as diagnosis, i (diagnosis)}
+          <input
+            type="checkbox"
+            name="diagnosis"
+            id="diagnosis_{i}"
+            value={diagnosis}
+            checked
+            required
+            onchange={() => {
+              diagnoses = diagnoses.filter((item) => item !== diagnosis);
+            }}
+          />
+          <label for="diagnosis_{i}" transition:scale>{diagnosis}</label>
+        {/each}
+      </div>
+    {/if}
+  </fieldset>
 
   <fieldset>
     <legend>النوع</legend>
@@ -150,6 +193,29 @@
         justify-content: center;
       }
 
+      &.diagnosis_box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+
+        & > .diagnoses_list {
+          display: flex;
+          gap: 1rem;
+
+          & :checked + label {
+            background-color: orange;
+            color: var(--main-bg-color);
+
+            &:hover,
+            &:focus {
+              background-color: salmon;
+              text-decoration: line-through;
+            }
+          }
+        }
+      }
+
       & > fieldset {
         margin-block-start: unset;
 
@@ -179,7 +245,7 @@
       padding-block: 0.5rem;
     }
 
-    input[type='radio'] {
+    :is(input[type='radio'], input[type='checkbox']) {
       display: none;
 
       & + label {
