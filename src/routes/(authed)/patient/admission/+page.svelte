@@ -5,7 +5,7 @@
 
   let idDocType = $state(1);
   let idDocNum = $state('');
-  let isNationalId = $derived(idDocType === 1 && idDocNum.length === 14);
+  let isNationalId = $derived(idDocType === 1 && nationalIdPattern.test(idDocNum));
   let gender = $derived.by(() => {
     if (isNationalId) {
       return Number(idDocNum.slice(12, 13)) % 2 ? 1 : 0;
