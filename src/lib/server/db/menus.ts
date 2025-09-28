@@ -27,7 +27,8 @@ export const new_id_doc_type = [
   { name: 'جواز سفر', id: 2 },
   { name: 'هوية وطنية', id: 3 },
   { name: 'بطاقة لجوء', id: 4 },
-  { name: 'بدون', id: 5 },
+  { name: 'رخصة إقامة', id: 5 },
+  { name: 'بدون', id: 6 },
 ];
 
 export const new_Patient_discharge_reasons = [
