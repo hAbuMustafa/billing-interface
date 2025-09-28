@@ -2,7 +2,7 @@ import { db } from '$lib/server/db/';
 import { People } from '$lib/server/db/schema.js';
 import { regexp } from '$lib/utils/drizzle.js';
 import { eq } from 'drizzle-orm';
-import { regexify } from 'extend-arabic-query';
+import { getRegexString } from 'extend-arabic-query';
 
 export async function GET({ url }) {
   // receive patient name in a request
@@ -26,7 +26,12 @@ export async function GET({ url }) {
       .from(People)
       .where(eq(People.id_doc_num, query));
   } else {
-    let regexifiedPersonName = regexify(query);
+    let regexifiedPersonName = new RegExp(
+      getRegexString(query)
+        .replaceAll('?:', '')
+        .replaceAll(' ', '.*')
+        .replaceAll('؟', '.')
+    );
 
     // perform database fuzzy search using extend-arabic-query on `People` table
     matchedPeople = await db
