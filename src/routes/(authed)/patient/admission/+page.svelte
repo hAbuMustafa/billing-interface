@@ -162,7 +162,6 @@
       name="person_query"
       id="person_query"
       autocomplete="off"
-      minlength="10"
       bind:value={personText}
     />
 
@@ -173,6 +172,8 @@
         <p>جار البحث...</p>
         <!-- todo: make app wide 'loading...' overlay -->
       {:then foundPeople}
+        <input type="button" class="new_person_button" value="مريض جديد" />
+
         {#if foundPeople.length}
           <div class="person-results">
             {#each foundPeople as person, i (person.id)}
@@ -214,7 +215,7 @@
       margin-inline-end: 1rem;
     }
 
-    input[type='submit'] {
+    input:is([type='submit'], [type='button']) {
       margin-block-start: 2rem;
       padding-block: 0.5rem;
     }
@@ -236,5 +237,9 @@
         opacity: 0.7;
       }
     }
+  }
+
+  .new_person_button {
+    background-color: rebeccapurple;
   }
 </style>

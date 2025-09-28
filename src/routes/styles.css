@@ -76,7 +76,7 @@ input.equal {
   color: red;
 }
 
-input[type='submit'] {
+input:is([type='submit'], [type='button']) {
   background-color: royalblue;
   color: #ccc;
 
@@ -84,4 +84,12 @@ input[type='submit'] {
   font-size: 1.25rem;
 
   height: 100%;
+
+  &:is(:hover, :focus) {
+    background-color: hsl(from royalblue h s 60%);
+  }
+
+  &:is(:active) {
+    background-color: hsl(from royalblue h s 50%);
+  }
 }
