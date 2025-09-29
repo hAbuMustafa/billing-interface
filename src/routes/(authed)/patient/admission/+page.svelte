@@ -35,6 +35,7 @@
     name="medical_number"
     id="medical_number"
     defaultValue={page.data.nextMedicalNumber}
+    required
   />
 
   <label for="name"> اسم المريض </label>
