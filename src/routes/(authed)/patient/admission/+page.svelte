@@ -29,6 +29,14 @@
 </script>
 
 <form method="POST">
+  <label for="medical_number">الرقم الطبي</label>
+  <input
+    type="number"
+    name="medical_number"
+    id="medical_number"
+    defaultValue={page.data.nextMedicalNumber}
+  />
+
   <label for="name"> اسم المريض </label>
   <input
     name="name"
@@ -232,7 +240,7 @@
       }
     }
 
-    input:is([type='text'], [type*='date']) {
+    input:is([type='text'], [type*='date'], [type='number']) {
       font-size: 1.5rem;
     }
 
