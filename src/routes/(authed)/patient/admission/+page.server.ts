@@ -41,7 +41,6 @@ export async function load() {
 
 export const actions = {
   default: async ({ request }) => {
-    // todo: make sure submitted data are not stale when manually changing derived fields from a national id. Or when changing id doc type.
-    console.log(await request.formData());
+    // todo: implement
   },
 };
