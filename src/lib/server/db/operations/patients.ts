@@ -107,7 +107,7 @@ export async function createPatient(
 
 export async function transferPatient(transfer: typeof Patient_wards.$inferInsert) {
   try {
-    const new_transfer = db.transaction(async (tx) => {
+    const new_transfer = await db.transaction(async (tx) => {
       const [transferInsert] = await tx
         .insert(Patient_wards)
         .values(transfer)
