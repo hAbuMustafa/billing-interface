@@ -63,7 +63,7 @@ export async function createPatient(
   patient: typeof People_Patients.$inferInsert & typeof People.$inferInsert
 ) {
   try {
-    const [new_patient] = await db.transaction(async (tx) => {
+    const new_patient = await db.transaction(async (tx) => {
       let foundPerson;
 
       if (!patient.person_id) {
@@ -82,7 +82,16 @@ export async function createPatient(
         patient.person_id = foundPerson.id;
       }
 
-      return await tx.insert(People_Patients).values(patient).returning();
+      const [p] = await tx.insert(People_Patients).values(patient).returning();
+
+      await tx.insert(Patient_wards).values({
+        patient_id: p.id,
+        ward: patient.admission_ward,
+        timestamp: patient.admission_date,
+        notes: 'admission',
+      });
+
+      return p;
     });
 
     return {
@@ -98,7 +107,20 @@ export async function createPatient(
 
 export async function transferPatient(transfer: typeof Patient_wards.$inferInsert) {
   try {
-    const [new_transfer] = await db.insert(Patient_wards).values(transfer).returning();
+    const new_transfer = db.transaction(async (tx) => {
+      const [transferInsert] = await tx
+        .insert(Patient_wards)
+        .values(transfer)
+        .returning();
+
+      await tx
+        .update(People_Patients)
+        .set({ recent_ward: transfer.ward })
+        .where(eq(People_Patients.id, transfer.patient_id));
+
+      return transferInsert;
+    });
+
     return {
       success: true,
       data: new_transfer,

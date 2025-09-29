@@ -51,6 +51,10 @@ export const People_Patients = sqliteTable('People_Patients', {
   diagnosis: text(),
   admission_date: integer({ mode: 'timestamp' }).notNull().default(new Date()),
   admission_notes: text(),
+  admission_ward: integer()
+    .notNull()
+    .references(() => Wards.id),
+  recent_ward: integer().references(() => Wards.id),
   discharge_date: integer({ mode: 'timestamp' }),
   discharge_reason: integer().references(() => Patient_discharge_reasons.id),
   discharge_notes: text(),
