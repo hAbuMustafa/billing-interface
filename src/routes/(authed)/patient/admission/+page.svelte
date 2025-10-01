@@ -73,6 +73,7 @@
     bind:value={patientName}
     pattern={arabicTetradicNamesPattern.source}
     disabled={hasSelectedPerson}
+    style="font-size:1.5rem;"
     required
   >
     {#snippet optionSnippet(person: FetchedPersonT)}
@@ -106,49 +107,6 @@
     disabled={hasSelectedPerson}
     required
   />
-
-  <fieldset class="diagnosis_box">
-    <legend>التشخيص الأولي</legend>
-    <input
-      id="diagnosis"
-      type="text"
-      bind:value={diagnosisText}
-      onkeydown={(e) => {
-        if (e.key === 'Enter' && diagnosisText.length > 2) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          diagnoses.push(diagnosisText.trim());
-          diagnosisText = '';
-        }
-      }}
-      list="diagnosis_suggestions"
-    />
-    <datalist id="diagnosis_suggestions">
-      {#each page.data.diagnoses_list as d, i (i)}
-        <option value={d}></option>
-      {/each}
-    </datalist>
-
-    {#if diagnoses.length}
-      <div class="diagnoses_list" transition:scale>
-        {#each diagnoses as diagnosis, i (diagnosis)}
-          <input
-            type="checkbox"
-            name="diagnosis"
-            id="diagnosis_{i}"
-            value={diagnosis}
-            checked
-            required
-            onchange={() => {
-              diagnoses = diagnoses.filter((item) => item !== diagnosis);
-            }}
-          />
-          <label for="diagnosis_{i}" transition:scale>{diagnosis}</label>
-        {/each}
-      </div>
-    {/if}
-  </fieldset>
 
   <fieldset disabled={hasSelectedPerson}>
     <legend>النوع</legend>
@@ -196,6 +154,51 @@
       required
     />
     <label for="uninsured">غير مؤمن عليه</label>
+  </fieldset>
+
+  <hr style="width: 100%; margin-block-start: 2rem;" />
+
+  <fieldset class="diagnosis_box">
+    <legend>التشخيص الأولي</legend>
+    <input
+      id="diagnosis"
+      type="text"
+      bind:value={diagnosisText}
+      onkeydown={(e) => {
+        if (e.key === 'Enter' && diagnosisText.length > 2) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          diagnoses.push(diagnosisText.trim());
+          diagnosisText = '';
+        }
+      }}
+      list="diagnosis_suggestions"
+    />
+    <datalist id="diagnosis_suggestions">
+      {#each page.data.diagnoses_list as d, i (i)}
+        <option value={d}></option>
+      {/each}
+    </datalist>
+
+    {#if diagnoses.length}
+      <div class="diagnoses_list" transition:scale>
+        {#each diagnoses as diagnosis, i (diagnosis)}
+          <input
+            type="checkbox"
+            name="diagnosis"
+            id="diagnosis_{i}"
+            value={diagnosis}
+            checked
+            required
+            onchange={() => {
+              diagnoses = diagnoses.filter((item) => item !== diagnosis);
+            }}
+          />
+          <label for="diagnosis_{i}" transition:scale>{diagnosis}</label>
+        {/each}
+      </div>
+    {/if}
   </fieldset>
 
   <fieldset>
