@@ -15,7 +15,7 @@ export async function load() {
         .flat()
         .sort()
     )
-  );
+  ); // todo: got to move this to a queryable table for efficiency
 
   const lastMedicalNumber = (
     await db
