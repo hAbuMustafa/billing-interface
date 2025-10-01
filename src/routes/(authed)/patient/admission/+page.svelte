@@ -3,7 +3,13 @@
   import { arabicTetradicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
   import { formatDate } from '$lib/utils/date-format';
   import { scale } from 'svelte/transition';
+  import ISelect from '$lib/components/Forms/iSelect.svelte';
+  import PersonButton from '$lib/components/Forms/PersonButton.svelte';
+  import type { People } from '$lib/server/db/schema';
 
+  type FetchedPersonT = typeof People.$inferSelect;
+
+  let patientName = $state('');
   let idDocType = $state(1);
   let idDocNum = $state('');
   let isNationalId = $derived(idDocType === 1 && nationalIdPattern.test(idDocNum));
@@ -26,6 +32,26 @@
 
   let diagnoses = $state<string[]>([]);
   let diagnosisText = $state('');
+
+  let hasSelectedPerson = $state(false);
+
+  function selectPerson(person: FetchedPersonT) {
+    hasSelectedPerson = true;
+
+    patientName = person.name;
+
+    idDocType = person.id_doc_type ?? 1;
+
+    idDocNum = person.id_doc_num ?? '';
+
+    if (person.gender) {
+      gender = Number(person.gender);
+    }
+
+    if (person.health_insurance) {
+      healthInsurance = Number(person.health_insurance);
+    }
+  }
 </script>
 
 <form method="POST">
@@ -39,15 +65,22 @@
   />
 
   <label for="name"> اسم المريض </label>
-  <input
+  <ISelect
+    endpoint="/api/people/"
     name="name"
     id="name"
-    type="text"
+    bind:done={hasSelectedPerson}
+    bind:value={patientName}
     pattern={arabicTetradicNamesPattern.source}
+    disabled={hasSelectedPerson}
     required
-  />
+  >
+    {#snippet optionSnippet(person: FetchedPersonT)}
+      <PersonButton {person} onclick={() => selectPerson(person)} />
+    {/snippet}
+  </ISelect>
 
-  <fieldset>
+  <fieldset disabled={hasSelectedPerson}>
     <legend>نوع الهوية</legend>
     {#each page.data.id_doc_type_list as d_type, i (d_type.id)}
       <input
@@ -70,6 +103,7 @@
     placeholder="22222222222222"
     bind:value={idDocNum}
     pattern={nationalIdPattern.source}
+    disabled={hasSelectedPerson}
     required
   />
 
@@ -116,7 +150,7 @@
     {/if}
   </fieldset>
 
-  <fieldset>
+  <fieldset disabled={hasSelectedPerson}>
     <legend>النوع</legend>
     <input name="gender" id="male" type="radio" value={1} bind:group={gender} required />
     <label for="male">ذكر</label>
@@ -132,9 +166,16 @@
   </fieldset>
 
   <label for="birthdate">تاريخ الميلاد</label>
-  <input name="birthdate" id="birthdate" type="date" bind:value={birthdate} required />
+  <input
+    name="birthdate"
+    id="birthdate"
+    type="date"
+    bind:value={birthdate}
+    disabled={hasSelectedPerson}
+    required
+  />
 
-  <fieldset>
+  <fieldset disabled={hasSelectedPerson}>
     <legend>التأمين الصحي</legend>
     <input
       name="health_insurance"
@@ -145,6 +186,7 @@
       required
     />
     <label for="insured">مؤمن عليه</label>
+
     <input
       name="health_insurance"
       id="uninsured"
@@ -153,7 +195,7 @@
       bind:group={healthInsurance}
       required
     />
-    <label for="insured">غير مؤمن عليه</label>
+    <label for="uninsured">غير مؤمن عليه</label>
   </fieldset>
 
   <fieldset>

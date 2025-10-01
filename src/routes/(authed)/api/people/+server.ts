@@ -35,17 +35,12 @@ export async function GET({ url }) {
 
     // perform database fuzzy search using extend-arabic-query on `People` table
     matchedPeople = await db
-      .select({
-        id: People.id,
-        name: People.name,
-        national_id: People.id_doc_num,
-        birthdate: People.birthdate,
-      })
+      .select()
       .from(People)
       .where(regexp('name', regexifiedPersonName));
   }
 
-  // return id, name, and national_id for every patient
+  // return people data
   return new Response(JSON.stringify(matchedPeople), {
     headers: {
       'content-type': 'application/json',
