@@ -294,29 +294,9 @@
       margin-inline-start: 1.5rem;
     }
 
-    input:is([type='submit']) {
+    input[type='submit'] {
       margin-block-start: 2rem;
       padding-block: 0.5rem;
-    }
-
-    :is(input[type='radio'], input[type='checkbox']) {
-      display: none;
-
-      & + label {
-        background-color: lightslategray;
-        color: var(--main-bg-color);
-        padding: 0.25rem 0.5rem;
-        text-align: center;
-        text-wrap: nowrap;
-
-        border-radius: 0.25rem;
-      }
-
-      &:checked + label {
-        background-color: royalblue;
-        font-weight: 700;
-        color: unset;
-      }
     }
   }
 </style>

@@ -93,3 +93,26 @@ input:is([type='submit'], [type='button']) {
     background-color: hsl(from royalblue h s 50%);
   }
 }
+
+:is(input[type='radio'], input[type='checkbox']) {
+  display: none;
+
+  & + label {
+    background-color: lightslategray;
+    color: var(--main-bg-color);
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+    text-wrap: nowrap;
+
+    border-radius: 0.25rem;
+  }
+
+  &:checked + label {
+    background-color: light-dark(
+      hsl(from royalblue h 100% 60%),
+      hsl(from royalblue h 100% 55%)
+    );
+    font-weight: 700;
+    color: light-dark(var(--main-bg-color), var(--main-text-color));
+  }
+}
