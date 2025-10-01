@@ -34,7 +34,7 @@
     type="number"
     name="medical_number"
     id="medical_number"
-    defaultValue={page.data.nextMedicalNumber}
+    placeholder={page.data.nextMedicalNumber}
     required
   />
 
