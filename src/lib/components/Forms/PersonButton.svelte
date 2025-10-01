@@ -22,7 +22,7 @@
   <span>{person.id_doc_num}</span>
   {#if person.birthdate}
     <span>
-      {formatDate(person.birthdate)} ({getAge(person.birthdate)})
+      {formatDate(person.birthdate, 'YYYY/MM/DD')} ({getAge(person.birthdate)} سنة)
     </span>
   {/if}
 </button>
