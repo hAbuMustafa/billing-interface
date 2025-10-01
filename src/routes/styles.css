@@ -70,6 +70,7 @@ input.equal {
 
 :is(
     label:has(+ input:required:not([type='radio']):not([type='checkbox'])),
+    label:has(+ div input:required:not([type='radio']):not([type='checkbox'])),
     label:has(+ select:required),
     :not(fieldset) > fieldset:has(:required) > legend
   )::after {
