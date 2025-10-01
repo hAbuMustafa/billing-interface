@@ -25,7 +25,7 @@ export async function load() {
         like(People_Patients.id, `${new Date().getFullYear().toString().slice(2, 4)}/%`)
       )
   )
-    .map((mn) => Number(mn?.mId.split('/')[1] || '0/0'))
+    .map((mn) => Number(mn?.mId.split('/')[1] || '0'))
     .sort((a, b) => a - b)
     .pop();
 
