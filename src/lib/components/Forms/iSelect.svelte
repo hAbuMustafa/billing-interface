@@ -31,9 +31,12 @@
         const response = await fetch(`${endpoint}?q=${inputText}`);
         const data = await response.json();
         selectList = data;
-      }, 150);
+      }, 1500);
 
       debouncedFetch();
+      return () => {
+        debouncedFetch.cancel();
+      };
     }
   });
 </script>
@@ -51,7 +54,7 @@
     {/if}
   </div>
 
-  {#if shouldFetch}
+  {#if shouldFetch && selectList.length}
     {#if optionSnippet}
       {@render list(optionSnippet)}
     {:else}

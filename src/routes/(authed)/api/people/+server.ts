@@ -1,7 +1,7 @@
 import { db } from '$lib/server/db/';
 import { People } from '$lib/server/db/schema.js';
 import { regexp } from '$lib/utils/drizzle.js';
-import { eq } from 'drizzle-orm';
+import { like } from 'drizzle-orm';
 import { getRegexString } from 'extend-arabic-query';
 
 export async function GET({ url }) {
@@ -17,14 +17,9 @@ export async function GET({ url }) {
 
   if (isIdNumber) {
     matchedPeople = await db
-      .select({
-        id: People.id,
-        name: People.name,
-        national_id: People.id_doc_num,
-        birthdate: People.birthdate,
-      })
+      .select()
       .from(People)
-      .where(eq(People.id_doc_num, query));
+      .where(like(People.id_doc_num, `%${query}%`));
   } else {
     let regexifiedPersonName = new RegExp(
       getRegexString(query)

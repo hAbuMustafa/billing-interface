@@ -56,11 +56,13 @@
 
 <form method="POST">
   <label for="medical_number">الرقم الطبي</label>
+  <!-- svelte-ignore a11y_autofocus -->
   <input
     type="number"
     name="medical_number"
     id="medical_number"
     placeholder={page.data.nextMedicalNumber}
+    autofocus
     required
   />
 
@@ -74,6 +76,7 @@
     pattern={arabicTetradicNamesPattern.source}
     disabled={hasSelectedPerson}
     style="font-size:1.5rem;"
+    autocomplete="off"
     required
   >
     {#snippet optionSnippet(person: FetchedPersonT)}
