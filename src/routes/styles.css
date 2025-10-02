@@ -82,6 +82,24 @@ input.equal {
   color: red;
 }
 
+:is(
+    label:has(+ input:disabled:not([type='radio']):not([type='checkbox'])),
+    label:has(+ div input:disabled:not([type='radio']):not([type='checkbox'])),
+    label:has(+ select:disabled),
+    :not(fieldset) > fieldset:has(:disabled)
+  ) {
+  position: relative;
+
+  &::before {
+    content: '🔒';
+
+    position: absolute;
+    inset-inline-end: 100%;
+    -webkit-margin-end: 0.25rem;
+    margin-inline-end: 0.25rem;
+  }
+}
+
 input:is([type='submit'], [type='button']) {
   background-color: var(--main-accent-color);
   color: #ccc;
