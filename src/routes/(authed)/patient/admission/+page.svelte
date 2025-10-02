@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import { arabicTetradicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
+  import { arabicTriadicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
   import { formatDate } from '$lib/utils/date-format';
   import { scale } from 'svelte/transition';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
@@ -73,7 +73,7 @@
     id="name"
     bind:done={hasSelectedPerson}
     bind:value={patientName}
-    pattern={arabicTetradicNamesPattern.source}
+    pattern={arabicTriadicNamesPattern.source}
     disabled={hasSelectedPerson}
     style="font-size:1.5rem;"
     autocomplete="off"

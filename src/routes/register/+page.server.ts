@@ -2,7 +2,7 @@ import { createUser } from '$lib/server/db/operations/auth';
 import { db } from '$lib/server/db';
 import { Sys_Users } from '$lib/server/db/schema';
 import {
-  arabicTetradicNamesPattern,
+  arabicTriadicNamesPattern,
   egyptianMobileNumberPattern,
   emailPattern,
   nationalIdPattern,
@@ -73,7 +73,7 @@ export const actions: Actions = {
       return failWithMessage('كلمة السر وتأكيدها غير متطابقان');
     }
 
-    if (!arabicTetradicNamesPattern.test(name)) {
+    if (!arabicTriadicNamesPattern.test(name)) {
       return failWithMessage(
         'اسم الموظف بصيغة غير صحيحة. يجب أن يكون اسما ثلاثيا على الأقل بحروف عربية فقط'
       );

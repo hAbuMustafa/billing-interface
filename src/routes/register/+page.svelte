@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    arabicTetradicNamesPattern,
+    arabicTriadicNamesPattern,
     egyptianMobileNumberPattern,
     nationalIdPattern,
     passwordPattern,
@@ -25,7 +25,7 @@
       style:direction="rtl"
       required
       autofocus
-      pattern={arabicTetradicNamesPattern.source}
+      pattern={arabicTriadicNamesPattern.source}
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
