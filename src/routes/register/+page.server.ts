@@ -9,9 +9,10 @@ import {
   passwordPattern,
   usernamePattern,
 } from '$lib/stores/patterns';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { redirect, type Actions } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import type { DrizzleQueryError } from 'drizzle-orm/errors';
+import { failWithFormFieldsAndMessageBuilder } from '$lib/utils/form-actions';
 
 export function load() {
   return {
@@ -146,13 +147,3 @@ export const actions: Actions = {
     return redirect(303, '/');
   },
 };
-
-function failWithFormFieldsAndMessageBuilder<T extends Record<string, string | number>>(
-  fields: T
-) {
-  return (failMessage: string) =>
-    fail(401, {
-      message: failMessage,
-      ...fields,
-    });
-}
