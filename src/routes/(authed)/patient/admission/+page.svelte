@@ -46,11 +46,14 @@
   );
 
   let hasSelectedPerson = $state(false);
+  let selectedPersonId = $state(0);
 
   function selectPerson(person: FetchedPersonT) {
     hasSelectedPerson = true;
 
     patientName = person.name;
+
+    selectedPersonId = person.id;
 
     idDocType = person.id_doc_type ?? 1;
 
@@ -89,6 +92,9 @@
     pattern={arabicTriadicNamesPattern.source}
     disabled={hasSelectedPerson}
     style="font-size:1.5rem;"
+    onclear={() => {
+      selectedPersonId = 0;
+    }}
     autocomplete="off"
     required
   >
@@ -171,6 +177,8 @@
     />
     <label for="uninsured">غير مؤمن عليه</label>
   </fieldset>
+
+  <input type="hidden" name="person_id" bind:value={selectedPersonId} />
 
   <hr style="width: 100%; margin-block-start: 2rem;" />
 
