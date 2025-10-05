@@ -35,11 +35,7 @@
   });
   let healthInsurance = $state(form?.heathInsurance ? Number(form.heathInsurance) : 0);
 
-  let returnedDiagnosesOnFormError = form?.diagnosis
-    ? typeof form.diagnosis === 'string'
-      ? [form.diagnosis]
-      : JSON.parse(form.diagnosis)
-    : null;
+  let returnedDiagnosesOnFormError = form?.diagnosis ? form.diagnosis : null;
   let diagnoses = $state<string[]>(returnedDiagnosesOnFormError ?? []);
   let diagnosisText = $state('');
 
@@ -208,7 +204,7 @@
         {#each diagnoses as diagnosis, i (diagnosis)}
           <input
             type="checkbox"
-            name="diagnosis"
+            name="diagnosis[]"
             id="diagnosis_{i}"
             value={diagnosis}
             checked
