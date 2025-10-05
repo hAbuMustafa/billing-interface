@@ -58,7 +58,7 @@ export const actions = {
     let medicalNumber = data.get('medical_number') as unknown as number;
     let admissionWard = data.get('admission_ward') as unknown as number;
     let admissionDate = data.get('admission_date') as unknown as Date;
-    let diagnosis = data.getAll('diagnosis[]') as unknown as string[];
+    let diagnosis = data.getAll('diagnosis') as unknown as string[];
 
     const failWithMessage = failWithFormFieldsAndMessageBuilder({
       medicalNumber,

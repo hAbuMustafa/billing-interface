@@ -224,7 +224,7 @@
         {#each diagnoses as diagnosis, i (diagnosis)}
           <input
             type="checkbox"
-            name="diagnosis[]"
+            name="diagnosis"
             id="diagnosis_{i}"
             value={diagnosis}
             checked
