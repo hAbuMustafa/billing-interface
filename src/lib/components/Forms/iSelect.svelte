@@ -9,6 +9,7 @@
     endpoint: string;
     minlength?: number;
     optionSnippet?: Snippet<[any]>;
+    onclear?: Function;
   };
 
   let {
@@ -18,6 +19,7 @@
     endpoint,
     minlength = 4,
     optionSnippet,
+    onclear,
     ...props
   }: iSelectT = $props();
 
@@ -49,6 +51,7 @@
         onclick={() => {
           inputText = '';
           done = false;
+          if (onclear) onclear();
         }}>إلغاء</button
       >
     {/if}
