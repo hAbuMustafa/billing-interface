@@ -45,7 +45,7 @@
     form?.admissionDate ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
   );
 
-  let hasSelectedPerson = $state(false);
+  let hasSelectedPerson = $state(!!form?.personId || false);
   let selectedPersonId = $state(0);
 
   function selectPerson(person: FetchedPersonT) {
@@ -82,7 +82,7 @@
     required
   />
 
-  <label for="name"> اسم المريض </label>
+  <label for="name" class={hasSelectedPerson ? 'locked' : ''}> اسم المريض </label>
   <ISelect
     endpoint="/api/people/"
     name="name"
@@ -90,7 +90,7 @@
     bind:done={hasSelectedPerson}
     bind:value={patientName}
     pattern={arabicTriadicNamesPattern.source}
-    disabled={hasSelectedPerson}
+    readonly={hasSelectedPerson}
     style="font-size:1.5rem;"
     onclear={() => {
       selectedPersonId = 0;
@@ -103,22 +103,23 @@
     {/snippet}
   </ISelect>
 
-  <fieldset disabled={hasSelectedPerson}>
+  <fieldset class={hasSelectedPerson ? 'locked' : ''}>
     <legend>نوع الهوية</legend>
     {#each page.data.id_doc_type_list as d_type, i (d_type.id)}
       <input
-        name="id_doc_type"
         id="id_doc_type_{i}"
         type="radio"
         value={d_type.id}
         bind:group={idDocType}
+        disabled={hasSelectedPerson}
         required
       />
       <label for="id_doc_type_{i}">{d_type.name}</label>
     {/each}
+    <input type="hidden" name="id_doc_type" bind:value={idDocType} />
   </fieldset>
 
-  <label for="id_doc_num">رقم الهوية</label>
+  <label for="id_doc_num" class={hasSelectedPerson ? 'locked' : ''}>رقم الهوية</label>
   <input
     name="id_doc_num"
     id="id_doc_num"
@@ -126,56 +127,66 @@
     placeholder="22222222222222"
     bind:value={idDocNum}
     pattern={idDocType === 1 ? nationalIdPattern.source : null}
-    disabled={hasSelectedPerson}
+    readonly={hasSelectedPerson}
     required
   />
 
-  <fieldset disabled={hasSelectedPerson}>
+  <fieldset class={hasSelectedPerson ? 'locked' : ''}>
     <legend>النوع</legend>
-    <input name="gender" id="male" type="radio" value={1} bind:group={gender} required />
+    <input
+      id="male"
+      type="radio"
+      value={1}
+      bind:group={gender}
+      disabled={hasSelectedPerson}
+      required
+    />
     <label for="male">ذكر</label>
     <input
-      name="gender"
       id="female"
       type="radio"
       value={0}
       bind:group={gender}
+      disabled={hasSelectedPerson}
       required
     />
     <label for="female">أنثى</label>
+    <input type="hidden" name="gender" bind:value={gender} />
   </fieldset>
 
-  <label for="birthdate">تاريخ الميلاد</label>
+  <label for="birthdate" class={hasSelectedPerson ? 'locked' : ''}>تاريخ الميلاد</label>
   <input
     name="birthdate"
     id="birthdate"
     type="date"
     bind:value={birthdate}
-    disabled={hasSelectedPerson}
+    readonly={hasSelectedPerson}
     required
   />
 
-  <fieldset disabled={hasSelectedPerson}>
+  <fieldset class={hasSelectedPerson ? 'locked' : ''}>
     <legend>التأمين الصحي</legend>
     <input
-      name="health_insurance"
       id="insured"
       type="radio"
       value={1}
       bind:group={healthInsurance}
+      disabled={hasSelectedPerson}
       required
     />
     <label for="insured">مؤمن عليه</label>
 
     <input
-      name="health_insurance"
       id="uninsured"
       type="radio"
       value={0}
       bind:group={healthInsurance}
+      disabled={hasSelectedPerson}
       required
     />
     <label for="uninsured">غير مؤمن عليه</label>
+
+    <input type="hidden" name="health_insurance" bind:value={healthInsurance} />
   </fieldset>
 
   <input type="hidden" name="person_id" bind:value={selectedPersonId} />
