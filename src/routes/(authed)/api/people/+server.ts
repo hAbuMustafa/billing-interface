@@ -1,8 +1,8 @@
 import { db } from '$lib/server/db/';
 import { People } from '$lib/server/db/schema.js';
 import { regexp } from '$lib/utils/drizzle.js';
+import { regexifiedPersonName } from '$lib/utils/querying';
 import { like } from 'drizzle-orm';
-import { getRegexString } from 'extend-arabic-query';
 
 export async function GET({ url }) {
   // receive patient name in a request
@@ -13,27 +13,14 @@ export async function GET({ url }) {
 
   const isIdNumber = /\d/g.test(query);
 
-  let matchedPeople: any[];
-
-  if (isIdNumber) {
-    matchedPeople = await db
-      .select()
-      .from(People)
-      .where(like(People.id_doc_num, `%${query}%`));
-  } else {
-    let regexifiedPersonName = new RegExp(
-      getRegexString(query)
-        .replaceAll('?:', '')
-        .replaceAll(' ', '.*')
-        .replaceAll('؟', '.')
+  const matchedPeople = await db
+    .select()
+    .from(People)
+    .where(
+      isIdNumber
+        ? like(People.id_doc_num, `%${query}%`)
+        : regexp('name', regexifiedPersonName(query))
     );
-
-    // perform database fuzzy search using extend-arabic-query on `People` table
-    matchedPeople = await db
-      .select()
-      .from(People)
-      .where(regexp('name', regexifiedPersonName));
-  }
 
   // return people data
   return new Response(JSON.stringify(matchedPeople), {
