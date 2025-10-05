@@ -9,14 +9,18 @@
 
   type FetchedPersonT = typeof People.$inferSelect;
 
-  let patientName = $state('');
-  let idDocType = $state(1);
-  let idDocNum = $state('');
+  const { form } = $props();
+
+  let medicalNumber = $state(form?.medicalNumber ?? '');
+  let patientName = $state(form?.patientName ?? '');
+  let idDocType = $state(form?.idDocType ? Number(form.idDocType) : 1);
+  let idDocNum = $state(form?.idDocNum ?? '');
   let isNationalId = $derived(idDocType === 1 && nationalIdPattern.test(idDocNum));
   let gender = $derived.by(() => {
     if (isNationalId) {
       return Number(idDocNum.slice(12, 13)) % 2 ? 1 : 0;
     }
+    return form?.gender ? Number(form.gender) : null;
   });
   let birthdate = $derived.by(() => {
     if (isNationalId) {
@@ -27,11 +31,23 @@
 
       return [year, month, day].join('-');
     }
+    return form?.birthdate;
   });
-  let healthInsurance = $state(0);
+  let healthInsurance = $state(form?.heathInsurance ? Number(form.heathInsurance) : 0);
 
-  let diagnoses = $state<string[]>([]);
+  let returnedDiagnosesOnFormError = form?.diagnosis
+    ? typeof form.diagnosis === 'string'
+      ? [form.diagnosis]
+      : JSON.parse(form.diagnosis)
+    : null;
+  let diagnoses = $state<string[]>(returnedDiagnosesOnFormError ?? []);
   let diagnosisText = $state('');
+
+  let admissionWard = $state(form?.admissionWard ? Number(form.admissionWard) : null);
+
+  let admissionDate = $state(
+    form?.admissionDate ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
+  );
 
   let hasSelectedPerson = $state(false);
 
@@ -63,6 +79,7 @@
     id="medical_number"
     placeholder={page.data.nextMedicalNumber}
     autofocus
+    bind:value={medicalNumber}
     required
   />
 
@@ -178,6 +195,7 @@
       }}
       list="diagnosis_suggestions"
     />
+    <!-- TODO: Should be required to prevent submission without it -->
     <datalist id="diagnosis_suggestions">
       {#each page.data.diagnoses_list as d, i (i)}
         <option value={d}></option>
@@ -214,6 +232,7 @@
             id="admission_ward_{ward.id}"
             name="admission_ward"
             value={ward.id}
+            bind:group={admissionWard}
             required
           />
           <label for="admission_ward_{ward.id}">{ward.name}</label>
@@ -227,7 +246,7 @@
     type="datetime-local"
     name="admission_date"
     id="admission_date"
-    defaultValue={formatDate(new Date(), 'YYYY-MM-DDTHH:mm')}
+    bind:value={admissionDate}
     required
   />
 
