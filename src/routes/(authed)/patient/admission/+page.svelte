@@ -106,7 +106,7 @@
     type="text"
     placeholder="22222222222222"
     bind:value={idDocNum}
-    pattern={nationalIdPattern.source}
+    pattern={idDocType === 1 ? nationalIdPattern.source : null}
     disabled={hasSelectedPerson}
     required
   />
