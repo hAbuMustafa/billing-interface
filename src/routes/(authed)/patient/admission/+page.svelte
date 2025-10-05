@@ -193,9 +193,10 @@
           diagnosisText = '';
         }
       }}
+      required={diagnoses.length === 0 ? true : null}
       list="diagnosis_suggestions"
     />
-    <!-- TODO: Should be required to prevent submission without it -->
+
     <datalist id="diagnosis_suggestions">
       {#each page.data.diagnoses_list as d, i (i)}
         <option value={d}></option>
