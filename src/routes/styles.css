@@ -82,12 +82,7 @@ input.equal {
   color: red;
 }
 
-:is(
-    label:has(+ input:disabled:not([type='radio']):not([type='checkbox'])),
-    label:has(+ div input:disabled:not([type='radio']):not([type='checkbox'])),
-    label:has(+ select:disabled),
-    :not(fieldset) > fieldset:has(:disabled)
-  ) {
+.locked {
   position: relative;
 
   &::before {
@@ -137,17 +132,22 @@ input:is([type='submit'], [type='button']) {
     color: light-dark(var(--main-bg-color), var(--main-text-color));
   }
 
-  &:disabled + label {
+  &:read-only + label {
     background-color: light-dark(
       hsl(from var(--main-unselected-accent-color) h 20% 80%),
       hsl(from var(--main-unselected-accent-color) h 5% 35%)
     );
   }
 
-  &:checked:disabled + label {
+  &:checked:read-only + label {
     background-color: light-dark(
       hsl(from var(--main-accent-color) h 80% 80%),
       hsl(from var(--main-accent-color) h 60% l)
     );
   }
+}
+
+input:read-only,
+input:is([type='radio'], [type='checkbox']):disabled + label {
+  opacity: 0.5;
 }
