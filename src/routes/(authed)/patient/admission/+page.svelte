@@ -105,6 +105,7 @@
 
   <fieldset class={hasSelectedPerson ? 'locked' : ''}>
     <legend>نوع الهوية</legend>
+    <!-- TODO: make these navigable by 'tab' -->
     {#each page.data.id_doc_type_list as d_type, i (d_type.id)}
       <input
         id="id_doc_type_{i}"
