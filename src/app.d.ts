@@ -23,6 +23,25 @@ declare global {
       DateColumnT: string | { name: string; format: string };
     }
     // interface Platform {}
+    interface CustomTypes {
+      PatientT: {
+        id: string;
+        name: string;
+        id_doc_num?: string;
+        diagnosis?: string;
+        admission_date: Date;
+        dismissal_date?: Date;
+        admission_notes?: string;
+        gender?: boolean;
+        birthdate?: Date;
+        health_insurance?: boolean;
+        id_doc_type?: number;
+        dismissal_reason?: number;
+        admission_ward: number;
+        person_id?: number;
+      };
+    }
+    type Require<T, K extends keyof T> = T & { [P in K]-?: T[P] };
   }
 }
 

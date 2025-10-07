@@ -59,9 +59,7 @@ export async function createDischargeReason(
   }
 }
 
-export async function createPatient(
-  patient: typeof People_Patients.$inferInsert & typeof People.$inferInsert
-) {
+export async function createPatient(patient: App.CustomTypes['PatientT']) {
   try {
     const new_patient = await db.transaction(async (tx) => {
       let foundPerson;
@@ -82,7 +80,10 @@ export async function createPatient(
         patient.person_id = foundPerson.id;
       }
 
-      const [p] = await tx.insert(People_Patients).values(patient).returning();
+      const [p] = await tx
+        .insert(People_Patients)
+        .values(patient as App.Require<App.CustomTypes['PatientT'], 'person_id'>)
+        .returning();
 
       await tx.insert(Patient_wards).values({
         patient_id: p.id,
