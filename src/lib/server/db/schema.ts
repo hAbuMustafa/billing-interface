@@ -40,7 +40,6 @@ export const People = sqliteTable('People', {
   id_doc_num: text(),
   gender: integer({ mode: 'boolean' }),
   birthdate: integer({ mode: 'timestamp' }),
-  health_insurance: integer({ mode: 'boolean' }),
 });
 
 export const People_Patients = sqliteTable('People_Patients', {
@@ -58,6 +57,7 @@ export const People_Patients = sqliteTable('People_Patients', {
   discharge_date: integer({ mode: 'timestamp' }),
   discharge_reason: integer().references(() => Patient_discharge_reasons.id),
   discharge_notes: text(),
+  health_insurance: integer({ mode: 'boolean' }),
 });
 
 export const Drugs_unit = sqliteTable('Drugs_unit', {
