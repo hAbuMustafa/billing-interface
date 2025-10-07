@@ -3,6 +3,7 @@ import { floors, new_id_doc_type, new_Wards } from '$lib/server/db/menus';
 import { createPatient } from '$lib/server/db/operations/patients.js';
 import { People_Patients } from '$lib/server/db/schema.js';
 import { failWithFormFieldsAndMessageBuilder } from '$lib/utils/form-actions.js';
+import { fail } from 'assert';
 import { like } from 'drizzle-orm';
 
 export async function load() {
@@ -102,24 +103,30 @@ export const actions = {
       return failWithMessage('جميع الحقول مطلوبة');
     }
 
-    personId = Number(personId);
-    medicalNumber = Number(medicalNumber);
-    idDocType = Number(idDocType);
-    admissionWard = Number(admissionWard);
+    try {
+      personId = Number(personId);
+      medicalNumber = Number(medicalNumber);
+      idDocType = Number(idDocType);
+      admissionWard = Number(admissionWard);
 
-    gender = Boolean(Number(gender));
-    heathInsurance = Boolean(Number(heathInsurance));
+      gender = Boolean(Number(gender));
+      heathInsurance = Boolean(Number(heathInsurance));
 
-    birthdate = new Date(birthdate);
-    admissionDate = new Date(admissionDate);
+      birthdate = new Date(birthdate);
+      admissionDate = new Date(admissionDate);
+    } catch (e) {
+      console.error(JSON.stringify(data, null, 4));
+      fail('خطأ في طبيعة البيانات المدخلة (أرقام أو تواريخ).');
+    }
 
-    // createPatient({
-    //   id: [new Date().getFullYear().toString().slice(2, 4), medicalNumber].join('/'),
-    //   name: patientName,
-    //   id_doc_type: idDocType,
-    //   id_doc_num: idDocNum,
-    //   admission_ward: admissionWard,
-    //   admission_date: admissionDate,
-    // });
+    createPatient({
+      id: [admissionDate.getFullYear().toString().slice(2, 4), medicalNumber].join('/'),
+      name: patientName.trim(),
+      id_doc_type: idDocType,
+      id_doc_num: idDocNum.trim(),
+      admission_ward: admissionWard,
+      admission_date: admissionDate,
+      diagnosis: diagnosis.map((d) => d.trim()).join(' + '),
+    });
   },
 };
