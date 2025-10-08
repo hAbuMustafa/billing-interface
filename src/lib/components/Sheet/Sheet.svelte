@@ -9,7 +9,7 @@
 
   type PropsT = {
     rows: RowT[];
-    dateColumns?: App.PageState['DateColumnT'][];
+    dateColumns?: Record<string, string | undefined>;
     renameColumns?: Record<string, string>;
   };
 

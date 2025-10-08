@@ -19,9 +19,7 @@ declare global {
       } | null;
     }
     // interface PageData {}
-    interface PageState {
-      DateColumnT: string | { name: string; format: string };
-    }
+    // interface PageState {}
     // interface Platform {}
     interface CustomTypes {
       PatientT: {
