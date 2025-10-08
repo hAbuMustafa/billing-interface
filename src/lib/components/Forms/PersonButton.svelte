@@ -4,7 +4,7 @@
 
   type PropsT = {
     person: typeof People.$inferSelect;
-    onclick: Function;
+    onclick?: Function;
   };
 
   let { person = $bindable(), onclick }: PropsT = $props();
@@ -15,7 +15,7 @@
     e.preventDefault();
     e.stopPropagation();
 
-    onclick();
+    onclick?.();
   }}
 >
   <strong>{person.name}</strong>
