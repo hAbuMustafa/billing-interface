@@ -19,6 +19,7 @@
         <ul>
           <li><a href="/patient/admission">تسجيل حالة دخول</a></li>
           <li><a href="/patient/discharge">تسجيل خروج مريض</a></li>
+          <li><a href="/patient/transfer">تحويل مريض إلى قسم</a></li>
         </ul>
       </li>
       <li><a href="/patient-search">تسعير فاتورة</a></li>
