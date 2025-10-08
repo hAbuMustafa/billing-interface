@@ -40,6 +40,7 @@ export const new_Patient_discharge_reasons = [
   { name: 'سوء سلوك', id: 6 },
   { name: 'إلغاء حجز', id: 7 },
   { name: 'نقل إلى مساكن العبور', id: 8 },
+  { name: 'أخرى', id: 9 },
 ];
 
 export const new_Drugs_unit = [
