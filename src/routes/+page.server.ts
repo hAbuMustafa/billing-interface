@@ -1,7 +1,8 @@
-import { transfers } from '$lib/server/db/seed/data/patient_transfers';
-
 export function load() {
   return {
-    table: transfers,
+    table: [
+      { id: 1, name: 'blah blah blah' },
+      { id: 2, Woah: 'dammit' },
+    ],
   };
 }
