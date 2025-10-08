@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { People } from '$lib/server/db/schema';
   import { formatDate, getAge } from '$lib/utils/date-format';
 
   type PropsT = {
-    person: typeof People.$inferSelect;
+    person: any;
     onclick?: Function;
   };
 
