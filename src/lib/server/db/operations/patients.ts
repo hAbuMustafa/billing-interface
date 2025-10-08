@@ -82,7 +82,10 @@ export async function createPatient(patient: App.CustomTypes['PatientT']) {
 
       const [p] = await tx
         .insert(People_Patients)
-        .values(patient as App.Require<App.CustomTypes['PatientT'], 'person_id'>)
+        .values({ ...patient, recent_ward: patient.admission_ward } as App.Require<
+          App.CustomTypes['PatientT'],
+          'person_id'
+        >)
         .returning();
 
       await tx.insert(Patient_wards).values({
