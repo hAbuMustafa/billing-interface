@@ -1,6 +1,10 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import Sheet from '$lib/components/Sheet/Sheet.svelte';
 </script>
 
-<Sheet rows={page.data.table} />
+<Sheet
+  rows={[
+    { id: 1, name: 'blah blah blah' },
+    { id: 2, Woah: 'dammit' },
+  ]}
+/>
