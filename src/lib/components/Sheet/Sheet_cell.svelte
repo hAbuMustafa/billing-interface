@@ -11,7 +11,7 @@
 </script>
 
 <td
-  >{#if dateColumns() && dateColumns().some((c) => dataTuple[0] === (typeof c === 'string' ? c : c.name))}
+  >{#if dateColumns && dateColumns() && dateColumns().some((c) => dataTuple[0] === (typeof c === 'string' ? c : c.name))}
     {#if dataTuple[1]}
       {formatDate(
         dataTuple[1] as number,

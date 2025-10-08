@@ -1,16 +1,23 @@
 <script lang="ts">
   import Cell from '$lib/components/Sheet/Sheet_cell.svelte';
+  import { getContext } from 'svelte';
 
   type PropsT = {
-    dataObj: { [key: string]: string | number | Date };
+    dataObj: Record<string, string | number | Date>;
   };
 
   const { dataObj }: PropsT = $props();
+
+  const colNames: () => string[] = $derived(getContext('column names'));
 </script>
 
 <tr>
-  {#each Object.entries(dataObj) as dataTuple, j (j)}
-    <Cell {dataTuple} />
+  {#each colNames() as column, j (j)}
+    {#if dataObj.hasOwnProperty(column) && dataObj[column] !== ''}
+      <Cell dataTuple={[column, dataObj[column]]} />
+    {:else}
+      <Cell dataTuple={[column, '']} />
+    {/if}
   {/each}
 </tr>
 

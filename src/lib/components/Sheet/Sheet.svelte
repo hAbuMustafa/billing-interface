@@ -5,8 +5,10 @@
   import Row from '$lib/components/Sheet/Sheet_row.svelte';
   import NoData from '$lib/components/Sheet/Sheet_no_data.svelte';
 
+  type RowT = Record<string, string | number | Date>;
+
   type PropsT = {
-    rows: { [key: string]: string | number | Date }[];
+    rows: RowT[];
     dateColumns?: App.PageState['DateColumnT'][];
   };
 
@@ -14,11 +16,11 @@
 
   let columnNames: string[] = $state([]);
   if (rows && rows.length > 0 && typeof rows[0] === 'object') {
-    columnNames = Object.keys(rows[0]);
+    columnNames = Array.from(new Set(rows.map((r) => Object.keys(r)).flat()));
   }
 
-  setContext('date columns', () => dateColumns);
   setContext('column names', () => columnNames);
+  if (dateColumns) setContext('date columns', () => dateColumns);
 </script>
 
 <table>
@@ -29,15 +31,11 @@
   {:else}
     <SheetHead />
     <tbody>
-      {#if rows.length === 1}
-        <NoData />
-      {:else}
-        {#each rows as row, i (i)}
-          {#if row[columnNames[0]] !== columnNames[0]}
-            <Row dataObj={row} />
-          {/if}
-        {/each}
-      {/if}
+      {#each rows as row, i (i)}
+        {#if row[columnNames[0]] !== columnNames[0]}
+          <Row dataObj={row} />
+        {/if}
+      {/each}
     </tbody>
   {/if}
 </table>
