@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db/';
-import { People } from '$lib/server/db/schema.js';
-import { regexp } from '$lib/utils/drizzle.js';
+import { People } from '$lib/server/db/schema';
+import { regexp } from '$lib/utils/drizzle';
 import { regexifiedPersonName } from '$lib/utils/querying';
 import { like } from 'drizzle-orm';
 
