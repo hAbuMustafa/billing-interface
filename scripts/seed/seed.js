@@ -3,19 +3,19 @@ import { drugs as new_Drugs } from './data/drugs';
 import { users as new_Users } from './data/users';
 import { transfers as new_PatientTransfers } from './data/patient_transfers';
 
-import { createUser } from '$lib/server/db/operations/auth';
+import { createUser } from '../../src/lib/server/db/operations/auth';
 import {
   createWard,
   createIdDocType,
   createDischargeReason,
   createPatient,
   transferPatient,
-} from '$lib/server/db/operations/patients';
+} from '../../src/lib/server/db/operations/patients';
 import {
   createDrugUnit,
   createDrugCategory,
   createDrug,
-} from '$lib/server/db/operations/drugs';
+} from '../../src/lib/server/db/operations/drugs';
 
 import {
   new_Wards,
@@ -23,9 +23,9 @@ import {
   new_Patient_discharge_reasons,
   new_Drugs_unit,
   new_Drugs_category,
-} from '$lib/server/db/menus';
+} from '../../src/lib/server/db/menus';
 
-export async function seed(items: any[], insertFunction: Function) {
+async function seed(items, insertFunction) {
   const seedName = insertFunction.name.replace('create', '');
 
   console.warn('\nStarting ' + seedName + ' seed..');
@@ -51,6 +51,11 @@ export async function seed(items: any[], insertFunction: Function) {
 }
 
 export async function beginSeed() {
+  if (process.env.NODE_ENV === 'production') {
+    console.error('❌ BEWARE NOT TO SEED IN PRODUCTION!\n❌ ABORTING SEED!');
+    process.exit(2);
+  }
+
   // Seed Menu Lists
   await seed(new_Wards, createWard);
   await seed(new_id_doc_type, createIdDocType);
@@ -63,6 +68,4 @@ export async function beginSeed() {
   await seed(new_Drugs, createDrug);
   await seed(new_Patients, createPatient);
   await seed(new_PatientTransfers, transferPatient);
-
-  console.log('\nALL SEEDING IS DONE!');
 }
