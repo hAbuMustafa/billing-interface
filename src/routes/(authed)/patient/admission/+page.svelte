@@ -164,17 +164,6 @@
 
   <hr style="width: 100%; margin-block-start: 2rem;" />
 
-  <fieldset>
-    <legend>التأمين الصحي</legend>
-    <input id="insured" type="radio" value={1} bind:group={healthInsurance} required />
-    <label for="insured">مؤمن عليه</label>
-
-    <input id="uninsured" type="radio" value={0} bind:group={healthInsurance} required />
-    <label for="uninsured">غير مؤمن عليه</label>
-
-    <input type="hidden" name="health_insurance" bind:value={healthInsurance} />
-  </fieldset>
-
   <input type="hidden" name="person_id" bind:value={selectedPersonId} />
 
   <fieldset class="diagnosis_box">
@@ -239,6 +228,17 @@
         {/each}
       </fieldset>
     {/each}
+  </fieldset>
+
+  <fieldset>
+    <legend>التأمين الصحي</legend>
+    <input id="insured" type="radio" value={1} bind:group={healthInsurance} required />
+    <label for="insured">مؤمن عليه</label>
+
+    <input id="uninsured" type="radio" value={0} bind:group={healthInsurance} required />
+    <label for="uninsured">غير مؤمن عليه</label>
+
+    <input type="hidden" name="health_insurance" bind:value={healthInsurance} />
   </fieldset>
 
   <label for="admission_date">وقت وتاريخ الدخول</label>
