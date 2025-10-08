@@ -132,14 +132,14 @@ input:is([type='submit'], [type='button']) {
     color: light-dark(var(--main-bg-color), var(--main-text-color));
   }
 
-  &:read-only + label {
+  &:disabled + label {
     background-color: light-dark(
       hsl(from var(--main-unselected-accent-color) h 20% 80%),
       hsl(from var(--main-unselected-accent-color) h 5% 35%)
     );
   }
 
-  &:checked:read-only + label {
+  &:checked:disabled + label {
     background-color: light-dark(
       hsl(from var(--main-accent-color) h 80% 80%),
       hsl(from var(--main-accent-color) h 60% l)
@@ -147,7 +147,7 @@ input:is([type='submit'], [type='button']) {
   }
 }
 
-input:read-only,
+input:is([type='text'], [type='number'], [type*='date']):read-only,
 input:is([type='radio'], [type='checkbox']):disabled + label {
   opacity: 0.5;
 }

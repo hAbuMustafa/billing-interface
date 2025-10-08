@@ -86,6 +86,7 @@
   <ISelect
     endpoint="/api/people/"
     name="name"
+    type="text"
     id="name"
     bind:done={hasSelectedPerson}
     bind:value={patientName}
