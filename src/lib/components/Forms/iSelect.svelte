@@ -30,8 +30,10 @@
   $effect(() => {
     if (shouldFetch) {
       const debouncedFetch = debounce(async () => {
+        // todo: show loader
         const response = await fetch(`${endpoint}?q=${inputText}`);
         const data = await response.json();
+        // todo: disable loader flag
         selectList = data;
       }, 1500);
 
