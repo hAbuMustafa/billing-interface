@@ -99,6 +99,7 @@
     {/snippet}
   </ISelect>
 
+  <!-- todo: extract a common picker component -->
   <fieldset class={hasSelectedPerson ? 'locked' : ''}>
     <legend>نوع الهوية</legend>
     <!-- TODO: make these navigable by 'tab' -->
