@@ -88,7 +88,6 @@
     bind:value={patientName}
     pattern={arabicTriadicNamesPattern.source}
     readonly={hasSelectedPerson}
-    style="font-size:1.5rem;"
     onclear={() => {
       selectedPersonId = 0;
     }}
@@ -306,10 +305,6 @@
           border-block-end: 1px solid;
         }
       }
-    }
-
-    input:is([type='text'], [type*='date'], [type='number']) {
-      font-size: 1.5rem;
     }
 
     input[type='radio']:not(:first-of-type) {

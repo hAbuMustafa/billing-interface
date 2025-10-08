@@ -119,12 +119,11 @@
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 6fr 1fr;
     gap: 1rem;
+    width: 100%;
 
     @media (max-width: 400px) {
-      width: 95vw;
       display: flex;
       flex-direction: column;
-      padding: 0px;
     }
   }
 
@@ -133,13 +132,7 @@
     flex-direction: column;
   }
 
-  input {
-    height: 2rem;
-  }
-
   input[type='submit'] {
-    font-weight: 700;
-    font-size: 1.25rem;
     grid-column: 1/-1;
   }
 </style>
