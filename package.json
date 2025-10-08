@@ -9,7 +9,10 @@
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "db:seed": "node scripts/seed/",
+    "db:push": "pnpm drizzle-kit push --config=drizzle-dev.config.ts",
+    "db:generate": "pnpm drizzle-kit generate --config=drizzle-dev.config.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^6.0.0",
