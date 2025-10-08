@@ -2,12 +2,17 @@
   import { getContext } from 'svelte';
 
   const columnNames: () => string[] = getContext('column names');
+  const renameColumns: Record<string, string> = getContext('rename columns');
 </script>
 
 <thead>
   <tr>
     {#each columnNames() as colName, i (i)}
-      <th>{colName}</th>
+      {#if renameColumns && renameColumns.hasOwnProperty(colName)}
+        <th>{renameColumns[colName]}</th>
+      {:else}
+        <th>{colName}</th>
+      {/if}
     {/each}
   </tr>
 </thead>

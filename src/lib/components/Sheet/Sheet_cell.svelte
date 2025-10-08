@@ -7,15 +7,15 @@
   };
 
   const { dataTuple }: PropsT = $props();
-  const dateColumns: () => App.PageState['DateColumnT'][] = getContext('date columns');
+  const dateColumns: App.PageState['DateColumnT'][] = getContext('date columns');
 </script>
 
 <td
-  >{#if dateColumns && dateColumns() && dateColumns().some((c) => dataTuple[0] === (typeof c === 'string' ? c : c.name))}
+  >{#if dateColumns && dateColumns.some((c) => dataTuple[0] === (typeof c === 'string' ? c : c.name))}
     {#if dataTuple[1]}
       {formatDate(
         dataTuple[1] as number,
-        dateColumns().find(
+        dateColumns.find(
           (c): c is { name: string; format: string } =>
             typeof c !== 'string' && c.name === dataTuple[0]
         )?.format

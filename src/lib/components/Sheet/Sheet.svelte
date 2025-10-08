@@ -10,9 +10,10 @@
   type PropsT = {
     rows: RowT[];
     dateColumns?: App.PageState['DateColumnT'][];
+    renameColumns?: Record<string, string>;
   };
 
-  const { rows, dateColumns }: PropsT = $props();
+  const { rows, dateColumns, renameColumns }: PropsT = $props();
 
   let columnNames: string[] = $state([]);
   if (rows && rows.length > 0 && typeof rows[0] === 'object') {
@@ -20,7 +21,8 @@
   }
 
   setContext('column names', () => columnNames);
-  if (dateColumns) setContext('date columns', () => dateColumns);
+  if (dateColumns) setContext('date columns', dateColumns);
+  if (renameColumns) setContext('rename columns', renameColumns);
 </script>
 
 <table>
