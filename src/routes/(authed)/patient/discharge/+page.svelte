@@ -13,6 +13,7 @@
     recent_ward: number;
   };
 
+  // todo: initiate state with returned values on submissions error
   let patientName = $state('');
   let selectedPatientId = $state('');
   let selectedDischargeReason = $state(0);
