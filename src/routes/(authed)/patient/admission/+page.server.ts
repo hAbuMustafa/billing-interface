@@ -60,6 +60,7 @@ export const actions = {
     let admissionWard = data.get('admission_ward') as unknown as number;
     let admissionDate = data.get('admission_date') as unknown as Date;
     let diagnosis = data.getAll('diagnosis') as unknown as string[];
+    let admissionNotes = data.get('admission_notes') as unknown as string;
 
     const failWithMessage = failWithFormFieldsAndMessageBuilder({
       medicalNumber,
@@ -73,6 +74,7 @@ export const actions = {
       admissionWard,
       admissionDate,
       personId,
+      admissionNotes,
     });
 
     if (
@@ -85,7 +87,8 @@ export const actions = {
       !heathInsurance ||
       !diagnosis.length ||
       !admissionWard ||
-      !admissionDate
+      !admissionDate ||
+      (!admissionNotes && idDocType === 6)
     ) {
       console.error({
         medicalNumber,
@@ -99,6 +102,7 @@ export const actions = {
         admissionWard,
         admissionDate,
         personId,
+        admissionNotes,
       });
       return failWithMessage('جميع الحقول مطلوبة');
     }
@@ -119,14 +123,15 @@ export const actions = {
       fail('خطأ في طبيعة البيانات المدخلة (أرقام أو تواريخ).');
     }
 
-    createPatient({
-      id: [admissionDate.getFullYear().toString().slice(2, 4), medicalNumber].join('/'),
-      name: patientName.trim(),
-      id_doc_type: idDocType,
-      id_doc_num: idDocNum.trim(),
-      admission_ward: admissionWard,
-      admission_date: admissionDate,
-      diagnosis: diagnosis.map((d) => d.trim()).join(' + '),
-    });
+    // createPatient({
+    //   id: [admissionDate.getFullYear().toString().slice(2, 4), medicalNumber].join('/'),
+    //   name: patientName.trim(),
+    //   id_doc_type: idDocType,
+    //   id_doc_num: idDocNum.trim(),
+    //   admission_ward: admissionWard,
+    //   admission_date: admissionDate,
+    //   admission_notes: admissionNotes,
+    //   diagnosis: diagnosis.map((d) => d.trim()).join(' + '),
+    // });
   },
 };

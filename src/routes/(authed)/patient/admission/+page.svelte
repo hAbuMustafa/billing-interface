@@ -183,6 +183,10 @@
     required
   />
 
+  <label for="admission_notes">ملاحظات</label>
+  <textarea name="admission_notes" id="admission_notes" required={idDocType === 6}
+  ></textarea>
+
   <input type="submit" value="تسجيل" />
 </form>
 
