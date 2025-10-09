@@ -2,6 +2,7 @@
   import { page } from '$app/state';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PatientButton from '$lib/components/Forms/PatientButton.svelte';
+  import Picker from '$lib/components/Forms/Picker.svelte';
   import { formatDate } from '$lib/utils/date-format';
 
   type PatientT = {
@@ -56,21 +57,12 @@
     bind:value={dischargeDate}
     required
   />
-
-  <fieldset>
-    <legend>سبب الخروج</legend>
-    {#each page.data.discharge_reasons as reason, i (i)}
-      <input
-        type="radio"
-        name="discharge_reason"
-        id="discharge_reason_{i}"
-        value={reason.id}
-        bind:group={selectedDischargeReason}
-        required
-      />
-      <label for="discharge_reason_{i}">{reason.name}</label>
-    {/each}
-  </fieldset>
+  <Picker
+    name="discharge_reason"
+    label="سبب الخروج"
+    options={page.data.discharge_reasons}
+    bind:value={selectedDischargeReason}
+  />
 
   <label for="discharge_notes">ملاحظات</label>
   <textarea
@@ -91,13 +83,5 @@
       margin-block-start: 2rem;
       padding-block: 0.5rem;
     }
-  }
-
-  fieldset {
-    margin-block-start: 1rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    justify-content: center;
-    gap: 1rem;
   }
 </style>

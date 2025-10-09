@@ -16,10 +16,10 @@ export const new_Wards = [
 ];
 
 export const floors = [
-  { number: 1, title: 'الرعاية المركزة' },
-  { number: 2, title: 'الدور الثاني' },
-  { number: 3, title: 'الدور الثالث' },
-  { number: 4, title: 'الدور الرابع' },
+  { id: 1, name: 'الرعاية المركزة' },
+  { id: 2, name: 'الدور الثاني' },
+  { id: 3, name: 'الدور الثالث' },
+  { id: 4, name: 'الدور الرابع' },
 ];
 
 export const new_id_doc_type = [

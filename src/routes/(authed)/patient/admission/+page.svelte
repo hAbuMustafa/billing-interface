@@ -6,6 +6,7 @@
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PersonButton from '$lib/components/Forms/PersonButton.svelte';
   import type { People } from '$lib/server/db/schema';
+  import Picker from '$lib/components/Forms/Picker.svelte';
 
   type FetchedPersonT = typeof People.$inferSelect;
 
@@ -99,23 +100,13 @@
     {/snippet}
   </ISelect>
 
-  <!-- todo: extract a common picker component -->
-  <fieldset class={hasSelectedPerson ? 'locked' : ''}>
-    <legend>نوع الهوية</legend>
-    <!-- TODO: make these navigable by 'tab' -->
-    {#each page.data.id_doc_type_list as d_type, i (d_type.id)}
-      <input
-        id="id_doc_type_{i}"
-        type="radio"
-        value={d_type.id}
-        bind:group={idDocType}
-        disabled={hasSelectedPerson}
-        required
-      />
-      <label for="id_doc_type_{i}">{d_type.name}</label>
-    {/each}
-    <input type="hidden" name="id_doc_type" bind:value={idDocType} />
-  </fieldset>
+  <Picker
+    label="نوع الهوية"
+    name="id_doc_type"
+    options={page.data.id_doc_type_list}
+    bind:value={idDocType}
+    locked={hasSelectedPerson}
+  />
 
   <label for="id_doc_num" class={hasSelectedPerson ? 'locked' : ''}>رقم الهوية</label>
   <input
@@ -130,28 +121,16 @@
     disabled={idDocType === 6}
   />
 
-  <fieldset class={hasSelectedPerson ? 'locked' : ''}>
-    <legend>النوع</legend>
-    <input
-      id="male"
-      type="radio"
-      value={1}
-      bind:group={gender}
-      disabled={hasSelectedPerson}
-      required
-    />
-    <label for="male">ذكر</label>
-    <input
-      id="female"
-      type="radio"
-      value={0}
-      bind:group={gender}
-      disabled={hasSelectedPerson}
-      required
-    />
-    <label for="female">أنثى</label>
-    <input type="hidden" name="gender" bind:value={gender} />
-  </fieldset>
+  <Picker
+    name="gender"
+    label="النوع"
+    options={[
+      { id: 1, name: 'ذكر' },
+      { id: 0, name: 'أنثى' },
+    ]}
+    bind:value={gender}
+    locked={hasSelectedPerson}
+  />
 
   <label for="birthdate" class={hasSelectedPerson ? 'locked' : ''}>تاريخ الميلاد</label>
   <input
@@ -212,35 +191,24 @@
     {/if}
   </fieldset>
 
-  <fieldset>
-    <legend>قسم الدخول</legend>
-    {#each page.data.floors_list as floor (floor.number)}
-      <fieldset class={floor.title}>
-        {#each page.data.wards_list.filter((w: { id: number; floor: number; name: string }) => w.floor === floor.number) as ward (ward.id)}
-          <input
-            type="radio"
-            id="admission_ward_{ward.id}"
-            name="admission_ward"
-            value={ward.id}
-            bind:group={admissionWard}
-            required
-          />
-          <label for="admission_ward_{ward.id}">{ward.name}</label>
-        {/each}
-      </fieldset>
-    {/each}
-  </fieldset>
+  <Picker
+    name="admission_ward"
+    label="قسم الدخول"
+    options={page.data.wards_list}
+    bind:value={admissionWard}
+    dividerList={page.data.floors_list}
+    dividerKey="floor"
+  />
 
-  <fieldset>
-    <legend>التأمين الصحي</legend>
-    <input id="insured" type="radio" value={1} bind:group={healthInsurance} required />
-    <label for="insured">مؤمن عليه</label>
-
-    <input id="uninsured" type="radio" value={0} bind:group={healthInsurance} required />
-    <label for="uninsured">غير مؤمن عليه</label>
-
-    <input type="hidden" name="health_insurance" bind:value={healthInsurance} />
-  </fieldset>
+  <Picker
+    name="health_insurance"
+    label="التأمين الصحي"
+    options={[
+      { id: 1, name: 'مؤمن عليه' },
+      { id: 0, name: 'غير مؤمن عليه' },
+    ]}
+    bind:value={healthInsurance}
+  />
 
   <label for="admission_date">وقت وتاريخ الدخول</label>
   <input
@@ -259,58 +227,27 @@
     display: flex;
     flex-direction: column;
 
-    fieldset {
-      margin-block-start: 1rem;
+    fieldset.diagnosis_box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
 
-      &:has(> [type='radio'] + label) {
+      & > .diagnoses_list {
         display: flex;
         gap: 1rem;
-        flex-wrap: wrap;
 
-        justify-content: center;
-      }
+        & :checked + label {
+          background-color: orange;
+          color: var(--main-bg-color);
 
-      &.diagnosis_box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-
-        & > .diagnoses_list {
-          display: flex;
-          gap: 1rem;
-
-          & :checked + label {
-            background-color: orange;
-            color: var(--main-bg-color);
-
-            &:hover,
-            &:focus {
-              background-color: salmon;
-              text-decoration: line-through;
-            }
+          &:hover,
+          &:focus {
+            background-color: salmon;
+            text-decoration: line-through;
           }
         }
       }
-
-      & > fieldset {
-        margin-block-start: unset;
-
-        border: none;
-        border-radius: unset;
-
-        &:first-of-type {
-          padding-block-start: unset;
-        }
-
-        &:not(:last-of-type) {
-          border-block-end: 1px solid;
-        }
-      }
-    }
-
-    input[type='radio']:not(:first-of-type) {
-      margin-inline-start: 1.5rem;
     }
 
     input[type='submit'] {
