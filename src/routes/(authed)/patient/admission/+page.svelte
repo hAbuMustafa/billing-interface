@@ -1,8 +1,9 @@
 <script lang="ts">
+  import ListMaker from '../../../../lib/components/Forms/ListMaker.svelte';
+
   import { page } from '$app/state';
   import { arabicTriadicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
   import { formatDate } from '$lib/utils/date-format';
-  import { scale } from 'svelte/transition';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PersonButton from '$lib/components/Forms/PersonButton.svelte';
   import type { People } from '$lib/server/db/schema';
@@ -146,50 +147,13 @@
 
   <input type="hidden" name="person_id" bind:value={selectedPersonId} />
 
-  <fieldset class="diagnosis_box">
-    <legend>التشخيص الأولي</legend>
-    <input
-      id="diagnosis"
-      type="text"
-      bind:value={diagnosisText}
-      onkeydown={(e) => {
-        if (e.key === 'Enter' && diagnosisText.length > 2) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          diagnoses.push(diagnosisText.trim());
-          diagnosisText = '';
-        }
-      }}
-      required={diagnoses.length === 0 ? true : null}
-      list="diagnosis_suggestions"
-    />
-
-    <datalist id="diagnosis_suggestions">
-      {#each page.data.diagnoses_list as d, i (i)}
-        <option value={d}></option>
-      {/each}
-    </datalist>
-
-    {#if diagnoses.length}
-      <div class="diagnoses_list" transition:scale>
-        {#each diagnoses as diagnosis, i (diagnosis)}
-          <input
-            type="checkbox"
-            name="diagnosis"
-            id="diagnosis_{i}"
-            value={diagnosis}
-            checked
-            required
-            onchange={() => {
-              diagnoses = diagnoses.filter((item) => item !== diagnosis);
-            }}
-          />
-          <label for="diagnosis_{i}" transition:scale>{diagnosis}</label>
-        {/each}
-      </div>
-    {/if}
-  </fieldset>
+  <ListMaker
+    name="diagnosis"
+    label="التشخيص"
+    bind:value={diagnosisText}
+    list={diagnoses}
+    datalist={page.data.diagnoses_list}
+  />
 
   <Picker
     name="admission_ward"
@@ -226,29 +190,6 @@
   form {
     display: flex;
     flex-direction: column;
-
-    fieldset.diagnosis_box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-
-      & > .diagnoses_list {
-        display: flex;
-        gap: 1rem;
-
-        & :checked + label {
-          background-color: orange;
-          color: var(--main-bg-color);
-
-          &:hover,
-          &:focus {
-            background-color: salmon;
-            text-decoration: line-through;
-          }
-        }
-      }
-    }
 
     input[type='submit'] {
       margin-block-start: 2rem;
