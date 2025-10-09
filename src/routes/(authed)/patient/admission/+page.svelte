@@ -126,7 +126,8 @@
     bind:value={idDocNum}
     pattern={idDocType === 1 ? nationalIdPattern.source : null}
     readonly={hasSelectedPerson}
-    required
+    required={idDocType !== 6}
+    disabled={idDocType === 6}
   />
 
   <fieldset class={hasSelectedPerson ? 'locked' : ''}>

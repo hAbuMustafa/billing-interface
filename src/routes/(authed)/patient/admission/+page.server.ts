@@ -79,7 +79,7 @@ export const actions = {
       !medicalNumber ||
       !patientName ||
       !idDocType ||
-      !idDocNum ||
+      (!idDocNum && idDocType !== 6) ||
       !gender ||
       !birthdate ||
       !heathInsurance ||
