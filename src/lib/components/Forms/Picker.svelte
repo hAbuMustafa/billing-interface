@@ -23,39 +23,44 @@
 
 <fieldset class={locked ? 'locked' : ''} {...otherProps}>
   <legend>{label}</legend>
-  <!-- TODO: make these navigable by 'tab' -->
   {#if !dividerList || !dividerKey}
     {#each options as opt, i (opt.id)}
-      <input
-        id="{name}_{i}"
-        type="radio"
-        value={opt.id}
-        bind:group={value}
-        disabled={locked}
-        required
-      />
-      <label for="{name}_{i}">{opt.name}</label>
+      {@render optionPick(opt)}
     {/each}
   {:else}
     {#each dividerList as div (div.id)}
       <fieldset class={div.title}>
         {#each options.filter((d: any) => d[dividerKey] === div.id) as opt (opt.id)}
-          <input
-            id="{name}_{opt.id}"
-            type="radio"
-            {name}
-            value={opt.id}
-            bind:group={value}
-            disabled={locked}
-            required
-          />
-          <label for="{name}_{opt.id}">{opt.name}</label>
+          {@render optionPick(opt)}
         {/each}
       </fieldset>
     {/each}
   {/if}
   <input type="hidden" {name} bind:value />
 </fieldset>
+
+{#snippet optionPick(opt: Record<string, any>)}
+  <input
+    id="{name}_{opt.id}"
+    type="radio"
+    {name}
+    value={opt.id}
+    bind:group={value}
+    disabled={locked}
+    required
+  />
+  <label for="{name}_{opt.id}">
+    <button
+      onclick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        value = opt.id;
+      }}
+    >
+      {opt.name}
+    </button>
+  </label>
+{/snippet}
 
 <style>
   fieldset {
@@ -81,6 +86,17 @@
 
       &:not(:last-of-type) {
         border-block-end: 1px solid;
+      }
+    }
+
+    label {
+      &:is(:focus-within, :focus, :active, :hover) {
+        outline: 1px solid var(--main-text-color);
+        outline-offset: 0.25rem;
+      }
+
+      & > button {
+        all: unset;
       }
     }
   }
