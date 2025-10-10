@@ -10,12 +10,13 @@
     type="text"
     bind:value
     onkeydown={(e) => {
-      if (e.key === 'Enter' && value.length > 2) {
+      if (e.key === 'Enter') {
         e.preventDefault();
         e.stopPropagation();
-
-        list.push(value.trim());
-        value = '';
+        if (value.length > 2) {
+          list.push(value.trim());
+          value = '';
+        }
       }
     }}
     required={list.length === 0 ? true : null}
