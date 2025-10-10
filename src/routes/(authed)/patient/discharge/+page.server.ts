@@ -1,8 +1,6 @@
-import { db } from '$lib/server/db/index';
 import { new_Patient_discharge_reasons } from '$lib/server/db/menus';
-import { People_Patients } from '$lib/server/db/schema.js';
+import { dischargePatient } from '$lib/server/db/operations/patients.js';
 import { failWithFormFieldsAndMessageBuilder } from '$lib/utils/form-actions';
-import { eq } from 'drizzle-orm';
 
 export function load() {
   return {
@@ -42,15 +40,15 @@ export const actions = {
       return failWithMessage('البيانات المدخلة غير صحيحة');
     }
 
-    await db
-      .update(People_Patients)
-      .set({
-        discharge_date: dischargeDate,
-        discharge_reason: dischargeReason,
-        discharge_notes: dischargeNotes ?? null,
-      })
-      .where(eq(People_Patients.id, patientId))
-      .returning()
-      .catch(() => failWithMessage('حدث خطأ غير متوقع. حاول مرة أخرى'));
+    const result = await dischargePatient({
+      id: patientId,
+      discharge_date: dischargeDate,
+      discharge_reason: dischargeReason,
+      discharge_notes: dischargeNotes,
+    });
+
+    if (!result.success) {
+      return failWithMessage('حدث خطأ غير متوقع. برجاء المحاولة مرة أخرى');
+    }
   },
 };

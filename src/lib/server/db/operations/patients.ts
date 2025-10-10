@@ -135,3 +135,31 @@ export async function transferPatient(transfer: typeof Patient_wards.$inferInser
     };
   }
 }
+
+export async function dischargePatient(patientDischarge: {
+  id: string;
+  discharge_reason: number;
+  discharge_date: Date;
+  discharge_notes?: string;
+}) {
+  try {
+    const [patient] = await db
+      .update(People_Patients)
+      .set({
+        discharge_date: patientDischarge.discharge_date,
+        discharge_reason: patientDischarge.discharge_reason,
+        discharge_notes: patientDischarge.discharge_notes ?? null,
+      })
+      .where(eq(People_Patients.id, patientDischarge.id))
+      .returning();
+
+    return {
+      success: true,
+      data: patient,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
