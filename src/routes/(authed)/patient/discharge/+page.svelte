@@ -13,13 +13,20 @@
     recent_ward: number;
   };
 
-  // todo: initiate state with returned values on submissions error
-  let patientName = $state('');
-  let selectedPatientId = $state('');
-  let selectedDischargeReason = $state(0);
-  let dischargeDate = $state(formatDate(new Date(), 'YYYY-MM-DDTHH:mm'));
+  const { form } = $props();
 
-  let hasSelectedPatient = $derived(!!selectedPatientId);
+  let patientName = $state(form?.patientName ?? '');
+  let selectedPatientId = $state(form?.patientId ?? '');
+  let selectedDischargeReason = $state(
+    form?.dischargeReason ? Number(form.dischargeReason) : 0
+  );
+  let dischargeDate = $state(
+    form?.dischargeDate ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
+  );
+
+  let hasSelectedPatient = $derived(
+    (form?.patientId?.length ?? 0) > 3 ? true : !!selectedPatientId
+  );
 </script>
 
 <form method="post">
