@@ -80,7 +80,7 @@ export const actions = {
     if (!medicalNumber) return failWithMessage('الرقم الطبي مطلوب');
     if (!patientName) return failWithMessage(' اسم المريض مطلوب');
     if (!idDocType) return failWithMessage('نوع الهوية مطلوبة');
-    if (!idDocNum && idDocType !== 6) return failWithMessage('رقم الهوية مطلوب');
+    if (!idDocNum && idDocType != 6) return failWithMessage('رقم الهوية مطلوب');
     if (!gender) return failWithMessage('الجنس/النوع مطلوب');
     if (!birthdate) return failWithMessage('تاريخ الميلاد مطلوب');
     if (!heathInsurance) return failWithMessage('موقف المريض من التأمين الصحي مطلوب');
@@ -88,7 +88,7 @@ export const actions = {
       return failWithMessage('التشخيص مطلوب. يلزم كتابة تشخيص واحد على الأقل');
     if (!admissionWard) return failWithMessage('يلزم تحديد قسم الدخول');
     if (!admissionDate) return failWithMessage('تاريخ الدخول مطلوب');
-    if (!admissionNotes && idDocType === 6)
+    if (!admissionNotes && idDocType == 6)
       return failWithMessage('يلزم الإفادة بملاحظات حال لم يتم كتابة رقم هوية');
 
     try {

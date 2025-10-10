@@ -30,7 +30,7 @@ export const actions = {
     if (!patientId) return failWithMessage('لم يتم العثور على المريض');
     if (!dischargeDate) return failWithMessage('وقت الخروج مطلوب');
     if (!dischargeReason) return failWithMessage('سبب الخروج مطلوب');
-    if ([3, 9].some((r) => dischargeReason === r) && !dischargeNotes)
+    if (!dischargeNotes && (dischargeReason == 3 || dischargeReason == 9))
       return failWithMessage(
         'يلزم كتابة ملاحظات حال كان سبب الخروج خارج الاختيارات المذكورة، أو في حال تم تحويل المريض لمستشفى آخر؛ يلزم ذكر المستشفى في الملاحظات'
       );
