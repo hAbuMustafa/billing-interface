@@ -91,6 +91,8 @@ export const actions = {
     if (!admissionNotes && idDocType == 6)
       return failWithMessage('يلزم الإفادة بملاحظات حال لم يتم كتابة رقم هوية');
 
+    // todo: instead of failing on each missing value separately, pool error messages in locals, then check after this line if there are any error messages, and only fail() then
+
     try {
       personId = Number(personId);
       medicalNumber = Number(medicalNumber);
