@@ -28,6 +28,7 @@
     endpoint="/api/patients/"
     type="text"
     id="name"
+    name="patient_name"
     bind:value={patientName}
     bind:done={hasSelectedPatient}
     readonly={hasSelectedPatient ?? false}

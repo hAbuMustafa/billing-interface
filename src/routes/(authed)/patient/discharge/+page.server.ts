@@ -14,12 +14,14 @@ export const actions = {
     const data = await request.formData();
 
     const patientId = data.get('patient_id') as unknown as string;
+    const patientName = data.get('patient_name') as unknown as string;
     let dischargeDate = data.get('discharge_date') as unknown as Date;
     let dischargeReason = data.get('discharge_reason') as unknown as number;
     const dischargeNotes = data.get('discharge_notes') as unknown as string;
 
     const failWithMessage = failWithFormFieldsAndMessageBuilder({
       patientId,
+      patientName,
       dischargeDate,
       dischargeReason,
       dischargeNotes,
