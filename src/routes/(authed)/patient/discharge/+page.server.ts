@@ -27,19 +27,19 @@ export const actions = {
       dischargeNotes,
     });
 
-    if (
-      !patientId ||
-      !dischargeDate ||
-      !dischargeReason ||
-      ([3, 9].some((r) => dischargeReason === r) && !dischargeNotes)
-    )
-      failWithMessage('جميع الحقول مطلوبة');
+    if (!patientId) return failWithMessage('لم يتم العثور على المريض');
+    if (!dischargeDate) return failWithMessage('وقت الخروج مطلوب');
+    if (!dischargeReason) return failWithMessage('سبب الخروج مطلوب');
+    if ([3, 9].some((r) => dischargeReason === r) && !dischargeNotes)
+      return failWithMessage(
+        'يلزم كتابة ملاحظات حال كان سبب الخروج خارج الاختيارات المذكورة، أو في حال تم تحويل المريض لمستشفى آخر؛ يلزم ذكر المستشفى في الملاحظات'
+      );
 
     try {
       dischargeDate = new Date(dischargeDate);
       dischargeReason = Number(dischargeReason);
     } catch (error) {
-      failWithMessage('البيانات المدخلة غير صحيحة');
+      return failWithMessage('البيانات المدخلة غير صحيحة');
     }
 
     await db

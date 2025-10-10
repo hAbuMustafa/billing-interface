@@ -4,7 +4,7 @@ import { createPatient } from '$lib/server/db/operations/patients.js';
 import { People_Patients } from '$lib/server/db/schema.js';
 import { failWithFormFieldsAndMessageBuilder } from '$lib/utils/form-actions.js';
 import { fail } from 'assert';
-import { like } from 'drizzle-orm';
+import { DrizzleQueryError, like } from 'drizzle-orm';
 
 export async function load() {
   const diagnoses = await db
@@ -77,35 +77,19 @@ export const actions = {
       admissionNotes,
     });
 
-    if (
-      !medicalNumber ||
-      !patientName ||
-      !idDocType ||
-      (!idDocNum && idDocType !== 6) ||
-      !gender ||
-      !birthdate ||
-      !heathInsurance ||
-      !diagnosis.length ||
-      !admissionWard ||
-      !admissionDate ||
-      (!admissionNotes && idDocType === 6)
-    ) {
-      console.error({
-        medicalNumber,
-        patientName,
-        idDocType,
-        idDocNum,
-        gender,
-        birthdate,
-        heathInsurance,
-        diagnosis,
-        admissionWard,
-        admissionDate,
-        personId,
-        admissionNotes,
-      });
-      return failWithMessage('جميع الحقول مطلوبة');
-    }
+    if (!medicalNumber) return failWithMessage('الرقم الطبي مطلوب');
+    if (!patientName) return failWithMessage(' اسم المريض مطلوب');
+    if (!idDocType) return failWithMessage('نوع الهوية مطلوبة');
+    if (!idDocNum && idDocType !== 6) return failWithMessage('رقم الهوية مطلوب');
+    if (!gender) return failWithMessage('الجنس/النوع مطلوب');
+    if (!birthdate) return failWithMessage('تاريخ الميلاد مطلوب');
+    if (!heathInsurance) return failWithMessage('موقف المريض من التأمين الصحي مطلوب');
+    if (!diagnosis.length)
+      return failWithMessage('التشخيص مطلوب. يلزم كتابة تشخيص واحد على الأقل');
+    if (!admissionWard) return failWithMessage('يلزم تحديد قسم الدخول');
+    if (!admissionDate) return failWithMessage('تاريخ الدخول مطلوب');
+    if (!admissionNotes && idDocType === 6)
+      return failWithMessage('يلزم الإفادة بملاحظات حال لم يتم كتابة رقم هوية');
 
     try {
       personId = Number(personId);
@@ -123,15 +107,24 @@ export const actions = {
       fail('خطأ في طبيعة البيانات المدخلة (أرقام أو تواريخ).');
     }
 
-    // createPatient({
-    //   id: [admissionDate.getFullYear().toString().slice(2, 4), medicalNumber].join('/'),
-    //   name: patientName.trim(),
-    //   id_doc_type: idDocType,
-    //   id_doc_num: idDocNum.trim(),
-    //   admission_ward: admissionWard,
-    //   admission_date: admissionDate,
-    //   admission_notes: admissionNotes,
-    //   diagnosis: diagnosis.map((d) => d.trim()).join(' + '),
-    // });
+    const result = await createPatient({
+      id: [admissionDate.getFullYear().toString().slice(2, 4), medicalNumber].join('/'),
+      name: patientName.trim(),
+      id_doc_type: idDocType,
+      id_doc_num: idDocNum.trim(),
+      admission_ward: admissionWard,
+      admission_date: admissionDate,
+      admission_notes: admissionNotes,
+      diagnosis: diagnosis.map((d) => d.trim()).join(' + '),
+    });
+
+    if (
+      !result.success &&
+      (result.error as DrizzleQueryError).cause?.message!.includes(
+        'UNIQUE constraint failed'
+      )
+    ) {
+      return failWithMessage(`الرقم الطبي ${medicalNumber} مسجل مسبقا`);
+    }
   },
 };
