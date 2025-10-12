@@ -11,6 +11,12 @@
 
 <Nav user={page.data.user} />
 
+{#if page.data.user?.password_reset_required}
+  <div class="form-message warning">
+    يلزم تغيير كلمة السر إذا كان هذا أول استخدام لك للمنصة
+  </div>
+{/if}
+
 {#if page?.form?.message}
   <!-- todo: convert to a popover dismissible dialog -->
   <div class="form-message {page.form.success ? 'success' : 'error'}" dir="auto">
@@ -70,5 +76,10 @@
       hsl(from lightgreen h s 80%),
       hsl(from lightgreen h s 20%)
     );
+  }
+
+  .form-message.warning {
+    border: 1px solid light-dark(gold, yellow);
+    background-color: light-dark(hsl(from yellow h s 80%), hsl(from yellow h s 20%));
   }
 </style>

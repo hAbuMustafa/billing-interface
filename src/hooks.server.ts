@@ -1,13 +1,18 @@
+import { page } from '$app/state';
 import { getUserFromSession } from '$lib/server/db/operations/auth';
 import { redirect } from '@sveltejs/kit';
 
 export async function handle({ event, resolve }) {
-  if (event.url.pathname.startsWith('/api') && !event.route.id?.startsWith('/(authed)'))
-    return await resolve(event);
-  if (event.url.pathname.startsWith('/log')) return await resolve(event);
+  if (event.locals.user) console.log(event.locals.user);
 
   const sessionId = event.cookies.get('session_id');
-  if (!sessionId && !event.route.id?.startsWith('/(authed)')) return await resolve(event);
+
+  const authedOnly = event.route.id?.startsWith('/(authed)');
+
+  if (event.url.pathname.startsWith('/api') && !authedOnly) return await resolve(event);
+  if (event.url.pathname.startsWith('/log')) return await resolve(event);
+
+  if (!sessionId && !authedOnly) return await resolve(event);
 
   const redirectURL = new URL('/login', event.url.origin);
 
@@ -28,6 +33,13 @@ export async function handle({ event, resolve }) {
   }
 
   event.locals.user = user;
+
+  if (
+    event.locals.user.password_reset_required &&
+    !event.url.pathname.startsWith('/account/change-password')
+  ) {
+    return redirect(307, '/account/change-password');
+  }
 
   return await resolve(event);
 }
