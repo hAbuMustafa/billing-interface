@@ -15,6 +15,7 @@ declare global {
         created_at: Date;
         active: boolean;
         last_login: Date | null;
+        password_reset_required?: boolean;
         gravatar: string;
       } | null;
     }
