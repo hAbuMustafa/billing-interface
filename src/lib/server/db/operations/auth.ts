@@ -59,7 +59,7 @@ export async function createUser(newUserData: NewUserDataT) {
         .values({
           hashed_pw: passwordHash,
           active: false,
-          role: 2, // todo: change this when roles are defined
+          role: 0,
           pb_key_id: new_pb_key.id,
           pv_key_id: new_pv_key.id,
           ...newUserData,

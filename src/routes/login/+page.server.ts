@@ -43,9 +43,15 @@ export const actions: Actions = {
       });
     }
 
-    if (!userData.active) {
+    if (!userData.role) {
       return fail(401, {
         message: 'حسابك لم يتم تفعيله بعد',
+      });
+    }
+
+    if (userData.role === -1) {
+      return fail(401, {
+        message: 'لقد تم تعطيل حسابك. إذا كنت تظن هذا خطأ، برجاء الرجوع لمدير النظام.',
       });
     }
 
