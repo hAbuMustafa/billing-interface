@@ -108,7 +108,10 @@ export async function checkIfUnique(
 export async function changePassword(userId: number, newPassword: string) {
   const newPasswordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
 
-  const result = await updateUser(userId, { hashed_pw: newPasswordHash });
+  const result = await updateUser(userId, {
+    hashed_pw: newPasswordHash,
+    password_reset_required: false,
+  });
 
   return result;
 }

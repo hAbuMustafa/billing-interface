@@ -33,6 +33,8 @@ export const actions = {
 
     if (!result.success) return fail(401, { message: 'حدث خطأ غير متوقع' });
 
+    locals.user!.password_reset_required = false;
+
     return {
       success: true,
       message: 'تم تغيير كلمة المرور بنجاح',
