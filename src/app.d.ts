@@ -13,7 +13,6 @@ declare global {
         national_id: string | null;
         role: number;
         created_at: Date;
-        active: boolean;
         last_login: Date | null;
         password_reset_required?: boolean;
         gravatar: string;

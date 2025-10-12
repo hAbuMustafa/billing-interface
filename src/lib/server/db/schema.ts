@@ -168,9 +168,8 @@ export const Sys_Users = sqliteTable(
     phone_number: text().notNull(),
     email: text(),
     national_id: text(),
-    role: integer().notNull(),
+    role: integer().notNull().default(0),
     created_at: integer({ mode: 'timestamp' }).notNull().default(new Date()),
-    active: integer({ mode: 'boolean' }).notNull().default(false),
     password_reset_required: integer({ mode: 'boolean' }).default(false).notNull(),
     last_login: integer({ mode: 'timestamp' }),
     pb_key_id: integer({ mode: 'number' })

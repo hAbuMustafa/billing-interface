@@ -3,7 +3,7 @@ import { PV_KEY_ENCR_KEY } from '$env/static/private';
 import { Sys_Sec_pb_key, Sys_Sec_pv_key, Sys_Users } from '$lib/server/db/schema';
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
-import { count, eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 const SALT_ROUNDS = 12;
 
@@ -52,8 +52,6 @@ export async function createUser(newUserData: NewUserDataT) {
         .insert(Sys_Users)
         .values({
           hashed_pw: passwordHash,
-          active: false,
-          role: 0,
           pb_key_id: new_pb_key.id,
           pv_key_id: new_pv_key.id,
           ...newUserData,
