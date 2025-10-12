@@ -53,7 +53,7 @@
   input {
     direction: ltr;
     border-radius: 4px;
-    border: 1px solid light-dark(#333, #ccc);
+    border: var(--main-border);
 
     text-align: center;
   }

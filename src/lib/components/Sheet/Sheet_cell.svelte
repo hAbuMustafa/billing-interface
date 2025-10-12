@@ -22,7 +22,7 @@
 
 <style>
   td {
-    border: 1px solid var(--main-text-color);
+    border: var(--main-border);
     padding: 0.5rem;
     text-align: center;
   }

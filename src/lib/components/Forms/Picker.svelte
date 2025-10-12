@@ -85,13 +85,13 @@
       }
 
       &:not(:last-of-type) {
-        border-block-end: 1px solid;
+        border-block-end: var(--main-border);
       }
     }
 
     label {
       &:is(:focus-within, :focus, :active, :hover) {
-        outline: 1px solid var(--main-text-color);
+        outline: var(--main-border);
         outline-offset: 0.25rem;
       }
 

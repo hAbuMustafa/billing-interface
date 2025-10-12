@@ -26,7 +26,7 @@
   tr {
     background-color: hsl(from var(--main-bg-color) h s 60%);
     color: var(--main-bg-color);
-    border: 1px solid var(--main-text-color);
+    border: var(--main-border);
   }
 
   th {
@@ -35,6 +35,6 @@
   }
 
   th:not(:last-of-type) {
-    border-inline-end: 1px solid light-dark(var(--main-text-color), var(--main-bg-color));
+    border-inline-end: var(--main-border);
   }
 </style>

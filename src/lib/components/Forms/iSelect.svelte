@@ -128,7 +128,7 @@
 
     z-index: 1;
 
-    border: 1px solid var(--main-text-color);
+    border: var(--main-border);
     border-radius: 0.25rem;
     box-shadow: 10px 10px 10px black;
   }
