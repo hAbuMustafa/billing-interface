@@ -17,6 +17,10 @@
   </div>
 {/if}
 
+{#if page.data.user && !page.data.user?.password_reset_required && (!page.data.user?.email || !page.data.user?.phone_number || !page.data.user?.national_id)}
+  <div class="form-message warning">يلزم استكمال بيانات الحساب</div>
+{/if}
+
 {#if page?.form?.message}
   <!-- todo: convert to a popover dismissible dialog -->
   <div class="form-message {page.form.success ? 'success' : 'error'}" dir="auto">

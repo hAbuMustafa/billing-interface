@@ -1,4 +1,3 @@
-import { page } from '$app/state';
 import { getUserFromSession } from '$lib/server/db/operations/auth';
 import { redirect } from '@sveltejs/kit';
 
@@ -39,6 +38,15 @@ export async function handle({ event, resolve }) {
     !event.url.pathname.startsWith('/account/change-password')
   ) {
     return redirect(307, '/account/change-password');
+  }
+
+  if (
+    (!event.locals.user.email ||
+      !event.locals.user.phone_number ||
+      !event.locals.user.national_id) &&
+    !event.url.pathname.startsWith('/account')
+  ) {
+    return redirect(307, '/account');
   }
 
   return await resolve(event);
