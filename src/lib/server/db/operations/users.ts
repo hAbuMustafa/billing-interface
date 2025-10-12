@@ -3,6 +3,7 @@ import { PV_KEY_ENCR_KEY } from '$env/static/private';
 import { Sys_Sec_pb_key, Sys_Sec_pv_key, Sys_Users } from '$lib/server/db/schema';
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
+import { count, eq, sql } from 'drizzle-orm';
 
 const SALT_ROUNDS = 12;
 
@@ -73,4 +74,35 @@ export async function createUser(newUserData: NewUserDataT) {
       error,
     };
   }
+}
+
+export async function updateUser(
+  userId: number,
+  values: Omit<Partial<typeof Sys_Users.$inferSelect>, 'id'>
+) {
+  try {
+    const [user] = await db
+      .update(Sys_Users)
+      .set(values as any)
+      .where(eq(Sys_Users.id, userId))
+      .returning();
+
+    return {
+      success: true,
+      data: user,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
+export async function checkIfUnique(
+  field: keyof Omit<Partial<typeof Sys_Users.$inferSelect>, 'id'>,
+  value: string | number | Date | boolean
+) {
+  const result = await db.$count(Sys_Users, eq(Sys_Users[field], value));
+
+  return result === 0;
 }
