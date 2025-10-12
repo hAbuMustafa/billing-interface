@@ -1,5 +1,9 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import { passwordPattern } from '$lib/stores/patterns';
+
+  let userPassword = $state('');
+  let userConfirmPassword = $state('');
 </script>
 
 <form method="POST" use:enhance>
@@ -9,10 +13,29 @@
   <hr />
 
   <label for="new_password">كلمة السر الجديدة</label>
-  <input type="password" name="new_password" id="new_password" required />
+  <input
+    type="password"
+    name="new_password"
+    id="new_password"
+    pattern={passwordPattern.source}
+    bind:value={userPassword}
+    required
+  />
 
   <label for="confirm_new_password">تأكيد كلمة السر</label>
-  <input type="password" name="confirm_new_password" id="confirm_new_password" required />
+  <input
+    type="password"
+    name="confirm_new_password"
+    id="confirm_new_password"
+    bind:value={userConfirmPassword}
+    class:unequal={userPassword &&
+      userConfirmPassword &&
+      userPassword !== userConfirmPassword}
+    class:equal={userPassword &&
+      userConfirmPassword &&
+      userPassword === userConfirmPassword}
+    required
+  />
 
   <input class="danger" type="submit" value="تغيير كلمة السر" />
 </form>

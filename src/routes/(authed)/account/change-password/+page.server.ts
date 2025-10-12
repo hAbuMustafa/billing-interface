@@ -1,5 +1,6 @@
 import { validateLogin } from '$lib/server/db/operations/auth.js';
 import { changePassword } from '$lib/server/db/operations/users.js';
+import { passwordPattern } from '$lib/stores/patterns.js';
 import { fail } from '@sveltejs/kit';
 
 export function load() {
@@ -28,6 +29,12 @@ export const actions = {
     const userData = await validateLogin(locals.user?.username!, oldPassword as string);
 
     if (!userData) return fail(401, { message: 'كلمة السر القديمة غير صحيحة' });
+
+    if (!passwordPattern.test(newPassword as string))
+      return fail(401, {
+        message:
+          'كلمة السر ضعيفة جدا. يجب أن تحتوي على أحرف وأرقام وأحد الرموز (@$!%*?&)، وأن تكون على الأقل من 8 محارف',
+      });
 
     const result = await changePassword(locals.user?.id!, newPassword as string);
 
