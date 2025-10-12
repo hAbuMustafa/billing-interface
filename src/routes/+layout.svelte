@@ -30,7 +30,7 @@
   .main-wrapper {
     display: grid;
     grid-template-columns: 3fr 6fr 3fr;
-    grid-template-rows: max-content 10fr;
+    grid-template-rows: min-content 1fr;
 
     @media (max-width: 400px) {
       grid-template-columns: 1fr;
