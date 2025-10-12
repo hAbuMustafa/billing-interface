@@ -67,16 +67,16 @@ input {
   text-align: center;
 }
 
-input:user-invalid,
-input.unequal {
-  border-color: light-dark(maroon, salmon);
-  background-color: light-dark(hsl(from salmon h s 80%), hsl(from salmon h s 20%));
-}
-
 input:user-valid,
 input.equal {
   border-color: light-dark(#008080, green);
   background-color: light-dark(hsl(from green h s 80%), hsl(from green h s 20%));
+}
+
+input:user-invalid,
+input.unequal {
+  border-color: light-dark(maroon, salmon);
+  background-color: light-dark(hsl(from salmon h s 80%), hsl(from salmon h s 20%));
 }
 
 :is(
