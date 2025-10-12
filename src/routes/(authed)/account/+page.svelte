@@ -64,6 +64,10 @@
     />
     <input type="submit" value="تعديل" />
   </form>
+
+  <hr />
+
+  <a class="button" href="/account/change-password">تغيير كلمة السر</a>
 </div>
 
 <style>
@@ -90,6 +94,14 @@
   label {
     text-align: end;
     text-wrap: nowrap;
+  }
+
+  hr {
+    width: 100%;
+  }
+
+  a.button {
+    width: 60%;
   }
 
   input[type='submit'] {
