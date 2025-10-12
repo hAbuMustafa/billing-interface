@@ -52,8 +52,12 @@
 
   main {
     grid-column: 2 / 3;
+    display: grid;
+    grid-template-columns: 1fr;
+    place-content: center;
+    padding-inline: 15%;
 
-    @media (max-width: 400px) {
+    @media (max-width: 700px) {
       grid-column: 1 / -1;
     }
   }
