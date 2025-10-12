@@ -87,7 +87,9 @@ function createAction(
 
     return {
       success: true,
-      message: `تم تغيير ${fieldLabel} من '${oldValue}' إلى '${fieldValue}'`,
+      message: oldValue
+        ? `تم تغيير ${fieldLabel} من '${oldValue}' إلى '${fieldValue}'`
+        : `تم حفظ ${fieldLabel} '${fieldValue}'`,
     };
   };
 }
