@@ -1,6 +1,12 @@
 import { checkIfUnique, updateUser } from '$lib/server/db/operations/users.js';
-import { arabicTriadicNamesPattern, usernamePattern } from '$lib/stores/patterns.js';
-import { fail } from '@sveltejs/kit';
+import {
+  arabicTriadicNamesPattern,
+  egyptianMobileNumberPattern,
+  emailPattern,
+  nationalIdPattern,
+  usernamePattern,
+} from '$lib/stores/patterns.js';
+import { fail, type Action } from '@sveltejs/kit';
 
 export function load() {
   return {
@@ -8,72 +14,80 @@ export function load() {
   };
 }
 
+const changeableFields = [
+  'name',
+  'username',
+  'phone_number',
+  'email',
+  'national_id',
+] as const;
+
 export const actions = {
-  username: async ({ request, locals }) => {
+  username: createAction(
+    'username',
+    'اسم المستخدم',
+    usernamePattern,
+    'ينبغي أن يكون من حروف إنجليزية فقط أو شرطات "-"',
+    true
+  ),
+  name: createAction(
+    'name',
+    'اسم الموظف',
+    arabicTriadicNamesPattern,
+    'يجب أن يكون اسما عربيا ثلاثيا على الأقل'
+  ),
+  phone_number: createAction('phone_number', 'رقم الموبايل', egyptianMobileNumberPattern),
+  email: createAction('email', 'البريد الإلكتروني', emailPattern),
+  national_id: createAction('national_id', 'الرقم القومي', nationalIdPattern),
+};
+
+function createAction(
+  fieldName: (typeof changeableFields)[number],
+  fieldLabel: string,
+  pattern: RegExp,
+  patternErrorMessage?: string,
+  mustBeUnique?: boolean
+): Action {
+  return async ({ request, locals }) => {
     const data = await request.formData();
 
-    let username = data.get('username') as unknown as string;
+    let fieldValue = data.get(fieldName) as unknown as string;
 
-    if (!username) return fail(401, { message: 'اسم المستخدم لا يمكن أن يكون فارغا' });
+    if (!fieldValue) return fail(401, { message: `${fieldLabel} لا يمكن أن يكون فارغا` });
 
-    username = username.trim().replace(/\s+/g, ' ');
+    fieldValue = fieldValue.trim().replace(/\s+/g, ' ');
 
-    if (!usernamePattern.test(username))
+    if (!pattern.test(fieldValue))
       return fail(401, {
-        message:
-          'صيغة اسم المستخدم غير صحيحة. ينبغي أن تكون حروف انجليزية فقط أو شرطة "-"',
+        message: `صيغة ${fieldLabel} غير صحيحة. ${patternErrorMessage ?? ''}`,
       });
 
-    if (username === locals.user?.username)
+    if (fieldValue === locals.user?.[fieldName])
       return fail(401, { message: 'غيرت إيه انت كدة؟ 🤷🏻‍♂️' });
 
-    const isUnique = await checkIfUnique('username', username);
+    if (mustBeUnique) {
+      const isUnique = await checkIfUnique(fieldName, fieldValue);
 
-    if (!isUnique)
-      return fail(401, {
-        message: 'اسم المستخدم يخص مستخدم آخر.',
-      });
+      if (!isUnique)
+        return fail(401, {
+          message: `${fieldLabel} '${fieldValue}' يخص مستخدم آخر.`,
+        });
+    }
 
-    const result = await updateUser(locals.user!.id, { username });
+    const newFields: Partial<{ [K in (typeof changeableFields)[number]]: string }> = {};
+    newFields[fieldName] = fieldValue;
 
-    if (!result.success) return fail(401, { message: 'حدث خطأ غير متوقع.' });
-
-    const oldUsername = locals.user?.username;
-
-    locals.user!.username = username;
-
-    return {
-      success: true,
-      message: `تم تغيير اسم المستخدم من ${oldUsername} إلى ${username}`,
-    };
-  },
-  name: async ({ request, locals }) => {
-    const data = await request.formData();
-
-    let name = data.get('name') as unknown as string;
-
-    if (!name) return fail(401, { message: 'اسم الموظف لا يمكن أن يكون فارغا' });
-
-    name = name.trim().replace(/\s+/g, ' ');
-
-    if (!arabicTriadicNamesPattern.test(name))
-      return fail(401, {
-        message: 'صيغة اسم الموظف غير صحيحة. ينبغي أن يكون اسما ثلاثيا عربيا',
-      });
-
-    if (name === locals.user?.name) return fail(401, { message: 'غيرت إيه انت كدة؟ 🤷🏻‍♂️' });
-
-    const result = await updateUser(locals.user!.id, { name });
+    const result = await updateUser(locals.user!.id, newFields);
 
     if (!result.success) return fail(401, { message: 'حدث خطأ غير متوقع.' });
 
-    const oldName = locals.user?.name;
+    const oldValue = locals.user?.[fieldName];
 
-    locals.user!.name = name;
+    locals.user![fieldName] = fieldValue;
 
     return {
       success: true,
-      message: `تم تغيير اسم الموظف من ${oldName} إلى ${name}`,
+      message: `تم تغيير ${fieldLabel} من '${oldValue}' إلى '${fieldValue}'`,
     };
-  },
-};
+  };
+}
