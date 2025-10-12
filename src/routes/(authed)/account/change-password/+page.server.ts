@@ -1,7 +1,7 @@
 import { validateLogin } from '$lib/server/db/operations/auth.js';
 import { changePassword } from '$lib/server/db/operations/users.js';
 import { passwordPattern } from '$lib/stores/patterns.js';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export function load() {
   return {
@@ -25,6 +25,11 @@ export const actions = {
 
     if (newPassword !== confirmNewPassword)
       return fail(401, { message: 'كلمة السر الجديدة لا تطابق تأكيدها' });
+
+    if (newPassword === oldPassword)
+      return fail(401, {
+        message: 'غيرت إيه انت كدة؟ 🤷🏻‍♂️',
+      });
 
     const userData = await validateLogin(locals.user?.username!, oldPassword as string);
 
