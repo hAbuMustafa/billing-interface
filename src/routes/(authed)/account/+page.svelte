@@ -23,7 +23,7 @@
     <input type="submit" value="تعديل" />
   </form>
 
-  <form method="POST" action="?/username" use:enhance>
+  <form method="POST" action="?/name" use:enhance>
     <label for="name">اسم الموظف</label>
     <input
       type="text"
@@ -35,7 +35,7 @@
     <input type="submit" value="تعديل" />
   </form>
 
-  <form method="POST" action="?/username" use:enhance>
+  <form method="POST" action="?/phone_number" use:enhance>
     <label for="phone_number">رقم الموبايل</label>
     <input
       type="text"
@@ -47,13 +47,13 @@
     <input type="submit" value="تعديل" />
   </form>
 
-  <form method="POST" action="?/username" use:enhance>
+  <form method="POST" action="?/email" use:enhance>
     <label for="email">البريد الإلكتروني</label>
     <input type="email" id="email" name="email" value={data.user?.email} />
     <input type="submit" value="تعديل" />
   </form>
 
-  <form method="POST" action="?/username" use:enhance>
+  <form method="POST" action="?/national_id" use:enhance>
     <label for="national_id">الرقم القومي</label>
     <input
       type="text"
