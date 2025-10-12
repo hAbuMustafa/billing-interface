@@ -11,9 +11,11 @@
 
 <Nav user={page.data.user} />
 
-{#if page.status >= 400 && page?.form?.message}
+{#if page?.form?.message}
   <!-- todo: convert to a popover dismissible dialog -->
-  <div class="error" dir="auto">{page.form.message}</div>
+  <div class="form-message {page.form.success ? 'success' : 'error'}" dir="auto">
+    {page.form.message}
+  </div>
 {/if}
 
 <div class="main-wrapper">
@@ -50,12 +52,23 @@
     }
   }
 
-  .error {
+  .form-message {
     margin-block: 1rem;
     padding-block: 1rem;
     text-align: center;
-    border: 1px solid light-dark(maroon, salmon);
     border-radius: 8px;
+  }
+
+  .form-message.error {
+    border: 1px solid light-dark(maroon, salmon);
     background-color: light-dark(hsl(from salmon h s 80%), hsl(from salmon h s 20%));
+  }
+
+  .form-message.success {
+    border: 1px solid light-dark(green, lightgreen);
+    background-color: light-dark(
+      hsl(from lightgreen h s 80%),
+      hsl(from lightgreen h s 20%)
+    );
   }
 </style>
