@@ -11,15 +11,15 @@
 
 <Nav user={page.data.user} />
 
+{#if page.status >= 400 && page?.form?.message}
+  <!-- todo: convert to a popover dismissible dialog -->
+  <div class="error" dir="auto">{page.form.message}</div>
+{/if}
+
 <div class="main-wrapper">
   <h1>
     {page.data.title ?? 'NO TITLE'}
   </h1>
-
-  {#if page.status >= 400 && page?.form?.message}
-    <!-- todo: convert to a popover dismissible dialog -->
-    <div class="error" dir="auto">{page.form.message}</div>
-  {/if}
 
   <main>
     {@render children()}
