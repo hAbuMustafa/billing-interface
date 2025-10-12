@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
   import { page } from '$app/state';
   import { usernamePattern } from '$lib/stores/patterns';
 
   const redirectTo = page.url.searchParams.get('redirectTo');
 </script>
 
-<form action="/login" method="post">
+<form method="post" use:enhance>
   <label for="username">اسم المستخدم</label>
   <!-- svelte-ignore a11y_autofocus -->
   <input

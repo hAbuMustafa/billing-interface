@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
   import {
     arabicTriadicNamesPattern,
     egyptianMobileNumberPattern,
@@ -13,7 +14,7 @@
   let userConfirmPassword = $state('');
 </script>
 
-<form action="/register" method="post">
+<form method="post" use:enhance>
   <fieldset>
     <legend>البيانات الشخصية</legend>
     <label for="name">الاسم كاملا</label>
