@@ -50,6 +50,7 @@ export const actions = {
     return {
       success: true,
       message: 'تم تغيير كلمة المرور بنجاح',
+      redirect: redirect(301, '/account'),
     };
   },
 };
