@@ -107,7 +107,8 @@ input.equal {
   }
 }
 
-input:is([type='submit'], [type='button']) {
+input:is([type='submit'], [type='button']),
+a.button {
   background-color: var(--main-accent-color);
   color: #ccc;
 
@@ -122,6 +123,14 @@ input:is([type='submit'], [type='button']) {
   &:is(:active) {
     background-color: hsl(from var(--main-accent-color) h s 50%);
   }
+}
+
+a.button {
+  text-align: center;
+  text-decoration: none;
+  padding: 0.25rem;
+  border: var(--main-border);
+  border-radius: 0.25rem;
 }
 
 :is(input[type='radio'], input[type='checkbox']) {
