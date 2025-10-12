@@ -11,29 +11,43 @@
 
 <Nav user={page.data.user} />
 
-{#if page.data.title}
+<div class="main-wrapper">
   <h1>
-    {page.data.title}
+    {page.data.title ?? 'NO TITLE'}
   </h1>
-{/if}
 
-{#if page.status >= 400 && page?.form?.message}
-  <!-- todo: convert to a popover dismissible dialog -->
-  <div class="error" dir="auto">{page.form.message}</div>
-{/if}
+  {#if page.status >= 400 && page?.form?.message}
+    <!-- todo: convert to a popover dismissible dialog -->
+    <div class="error" dir="auto">{page.form.message}</div>
+  {/if}
 
-<main>
-  {@render children()}
-</main>
+  <main>
+    {@render children()}
+  </main>
+</div>
 
 <style>
+  .main-wrapper {
+    display: grid;
+    grid-template-columns: 3fr 6fr 3fr;
+    grid-template-rows: max-content 10fr;
+
+    @media (max-width: 400px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
   h1 {
     text-align: center;
+    grid-column: 1 / -1;
   }
 
   main {
-    display: flex;
-    justify-content: center;
+    grid-column: 2 / 3;
+
+    @media (max-width: 400px) {
+      grid-column: 1 / -1;
+    }
   }
 
   .error {

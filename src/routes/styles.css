@@ -22,7 +22,6 @@ body {
 }
 
 main > form {
-  width: clamp(500px, fit-content, 600px);
   padding: 2rem;
 
   border-radius: 0.25rem;
