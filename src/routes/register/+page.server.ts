@@ -1,4 +1,4 @@
-import { createUser } from '$lib/server/db/operations/auth';
+import { createUser } from '$lib/server/db/operations/users';
 import { db } from '$lib/server/db';
 import { Sys_Users } from '$lib/server/db/schema';
 import {

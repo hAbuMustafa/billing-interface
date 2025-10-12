@@ -1,0 +1,76 @@
+import { generateKeyPairSync } from 'node:crypto';
+import { PV_KEY_ENCR_KEY } from '$env/static/private';
+import { Sys_Sec_pb_key, Sys_Sec_pv_key, Sys_Users } from '$lib/server/db/schema';
+import bcrypt from 'bcryptjs';
+import { db } from '$lib/server/db';
+
+const SALT_ROUNDS = 12;
+
+type NewUserDataT = {
+  username: string;
+  password: string;
+  name: string;
+  national_id: string;
+  email: string;
+  phone_number: string;
+};
+
+export async function createUser(newUserData: NewUserDataT) {
+  const passwordHash = await bcrypt.hash(newUserData.password, SALT_ROUNDS);
+
+  const { publicKey: encryptedPbKey, privateKey: encryptedPvKey } = generateKeyPairSync(
+    'rsa',
+    {
+      modulusLength: 4096,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem',
+      },
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem',
+        cipher: 'aes-256-cbc',
+        passphrase: PV_KEY_ENCR_KEY,
+      },
+    }
+  );
+
+  try {
+    const response = await db.transaction(async (tx) => {
+      const [new_pb_key] = await tx
+        .insert(Sys_Sec_pb_key)
+        .values({ key: encryptedPbKey })
+        .returning();
+
+      const [new_pv_key] = await tx
+        .insert(Sys_Sec_pv_key)
+        .values({ key: encryptedPvKey })
+        .returning();
+
+      const [user] = await tx
+        .insert(Sys_Users)
+        .values({
+          hashed_pw: passwordHash,
+          active: false,
+          role: 0,
+          pb_key_id: new_pb_key.id,
+          pv_key_id: new_pv_key.id,
+          ...newUserData,
+        })
+        .returning();
+
+      return user;
+    });
+
+    const { hashed_pw: droppedPwHash2, ...otherUserData } = response;
+
+    return {
+      success: true,
+      data: otherUserData,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}

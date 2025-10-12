@@ -3,7 +3,7 @@ import { drugs as new_Drugs } from './data/drugs';
 import { users as new_Users } from './data/users';
 import { transfers as new_PatientTransfers } from './data/patient_transfers';
 
-import { createUser } from '../../src/lib/server/db/operations/auth';
+import { createUser } from '../../src/lib/server/db/operations/users';
 import {
   createWard,
   createIdDocType,
