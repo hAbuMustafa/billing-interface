@@ -14,7 +14,7 @@
   <label for="confirm_new_password">تأكيد كلمة السر</label>
   <input type="password" name="confirm_new_password" id="confirm_new_password" required />
 
-  <input type="submit" value="تغيير كلمة السر" />
+  <input class="danger" type="submit" value="تغيير كلمة السر" />
 </form>
 
 <style>
@@ -41,6 +41,5 @@
     margin-block-start: 1rem;
     grid-column: 1/-1;
     padding: 0.25rem;
-    background-color: maroon;
   }
 </style>

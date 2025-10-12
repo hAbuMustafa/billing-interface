@@ -123,6 +123,19 @@ a.button {
   &:is(:active) {
     background-color: hsl(from var(--main-accent-color) h s 50%);
   }
+
+  &.danger {
+    background-color: maroon;
+
+    &:hover,
+    &:focus {
+      background-color: chocolate;
+    }
+
+    &:active {
+      background-color: red;
+    }
+  }
 }
 
 a.button {
