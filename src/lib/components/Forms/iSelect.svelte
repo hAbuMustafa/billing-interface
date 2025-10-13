@@ -2,6 +2,7 @@
   import debounce from 'lodash.debounce';
   import type { Snippet } from 'svelte';
   import type { HTMLInputAttributes } from 'svelte/elements';
+  import Loader from '../Loader.svelte';
 
   type iSelectT = HTMLInputAttributes & {
     selectedValue?: any;
@@ -27,14 +28,16 @@
 
   let shouldFetch = $derived(!done && inputText.length >= minlength);
 
+  let fetching = $state(false);
+
   $effect(() => {
     if (shouldFetch) {
+      fetching = true;
       const debouncedFetch = debounce(async () => {
-        // todo: show loader
         const response = await fetch(`${endpoint}?q=${inputText}`);
         const data = await response.json();
-        // todo: disable loader flag
         selectList = data;
+        fetching = false;
       }, 1500);
 
       debouncedFetch();
@@ -59,7 +62,7 @@
     {/if}
   </div>
 
-  {#if shouldFetch && selectList.length}
+  {#if shouldFetch}
     {#if optionSnippet}
       {@render list(optionSnippet)}
     {:else}
@@ -68,7 +71,11 @@
   {/if}
 
   {#snippet list(snippet: Snippet<[any]>)}
-    {#if selectList.length}
+    {#if fetching}
+      <div class="results loading">
+        <Loader />
+      </div>
+    {:else if selectList.length}
       <div class="results">
         <!-- todo: should be able to dismiss on `Esc` key down -->
         {#each selectList as item, i (i)}
@@ -95,9 +102,37 @@
 </div>
 
 <style>
-  .wrapper .results {
+  .wrapper {
+    position: relative;
+  }
+
+  .wrapper:not(:focus-within) > .results {
+    display: none;
+  }
+
+  .results {
     display: flex;
     flex-direction: column;
+
+    width: 100%;
+
+    position: absolute;
+    inset-block-start: 100%;
+
+    z-index: 1;
+
+    border: var(--main-border);
+    border-radius: 0.25rem;
+    box-shadow: 10px 10px 10px black;
+
+    &.no-results {
+      text-align: center;
+    }
+
+    &.loading {
+      background-color: var(--main-bg-color);
+      align-items: center;
+    }
   }
 
   .interaction-wrapper {
@@ -110,30 +145,5 @@
     .cancel {
       flex: 1;
     }
-  }
-
-  .wrapper {
-    position: relative;
-  }
-
-  .wrapper:not(:focus-within) > .results {
-    display: none;
-  }
-
-  .results {
-    width: 100%;
-
-    position: absolute;
-    inset-block-start: 100%;
-
-    z-index: 1;
-
-    border: var(--main-border);
-    border-radius: 0.25rem;
-    box-shadow: 10px 10px 10px black;
-  }
-
-  .no-results {
-    text-align: center;
   }
 </style>
