@@ -1,8 +1,37 @@
 <script lang="ts">
   import { page } from '$app/state';
   import Nav from '$lib/components/Nav.svelte';
+  import { toast, Toaster } from 'svelte-sonner';
   import './styles.css';
   const { children } = $props();
+
+  $effect(() => {
+    if (page.form?.message) {
+      if (page.form.success) {
+        toast.success(page.form.message);
+      } else {
+        toast.error(page.form.message);
+      }
+    }
+
+    if (page.data.user?.password_reset_required) {
+      toast.warning('يلزم تغيير كلمة السر إذا كان هذا أول استخدام لك للمنصة', {
+        duration: 10000,
+      });
+    }
+
+    if (
+      page.data.user &&
+      !page.data.user?.password_reset_required &&
+      (!page.data.user?.email ||
+        !page.data.user?.phone_number ||
+        !page.data.user?.national_id)
+    ) {
+      toast.warning('يلزم استكمال بيانات الحساب', {
+        duration: 10000,
+      });
+    }
+  });
 </script>
 
 <svelte:head>
@@ -11,22 +40,7 @@
 
 <Nav user={page.data.user} />
 
-{#if page.data.user?.password_reset_required}
-  <div class="form-message warning">
-    يلزم تغيير كلمة السر إذا كان هذا أول استخدام لك للمنصة
-  </div>
-{/if}
-
-{#if page.data.user && !page.data.user?.password_reset_required && (!page.data.user?.email || !page.data.user?.phone_number || !page.data.user?.national_id)}
-  <div class="form-message warning">يلزم استكمال بيانات الحساب</div>
-{/if}
-
-{#if page?.form?.message}
-  <!-- todo: convert to a popover dismissible dialog -->
-  <div class="form-message {page.form.success ? 'success' : 'error'}" dir="auto">
-    {page.form.message}
-  </div>
-{/if}
+<Toaster richColors closeButton position="bottom-left" />
 
 <div class="main-wrapper">
   <h1>
@@ -64,30 +78,5 @@
     @media (max-width: 700px) {
       grid-column: 1 / -1;
     }
-  }
-
-  .form-message {
-    margin-block: 1rem;
-    padding-block: 1rem;
-    text-align: center;
-    border-radius: 8px;
-  }
-
-  .form-message.error {
-    border: 1px solid light-dark(maroon, salmon);
-    background-color: light-dark(hsl(from salmon h s 80%), hsl(from salmon h s 20%));
-  }
-
-  .form-message.success {
-    border: 1px solid light-dark(green, lightgreen);
-    background-color: light-dark(
-      hsl(from lightgreen h s 80%),
-      hsl(from lightgreen h s 20%)
-    );
-  }
-
-  .form-message.warning {
-    border: 1px solid light-dark(gold, yellow);
-    background-color: light-dark(hsl(from yellow h s 80%), hsl(from yellow h s 20%));
   }
 </style>
