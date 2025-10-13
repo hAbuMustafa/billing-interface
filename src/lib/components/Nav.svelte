@@ -87,6 +87,10 @@
       display: none;
     }
 
+    & > label {
+      all: unset;
+    }
+
     &::after {
       content: '▼';
       font-size: 0.7rem;
@@ -136,7 +140,8 @@
   }
 
   li:has(:hover, :focus-within, :focus) > ul,
-  li > ul:hover {
+  li:has(> input[type='checkbox']:checked) > ul,
+  li > ul:has(:hover, :focus-within, :focus) {
     visibility: visible;
     opacity: 1;
     transform: translateY(0);
