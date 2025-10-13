@@ -1,6 +1,4 @@
-import { validateLogin } from '$lib/server/db/operations/auth';
-import { db } from '$lib/server/db';
-import { Sys_Sessions, Sys_Users } from '$lib/server/db/schema.js';
+import { createSession, validateLogin } from '$lib/server/db/operations/auth';
 import { usernamePattern } from '$lib/stores/patterns';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
@@ -57,29 +55,20 @@ export const actions: Actions = {
 
     // create session
     const sessionId = crypto.randomUUID();
-    const [newSessionData] = await db
-      .insert(Sys_Sessions)
-      .values({
-        id: sessionId,
-        user_id: userData.id,
-        expires_at: getEndOfSessionTime(),
-      })
-      .returning();
+    const sessionMaxAge = getEndOfSessionTime();
+
+    const result = await createSession(userData.id, sessionId, sessionMaxAge);
+
+    if (!result.success)
+      return fail(401, { message: 'حدث خطأ غير متوقع أثناء إثبات الجلسة' });
 
     cookies.set('session_id', sessionId, {
       path: '/',
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      expires: newSessionData.expires_at,
+      expires: sessionMaxAge,
     });
-
-    // update user's last_login field
-    try {
-      await db.update(Sys_Users).set({ last_login: new Date() });
-    } catch (error) {
-      console.error(error);
-    }
 
     if (!redirectTo) {
       return redirect(303, '/');

@@ -25,6 +25,41 @@ export async function validateLogin(username: string, password: string) {
   return otherUserData;
 }
 
+export async function createSession(
+  userId: number,
+  sessionId: string,
+  sessionMaxAge: Date
+) {
+  try {
+    const newSession = await db.transaction(async (tx) => {
+      const [sessionInsert] = await tx
+        .insert(Sys_Sessions)
+        .values({
+          id: sessionId,
+          user_id: userId,
+          expires_at: sessionMaxAge,
+        })
+        .returning();
+
+      const [updatedUser] = await tx
+        .update(Sys_Users)
+        .set({ last_login: new Date() })
+        .returning();
+
+      return sessionInsert;
+    });
+
+    return {
+      success: true,
+      data: newSession,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
 export async function getUserFromSession(sessionId: string) {
   const sessionsData = await db
     .select()
