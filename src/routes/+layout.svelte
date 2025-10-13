@@ -35,7 +35,9 @@
 </script>
 
 <svelte:head>
-  <title>{page.data.title ? `${page.data.title} | ` : ''}صيدلية الاقتصادي</title>
+  <title>
+    {page.data.title ? `${page.data.title} | ` : ''}مستشفى 23 يوليو للأمراض الصدرية
+  </title>
 </svelte:head>
 
 <Nav user={page.data.user} />

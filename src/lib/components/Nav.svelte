@@ -4,11 +4,7 @@
 
 <nav>
   <a href="/">
-    <img
-      src="/favicon.png"
-      alt="مستشفى 23 يوليو للأمراض الصدرية: نظام إصدار فواتير المرضى"
-      width="80"
-    />
+    <img src="/favicon.png" alt="مستشفى 23 يوليو للأمراض الصدرية" width="80" />
   </a>
   {#if user}
     <ul>
