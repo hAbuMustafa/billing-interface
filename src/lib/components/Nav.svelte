@@ -67,7 +67,7 @@
     text-decoration: none;
   }
 
-  li:is(:hover, :focus) {
+  li:is(:hover, :focus):not(:has(> img:only-child)) {
     background-color: hsl(from var(--main-bg-color) h s 50%);
   }
 
