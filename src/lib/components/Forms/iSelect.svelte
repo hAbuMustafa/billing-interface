@@ -50,7 +50,19 @@
 
 <div class="wrapper">
   <div class="interaction-wrapper">
-    <input bind:value={inputText} {...props} />
+    <input
+      bind:value={inputText}
+      onkeydown={(e) => {
+        if (e.code === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+          selectList = [];
+          fetching = false;
+          shouldFetch = false;
+        }
+      }}
+      {...props}
+    />
     {#if done}
       <button
         onclick={() => {
