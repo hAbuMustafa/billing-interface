@@ -196,9 +196,7 @@ export const Sys_Sessions = sqliteTable(
     user_id: integer({ mode: 'number' })
       .notNull()
       .references(() => Sys_Users.id),
-    expires_at: integer({ mode: 'timestamp' })
-      .notNull()
-      .default(sql`(STRFTIME('%s', 'now', '+2 hours'))`), // todo: default to the nearest shift time instead
+    expires_at: integer({ mode: 'timestamp' }).notNull(),
   },
   (table) => [index('sessions_user_link').on(table.user_id)]
 );
