@@ -14,6 +14,22 @@
       }
     }
 
+    if (page.form?.messages) {
+      page.form.messages.forEach(
+        (
+          message:
+            | string
+            | { message: string; type: 'info' | 'success' | 'error' | 'warning' }
+        ) => {
+          if (typeof message === 'string') {
+            toast(message);
+          } else {
+            toast[message.type](message.message);
+          }
+        }
+      );
+    }
+
     if (page.data.user?.password_reset_required) {
       toast.warning('يلزم تغيير كلمة السر إذا كان هذا أول استخدام لك للمنصة', {
         duration: 10000,
