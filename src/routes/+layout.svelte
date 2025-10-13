@@ -22,7 +22,7 @@
             | { message: string; type: 'info' | 'success' | 'error' | 'warning' }
         ) => {
           if (typeof message === 'string') {
-            toast(message);
+            toast.warning(message);
           } else {
             toast[message.type](message.message);
           }
