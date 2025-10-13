@@ -1,6 +1,6 @@
 import { new_Patient_discharge_reasons } from '$lib/server/db/menus';
 import { dischargePatient } from '$lib/server/db/operations/patients.js';
-import { failWithFormFieldsAndMessageBuilder } from '$lib/utils/form-actions';
+import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 
 export function load() {
   return {
@@ -19,7 +19,9 @@ export const actions = {
     let dischargeReason = data.get('discharge_reason') as unknown as number;
     const dischargeNotes = data.get('discharge_notes') as unknown as string;
 
-    const failWithMessage = failWithFormFieldsAndMessageBuilder({
+    const failMessages = [];
+
+    const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
       patientId,
       patientName,
       dischargeDate,
@@ -27,19 +29,21 @@ export const actions = {
       dischargeNotes,
     });
 
-    if (!patientId) return failWithMessage('لم يتم العثور على المريض');
-    if (!dischargeDate) return failWithMessage('وقت الخروج مطلوب');
-    if (!dischargeReason) return failWithMessage('سبب الخروج مطلوب');
+    if (!patientId) failMessages.push('لم يتم العثور على المريض');
+    if (!dischargeDate) failMessages.push('وقت الخروج مطلوب');
+    if (!dischargeReason) failMessages.push('سبب الخروج مطلوب');
     if (!dischargeNotes && (dischargeReason == 3 || dischargeReason == 9))
-      return failWithMessage(
+      failMessages.push(
         'يلزم كتابة ملاحظات حال كان سبب الخروج خارج الاختيارات المذكورة، أو في حال تم تحويل المريض لمستشفى آخر؛ يلزم ذكر المستشفى في الملاحظات'
       );
+
+    if (failMessages.length) return failWithMessages(failMessages);
 
     try {
       dischargeDate = new Date(dischargeDate);
       dischargeReason = Number(dischargeReason);
     } catch (error) {
-      return failWithMessage('البيانات المدخلة غير صحيحة');
+      return failWithMessages([{ message: 'البيانات المدخلة غير صحيحة', type: 'error' }]);
     }
 
     const result = await dischargePatient({
@@ -50,7 +54,14 @@ export const actions = {
     });
 
     if (!result.success) {
-      return failWithMessage('حدث خطأ غير متوقع. برجاء المحاولة مرة أخرى');
+      return failWithMessages([
+        { message: 'حدث خطأ غير متوقع. برجاء المحاولة مرة أخرى', type: 'error' },
+      ]);
     }
+
+    return {
+      success: true,
+      message: `تم تسجيل خروج رقم القيد "${result.data.id}" بنجاح`,
+    };
   },
 };

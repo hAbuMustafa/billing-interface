@@ -11,3 +11,13 @@ export function failWithFormFieldsAndMessageBuilder<
       ...fields,
     });
 }
+
+export function failWithFormFieldsAndMessageArrayBuilder<
+  T extends Record<string, InputTypes | InputTypes[] | null>
+>(fields: T) {
+  return (failMessages: string[] | ToastT[]) =>
+    fail(401, {
+      messages: failMessages,
+      ...fields,
+    });
+}

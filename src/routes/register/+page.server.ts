@@ -1,6 +1,6 @@
 import { createUser } from '$lib/server/db/operations/users';
 import { db } from '$lib/server/db';
-import { Sys_Users } from '$lib/server/db/schema';
+import { Sys_Users } from '$lib/server/db/schema'; // todo: isolate db processes into 'operations/users'
 import {
   arabicTriadicNamesPattern,
   egyptianMobileNumberPattern,
@@ -11,8 +11,7 @@ import {
 } from '$lib/stores/patterns';
 import { redirect, type Actions } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import type { DrizzleQueryError } from 'drizzle-orm/errors';
-import { failWithFormFieldsAndMessageBuilder } from '$lib/utils/form-actions';
+import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 
 export function load() {
   return {
@@ -38,7 +37,7 @@ export const actions: Actions = {
     phone_number = phone_number?.trim();
     email = email?.trim();
 
-    const failWithMessage = failWithFormFieldsAndMessageBuilder({
+    const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
       name,
       national_id,
       username,
@@ -55,41 +54,43 @@ export const actions: Actions = {
       !phone_number ||
       !email
     ) {
-      return failWithMessage('برجاء إدخال جميع البيانات المطلوبة');
+      return failWithMessages(['برجاء إدخال جميع البيانات المطلوبة']);
     }
 
+    const failMessages = [];
+
     if (!usernamePattern.test(username as string)) {
-      return failWithMessage(
+      failMessages.push(
         'اسم المستخدم بصيغة غير صحيحة. يمكنك استخدام الأحرف والشرطات (-) فقط. ويجب أن يكون من 4 أحرف على الأقل أو 16 حرفا بحد أقصى'
       );
     }
 
     if (!passwordPattern.test(password as string)) {
-      return failWithMessage(
+      failMessages.push(
         'كلمة المرور بصيغة غير صحيحة. أحرف وأرقام ورموز (@$!%*?&) فقط. ومن 7 أحرف على الأقل.'
       );
     }
 
     if (password !== confirmPassword) {
-      return failWithMessage('كلمة السر وتأكيدها غير متطابقان');
+      failMessages.push('كلمة السر وتأكيدها غير متطابقان');
     }
 
     if (!arabicTriadicNamesPattern.test(name)) {
-      return failWithMessage(
+      failMessages.push(
         'اسم الموظف بصيغة غير صحيحة. يجب أن يكون اسما ثلاثيا على الأقل بحروف عربية فقط'
       );
     }
 
     if (!egyptianMobileNumberPattern.test(phone_number)) {
-      return failWithMessage('رقم الموبايل بصيغة غير صحيحة');
+      failMessages.push('رقم الموبايل بصيغة غير صحيحة');
     }
 
     if (!emailPattern.test(email)) {
-      return failWithMessage('البريد الإلكتروني بصيغة غير صحيحة');
+      failMessages.push('البريد الإلكتروني بصيغة غير صحيحة');
     }
 
     if (!nationalIdPattern.test(national_id)) {
-      return failWithMessage('الرقم القومي غير صحيح');
+      failMessages.push('الرقم القومي غير صحيح');
     }
 
     // username used before?
@@ -98,7 +99,7 @@ export const actions: Actions = {
     ).length;
 
     if (usersWithSameUsername) {
-      return failWithMessage('اسم المستخدم مسجل مسبقا.');
+      failMessages.push('اسم المستخدم مسجل مسبقا.');
     }
 
     // email registered before?
@@ -107,7 +108,7 @@ export const actions: Actions = {
     ).length;
 
     if (usersWithSameEmail) {
-      return failWithMessage('البريد الإلكتروني مسجل مسبقا.');
+      failMessages.push('البريد الإلكتروني مسجل مسبقا.');
     }
 
     // phone-number registered before?
@@ -116,7 +117,7 @@ export const actions: Actions = {
     ).length;
 
     if (usersWithSamePhone_number) {
-      return failWithMessage('رقم الهاتف مسجل مسبقا.');
+      failMessages.push('رقم الهاتف مسجل مسبقا.');
     }
 
     // national id registered before?
@@ -125,8 +126,10 @@ export const actions: Actions = {
     ).length;
 
     if (usersWithSameNationalId) {
-      return failWithMessage('الرقم القومي مسجل مسبقا.');
+      failMessages.push('الرقم القومي مسجل مسبقا.');
     }
+
+    if (failMessages.length) return failWithMessages(failMessages);
 
     // EXECUTE Registration
     const registrationResult = await createUser({
@@ -139,11 +142,15 @@ export const actions: Actions = {
     });
 
     if (!registrationResult.success) {
-      return failWithMessage(
-        (registrationResult.error as DrizzleQueryError).cause!.message.split(' for ')[0]
-      );
+      return failWithMessages(['حدث خطأ غير متوقع']);
     }
 
-    return redirect(303, '/');
+    return {
+      messages: [
+        { message: `تم إنشاء حسابك ${username} بنجاح`, type: 'success' },
+        { message: 'يلزم التواصل مع مدير النظام لتفعيل حسابك!', type: 'info' },
+      ],
+      redirect: redirect(303, '/'),
+    };
   },
 };

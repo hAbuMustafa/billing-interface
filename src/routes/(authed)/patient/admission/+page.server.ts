@@ -1,9 +1,8 @@
 import { db } from '$lib/server/db/index.js';
 import { floors, new_id_doc_type, new_Wards } from '$lib/server/db/menus';
 import { createPatient } from '$lib/server/db/operations/patients.js';
-import { People_Patients } from '$lib/server/db/schema.js';
-import { failWithFormFieldsAndMessageBuilder } from '$lib/utils/form-actions.js';
-import { fail } from 'assert';
+import { People_Patients } from '$lib/server/db/schema.js'; // todo: isolate db processes into 'operations/patients'
+import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions.js';
 import { DrizzleQueryError, like } from 'drizzle-orm';
 
 export async function load() {
@@ -45,6 +44,7 @@ export async function load() {
 export const actions = {
   default: async ({ request }) => {
     const data = await request.formData();
+    console.log('submitted');
 
     // Person Data
     let personId = data.get('person_id') as unknown as number;
@@ -62,7 +62,7 @@ export const actions = {
     let diagnosis = data.getAll('diagnosis') as unknown as string[];
     let admissionNotes = data.get('admission_notes') as unknown as string;
 
-    const failWithMessage = failWithFormFieldsAndMessageBuilder({
+    const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
       medicalNumber,
       patientName,
       idDocType,
@@ -77,21 +77,23 @@ export const actions = {
       admissionNotes,
     });
 
-    if (!medicalNumber) return failWithMessage('الرقم الطبي مطلوب');
-    if (!patientName) return failWithMessage(' اسم المريض مطلوب');
-    if (!idDocType) return failWithMessage('نوع الهوية مطلوبة');
-    if (!idDocNum && idDocType != 6) return failWithMessage('رقم الهوية مطلوب');
-    if (!gender) return failWithMessage('الجنس/النوع مطلوب');
-    if (!birthdate) return failWithMessage('تاريخ الميلاد مطلوب');
-    if (!heathInsurance) return failWithMessage('موقف المريض من التأمين الصحي مطلوب');
-    if (!diagnosis.length)
-      return failWithMessage('التشخيص مطلوب. يلزم كتابة تشخيص واحد على الأقل');
-    if (!admissionWard) return failWithMessage('يلزم تحديد قسم الدخول');
-    if (!admissionDate) return failWithMessage('تاريخ الدخول مطلوب');
-    if (!admissionNotes && idDocType == 6)
-      return failWithMessage('يلزم الإفادة بملاحظات حال لم يتم كتابة رقم هوية');
+    const failMessages = [];
 
-    // todo: instead of failing on each missing value separately, pool error messages in locals, then check after this line if there are any error messages, and only fail() then
+    if (!medicalNumber) failMessages.push('الرقم الطبي مطلوب');
+    if (!patientName) failMessages.push(' اسم المريض مطلوب');
+    if (!idDocType) failMessages.push('نوع الهوية مطلوبة');
+    if (!idDocNum && idDocType != 6) failMessages.push('رقم الهوية مطلوب');
+    if (!gender) failMessages.push('الجنس/النوع مطلوب');
+    if (!birthdate) failMessages.push('تاريخ الميلاد مطلوب');
+    if (!heathInsurance) failMessages.push('موقف المريض من التأمين الصحي مطلوب');
+    if (!diagnosis.length)
+      failMessages.push('التشخيص مطلوب. يلزم كتابة تشخيص واحد على الأقل');
+    if (!admissionWard) failMessages.push('يلزم تحديد قسم الدخول');
+    if (!admissionDate) failMessages.push('تاريخ الدخول مطلوب');
+    if (!admissionNotes && idDocType == 6)
+      failMessages.push('يلزم الإفادة بملاحظات حال لم يتم كتابة رقم هوية');
+
+    if (failMessages.length) return failWithMessages(failMessages);
 
     try {
       personId = Number(personId);
@@ -106,7 +108,9 @@ export const actions = {
       admissionDate = new Date(admissionDate);
     } catch (e) {
       console.error(JSON.stringify(data, null, 4));
-      fail('خطأ في طبيعة البيانات المدخلة (أرقام أو تواريخ).');
+      failWithMessages([
+        { message: 'خطأ في طبيعة البيانات المدخلة (أرقام أو تواريخ).', type: 'error' },
+      ]);
     }
 
     const result = await createPatient({
@@ -126,7 +130,14 @@ export const actions = {
         'UNIQUE constraint failed'
       )
     ) {
-      return failWithMessage(`الرقم الطبي ${medicalNumber} مسجل مسبقا`);
+      return failWithMessages([
+        { message: `الرقم الطبي ${medicalNumber} مسجل مسبقا`, type: 'error' },
+      ]);
     }
+
+    return {
+      success: true,
+      message: `تم تسجيل دخول المريض "${patientName}" بنجاح`,
+    };
   },
 };
