@@ -41,6 +41,7 @@ declare global {
     }
     type Require<T, K extends keyof T> = T & { [P in K]-?: T[P] };
   }
+  type ToastT = { type: 'info' | 'success' | 'error' | 'warning'; message: string };
 }
 
 export {};

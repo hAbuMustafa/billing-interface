@@ -15,19 +15,13 @@
     }
 
     if (page.form?.messages) {
-      page.form.messages.forEach(
-        (
-          message:
-            | string
-            | { message: string; type: 'info' | 'success' | 'error' | 'warning' }
-        ) => {
-          if (typeof message === 'string') {
-            toast.warning(message);
-          } else {
-            toast[message.type](message.message);
-          }
+      page.form.messages.forEach((message: string | ToastT) => {
+        if (typeof message === 'string') {
+          toast.warning(message);
+        } else {
+          toast[message.type](message.message);
         }
-      );
+      });
     }
 
     if (page.data.user?.password_reset_required) {
