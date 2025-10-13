@@ -89,7 +89,6 @@
       </div>
     {:else if selectList.length}
       <div class="results">
-        <!-- todo: should be able to dismiss on `Esc` key down -->
         {#each selectList as item, i (i)}
           {@render snippet(item)}
         {/each}
