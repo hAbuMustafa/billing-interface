@@ -3,6 +3,7 @@
   import type { Snippet } from 'svelte';
   import type { HTMLInputAttributes } from 'svelte/elements';
   import Loader from '../Loader.svelte';
+  import { toast } from 'svelte-sonner';
 
   type iSelectT = HTMLInputAttributes & {
     selectedValue?: any;
@@ -46,6 +47,7 @@
       })
       .catch((error) => {
         console.error('Fetch error:', error);
+        toast.error('حدث خطأ ما. ربما عليك تسجيل الدخول من جديد');
         selectList = [];
       })
       .finally(() => {
