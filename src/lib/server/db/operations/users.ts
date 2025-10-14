@@ -96,7 +96,7 @@ export async function updateUser(
   }
 }
 
-export async function checkIfUnique(
+export async function isUniqueValue(
   field: keyof Omit<Partial<typeof Sys_Users.$inferSelect>, 'id'>,
   value: string | number | Date | boolean
 ) {
