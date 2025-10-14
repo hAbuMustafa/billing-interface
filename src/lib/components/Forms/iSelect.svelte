@@ -28,11 +28,11 @@
 
   let selectList = $state([]);
 
-  $effect(() => {
+  const debouncedFetch = debounce((text) => {
     if (shouldFetch) {
       let cancelled = false;
 
-      fetch(`${endpoint}?q=${inputText}`)
+      fetch(`${endpoint}?q=${text}`)
         .then((response) => response.json())
         .then((data) => {
           if (!cancelled) {
@@ -52,6 +52,10 @@
     } else {
       selectList = [];
     }
+  }, 1500);
+
+  $effect(() => {
+    debouncedFetch(inputText);
   });
 </script>
 
