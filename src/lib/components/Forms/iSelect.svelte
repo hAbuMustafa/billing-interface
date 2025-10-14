@@ -24,26 +24,33 @@
     ...props
   }: iSelectT = $props();
 
-  let selectList: any[] = $state([]);
-
   let shouldFetch = $derived(!done && inputText.length >= minlength);
 
-  let fetching = $state(false);
+  let selectList = $state([]);
 
   $effect(() => {
     if (shouldFetch) {
-      fetching = true;
-      const debouncedFetch = debounce(async () => {
-        const response = await fetch(`${endpoint}?q=${inputText}`);
-        const data = await response.json();
-        selectList = data;
-        fetching = false;
-      }, 1500);
+      let cancelled = false;
 
-      debouncedFetch();
+      fetch(`${endpoint}?q=${inputText}`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (!cancelled) {
+            selectList = data || [];
+          } else {
+            selectList = [];
+          }
+        })
+        .catch((error) => {
+          console.error('Fetch error:', error);
+          selectList = [];
+        });
+
       return () => {
-        debouncedFetch.cancel();
+        cancelled = true;
       };
+    } else {
+      selectList = [];
     }
   });
 </script>
@@ -57,7 +64,6 @@
           e.preventDefault();
           e.stopPropagation();
           selectList = [];
-          fetching = false;
           shouldFetch = false;
         }
       }}
@@ -83,19 +89,21 @@
   {/if}
 
   {#snippet list(snippet: Snippet<[any]>)}
-    {#if fetching}
+    {#await selectList}
       <div class="results loading">
         <Loader />
       </div>
-    {:else if selectList.length}
-      <div class="results">
-        {#each selectList as item, i (i)}
-          {@render snippet(item)}
-        {/each}
-      </div>
-    {:else if inputText !== '' && inputText.length >= minlength}
-      <div class="results no-results">لا توجد نتائج</div>
-    {/if}
+    {:then returnedList}
+      {#if returnedList.length}
+        <div class="results">
+          {#each returnedList as item, i (i)}
+            {@render snippet(item)}
+          {/each}
+        </div>
+      {:else if inputText !== '' && inputText.length >= minlength}
+        <div class="results no-results">لا توجد نتائج</div>
+      {/if}
+    {/await}
   {/snippet}
 
   {#snippet fallback(item: any)}
