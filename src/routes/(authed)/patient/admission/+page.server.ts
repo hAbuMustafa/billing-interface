@@ -1,35 +1,17 @@
 import { db } from '$lib/server/db/index.js';
 import { floors, new_id_doc_type, new_Wards } from '$lib/server/db/menus';
-import { createPatient } from '$lib/server/db/operations/patients.js';
-import { People_Patients } from '$lib/server/db/schema.js'; // todo: isolate db processes into 'operations/patients'
+import {
+  createPatient,
+  getDiagnoses,
+  getLastMedicalNumber,
+} from '$lib/server/db/operations/patients.js';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions.js';
-import { DrizzleQueryError, like } from 'drizzle-orm';
+import { DrizzleQueryError } from 'drizzle-orm';
 
 export async function load() {
-  const diagnoses = await db
-    .select({ diagnosis: People_Patients.diagnosis })
-    .from(People_Patients);
-  const diagnoses_list = Array.from(
-    new Set(
-      diagnoses
-        .map((d) => d.diagnosis)
-        .map((d) => d?.split('+').map((c) => c.trim()))
-        .flat()
-        .sort()
-    )
-  ); // todo: got to move this to a queryable table for efficiency
+  const diagnoses_list = await getDiagnoses();
 
-  const lastMedicalNumber = (
-    await db
-      .select({ mId: People_Patients.id })
-      .from(People_Patients)
-      .where(
-        like(People_Patients.id, `${new Date().getFullYear().toString().slice(2, 4)}/%`)
-      )
-  )
-    .map((mn) => Number(mn?.mId.split('/')[1] || '0'))
-    .sort((a, b) => a - b)
-    .pop();
+  const lastMedicalNumber = await getLastMedicalNumber();
 
   return {
     title: 'تسجيل دخول مريض',

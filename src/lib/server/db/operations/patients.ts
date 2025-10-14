@@ -7,7 +7,7 @@ import {
   People_Patients,
   Wards,
 } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, like } from 'drizzle-orm';
 
 export async function createWard(ward: typeof Wards.$inferInsert) {
   try {
@@ -162,4 +162,39 @@ export async function dischargePatient(patientDischarge: {
       error,
     };
   }
+}
+
+export async function getLastMedicalNumber() {
+  const num = (
+    await db
+      .select({ mId: People_Patients.id })
+      .from(People_Patients)
+      .where(
+        like(People_Patients.id, `${new Date().getFullYear().toString().slice(2, 4)}/%`)
+      )
+  )
+    .map((mn) => Number(mn?.mId.split('/')[1] || '0'))
+    .sort((a, b) => a - b)
+    .pop();
+
+  return num || 0;
+}
+
+export async function getDiagnoses() {
+  // todo: turn to its own table logic
+  const diagnoses = await db
+    .select({ diagnosis: People_Patients.diagnosis })
+    .from(People_Patients);
+
+  const diagnoses_list = Array.from(
+    new Set(
+      diagnoses
+        .map((d) => d.diagnosis)
+        .map((d) => d?.split('+').map((c) => c.trim()))
+        .flat()
+        .sort()
+    )
+  );
+
+  return diagnoses_list || [];
 }
