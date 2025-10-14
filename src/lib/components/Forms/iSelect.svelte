@@ -26,36 +26,44 @@
 
   let shouldFetch = $derived(!done && inputText.length >= minlength);
 
+  let isLoading = $state(false);
+
   let selectList = $state([]);
 
   const debouncedFetch = debounce((text) => {
-    if (shouldFetch) {
-      let cancelled = false;
+    let cancelled = false;
 
-      fetch(`${endpoint}?q=${text}`)
-        .then((response) => response.json())
-        .then((data) => {
-          if (!cancelled) {
-            selectList = data || [];
-          } else {
-            selectList = [];
-          }
-        })
-        .catch((error) => {
-          console.error('Fetch error:', error);
+    fetch(`${endpoint}?q=${text}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (!cancelled) {
+          selectList = data || [];
+        } else {
           selectList = [];
-        });
+        }
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+        selectList = [];
+      })
+      .finally(() => {
+        isLoading = false;
+      });
 
-      return () => {
-        cancelled = true;
-      };
-    } else {
-      selectList = [];
-    }
+    return () => {
+      cancelled = true;
+    };
   }, 1500);
 
   $effect(() => {
-    debouncedFetch(inputText);
+    if (shouldFetch) {
+      selectList = [];
+      isLoading = true;
+      debouncedFetch(inputText);
+    } else {
+      selectList = [];
+      isLoading = false;
+    }
   });
 </script>
 
@@ -93,21 +101,19 @@
   {/if}
 
   {#snippet list(snippet: Snippet<[any]>)}
-    {#await selectList}
+    {#if isLoading}
       <div class="results loading">
         <Loader />
       </div>
-    {:then returnedList}
-      {#if returnedList.length}
-        <div class="results">
-          {#each returnedList as item, i (i)}
-            {@render snippet(item)}
-          {/each}
-        </div>
-      {:else if inputText !== '' && inputText.length >= minlength}
-        <div class="results no-results">لا توجد نتائج</div>
-      {/if}
-    {/await}
+    {:else if selectList.length}
+      <div class="results">
+        {#each selectList as item, i (i)}
+          {@render snippet(item)}
+        {/each}
+      </div>
+    {:else if inputText !== '' && inputText.length >= minlength}
+      <div class="results no-results">لا توجد نتائج</div>
+    {/if}
   {/snippet}
 
   {#snippet fallback(item: any)}
