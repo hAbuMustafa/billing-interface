@@ -28,6 +28,7 @@ export async function handle({ event, resolve }) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
     });
+    event.locals.user = null;
     return redirect(303, redirectURL);
   }
 
