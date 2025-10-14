@@ -1,11 +1,10 @@
-import { db } from '$lib/server/db/index.js';
 import { floors, new_id_doc_type, new_Wards } from '$lib/server/db/menus';
 import {
   createPatient,
   getDiagnoses,
   getLastMedicalNumber,
-} from '$lib/server/db/operations/patients.js';
-import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions.js';
+} from '$lib/server/db/operations/patients';
+import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 import { DrizzleQueryError } from 'drizzle-orm';
 
 export async function load() {
