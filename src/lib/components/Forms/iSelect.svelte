@@ -153,6 +153,7 @@
   .results {
     display: flex;
     flex-direction: column;
+    background-color: var(--main-bg-color);
 
     width: 100%;
 
@@ -167,10 +168,10 @@
 
     &.no-results {
       text-align: center;
+      padding-block: 1rem;
     }
 
     &.loading {
-      background-color: var(--main-bg-color);
       align-items: center;
     }
   }
