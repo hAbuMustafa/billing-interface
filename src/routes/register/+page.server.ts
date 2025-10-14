@@ -1,6 +1,4 @@
-import { createUser } from '$lib/server/db/operations/users';
-import { db } from '$lib/server/db';
-import { Sys_Users } from '$lib/server/db/schema'; // todo: isolate db processes into 'operations/users'
+import { createUser, isUniqueValue } from '$lib/server/db/operations/users';
 import {
   arabicTriadicNamesPattern,
   egyptianMobileNumberPattern,
@@ -10,7 +8,6 @@ import {
   usernamePattern,
 } from '$lib/stores/patterns';
 import { redirect, type Actions } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 
 export function load() {
@@ -94,40 +91,20 @@ export const actions: Actions = {
     }
 
     // username used before?
-    const usersWithSameUsername = (
-      await db.select().from(Sys_Users).where(eq(Sys_Users.username, username))
-    ).length;
-
-    if (usersWithSameUsername) {
-      failMessages.push('اسم المستخدم مسجل مسبقا.');
-    }
+    const usersWithSameUsername = await isUniqueValue('username', username);
+    if (usersWithSameUsername) failMessages.push('اسم المستخدم مسجل مسبقا.');
 
     // email registered before?
-    const usersWithSameEmail = (
-      await db.select().from(Sys_Users).where(eq(Sys_Users.email, email))
-    ).length;
-
-    if (usersWithSameEmail) {
-      failMessages.push('البريد الإلكتروني مسجل مسبقا.');
-    }
+    const usersWithSameEmail = await isUniqueValue('email', email);
+    if (usersWithSameEmail) failMessages.push('البريد الإلكتروني مسجل مسبقا.');
 
     // phone-number registered before?
-    const usersWithSamePhone_number = (
-      await db.select().from(Sys_Users).where(eq(Sys_Users.phone_number, phone_number))
-    ).length;
-
-    if (usersWithSamePhone_number) {
-      failMessages.push('رقم الهاتف مسجل مسبقا.');
-    }
+    const usersWithSamePhone_number = await isUniqueValue('phone_number', phone_number);
+    if (usersWithSamePhone_number) failMessages.push('رقم الهاتف مسجل مسبقا.');
 
     // national id registered before?
-    const usersWithSameNationalId = (
-      await db.select().from(Sys_Users).where(eq(Sys_Users.national_id, national_id))
-    ).length;
-
-    if (usersWithSameNationalId) {
-      failMessages.push('الرقم القومي مسجل مسبقا.');
-    }
+    const usersWithSameNationalId = await isUniqueValue('national_id', national_id);
+    if (usersWithSameNationalId) failMessages.push('الرقم القومي مسجل مسبقا.');
 
     if (failMessages.length) return failWithMessages(failMessages);
 
