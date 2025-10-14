@@ -1,4 +1,3 @@
-import { sql } from 'drizzle-orm';
 import { sqliteTable, index, integer, text, unique, real } from 'drizzle-orm/sqlite-core';
 
 export const Wards = sqliteTable('Wards', {
@@ -23,7 +22,7 @@ export const Patient_wards = sqliteTable(
     id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
     patient_id: text()
       .notNull()
-      .references(() => People_Patients.id),
+      .references(() => Patients.id),
     ward: integer()
       .notNull()
       .references(() => Wards.id),
@@ -42,7 +41,7 @@ export const People = sqliteTable('People', {
   birthdate: integer({ mode: 'timestamp' }),
 });
 
-export const People_Patients = sqliteTable('People_Patients', {
+export const Patients = sqliteTable('Patients', {
   id: text().notNull().primaryKey(),
   person_id: integer({ mode: 'number' })
     .notNull()
@@ -60,17 +59,17 @@ export const People_Patients = sqliteTable('People_Patients', {
   health_insurance: integer({ mode: 'boolean' }),
 });
 
-export const Drugs_unit = sqliteTable('Drugs_unit', {
+export const Drug_units = sqliteTable('Drug_units', {
   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
   name: text().notNull(),
 });
 
-export const Drugs_category = sqliteTable('Drugs_category', {
+export const Drug_categories = sqliteTable('Drug_categories', {
   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
   name: text().notNull(),
 });
 
-export const Drugs_page_number = sqliteTable('Drugs_page_number', {
+export const Drug_page_numbers = sqliteTable('Drug_page_numbers', {
   drug_id: integer({ mode: 'number' })
     .notNull()
     .references(() => Ph_InEco_Stock.id),
@@ -78,7 +77,7 @@ export const Drugs_page_number = sqliteTable('Drugs_page_number', {
   record_page_number: integer().notNull(),
 });
 
-export const Drugs_amb_name = sqliteTable('Drugs_amb_name', {
+export const Drug_name_like = sqliteTable('Drug_name_like', {
   drug_id: integer({ mode: 'number' })
     .notNull()
     .references(() => Drugs.id),
@@ -87,7 +86,7 @@ export const Drugs_amb_name = sqliteTable('Drugs_amb_name', {
     .references(() => Drugs.id),
 });
 
-export const Drugs_amb_look = sqliteTable('Drugs_amb_look', {
+export const Drug_look_like = sqliteTable('Drug_look_like', {
   drug_id: integer({ mode: 'number' })
     .notNull()
     .references(() => Drugs.id),
@@ -104,10 +103,10 @@ export const Drugs = sqliteTable('Drugs', {
   trade_name_en: text(),
   unit: integer({ mode: 'number' })
     .notNull()
-    .references(() => Drugs_unit.id),
+    .references(() => Drug_units.id),
   category: integer()
     .notNull()
-    .references(() => Drugs_category.id),
+    .references(() => Drug_categories.id),
   smc_code: integer(),
   cat_strategy: integer({ mode: 'boolean' }),
   cat_high_concentration_electrolyte: integer({ mode: 'boolean' }),
@@ -141,10 +140,10 @@ export const Ph_InEco_Transactions = sqliteTable(
     amount: integer().notNull(),
     patient_id: text()
       .notNull()
-      .references(() => People_Patients.id),
+      .references(() => Patients.id),
     user_id: integer()
       .notNull()
-      .references(() => Sys_Users.id),
+      .references(() => Users.id),
     pb_key_id: integer({ mode: 'number' })
       .notNull()
       .references(() => Sys_Sec_pb_key.id),
@@ -158,8 +157,8 @@ export const Ph_InEco_Transactions = sqliteTable(
   ]
 );
 
-export const Sys_Users = sqliteTable(
-  'Sys_Users',
+export const Users = sqliteTable(
+  'Users',
   {
     id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
     username: text().notNull(),
@@ -189,13 +188,13 @@ export const Sys_Users = sqliteTable(
   ]
 );
 
-export const Sys_Sessions = sqliteTable(
-  'Sys_Sessions',
+export const Sessions = sqliteTable(
+  'Sessions',
   {
     id: text().primaryKey(),
     user_id: integer({ mode: 'number' })
       .notNull()
-      .references(() => Sys_Users.id),
+      .references(() => Users.id),
     expires_at: integer({ mode: 'timestamp' }).notNull(),
   },
   (table) => [index('sessions_user_link').on(table.user_id)]
@@ -219,10 +218,10 @@ export const Invoice = sqliteTable(
     id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
     patient_id: text()
       .notNull()
-      .references(() => People_Patients.id),
+      .references(() => Patients.id),
     created_by: integer({ mode: 'number' })
       .notNull()
-      .references(() => Sys_Users.id),
+      .references(() => Users.id),
     created_at: integer({ mode: 'timestamp' }).notNull().default(new Date()),
     from: integer({ mode: 'timestamp' }).notNull(),
     till: integer({ mode: 'timestamp' }).notNull(),

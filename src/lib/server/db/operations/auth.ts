@@ -1,14 +1,11 @@
 import { getGravatarHash } from '$lib/utils/gravatar';
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
-import { Sys_Users, Sys_Sessions } from '$lib/server/db/schema';
+import { Users, Sessions } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function validateLogin(username: string, password: string) {
-  const [user] = await db
-    .select()
-    .from(Sys_Users)
-    .where(eq(Sys_Users.username, username));
+  const [user] = await db.select().from(Users).where(eq(Users.username, username));
 
   if (!user) {
     return null;
@@ -33,7 +30,7 @@ export async function createSession(
   try {
     const newSession = await db.transaction(async (tx) => {
       const [sessionInsert] = await tx
-        .insert(Sys_Sessions)
+        .insert(Sessions)
         .values({
           id: sessionId,
           user_id: userId,
@@ -42,7 +39,7 @@ export async function createSession(
         .returning();
 
       const [updatedUser] = await tx
-        .update(Sys_Users)
+        .update(Users)
         .set({ last_login: new Date() })
         .returning();
 
@@ -63,14 +60,14 @@ export async function createSession(
 export async function getUserFromSession(sessionId: string) {
   const sessionsData = await db
     .select()
-    .from(Sys_Sessions)
-    .innerJoin(Sys_Users, eq(Sys_Sessions.user_id, Sys_Users.id))
-    .where(eq(Sys_Sessions.id, sessionId));
+    .from(Sessions)
+    .innerJoin(Users, eq(Sessions.user_id, Users.id))
+    .where(eq(Sessions.id, sessionId));
   if (sessionsData.length === 0) return null;
 
   if (sessionsData[0].Sys_Sessions.expires_at < new Date()) {
     try {
-      await db.delete(Sys_Sessions).where(eq(Sys_Sessions.id, sessionId));
+      await db.delete(Sessions).where(eq(Sessions.id, sessionId));
     } catch (error) {
       console.error(error);
     }

@@ -1,9 +1,14 @@
 import { db } from '$lib/server/db';
-import { Drugs, Drugs_category, Drugs_unit, Ph_InEco_Stock } from '$lib/server/db/schema';
+import {
+  Drugs,
+  Drug_categories,
+  Drug_units,
+  Ph_InEco_Stock,
+} from '$lib/server/db/schema';
 
-export async function createDrugUnit(unit: typeof Drugs_unit.$inferInsert) {
+export async function createDrugUnit(unit: typeof Drug_units.$inferInsert) {
   try {
-    const [drugUnit] = await db.insert(Drugs_unit).values(unit).returning();
+    const [drugUnit] = await db.insert(Drug_units).values(unit).returning();
 
     return {
       success: true,
@@ -16,9 +21,9 @@ export async function createDrugUnit(unit: typeof Drugs_unit.$inferInsert) {
   }
 }
 
-export async function createDrugCategory(category: typeof Drugs_category.$inferInsert) {
+export async function createDrugCategory(category: typeof Drug_categories.$inferInsert) {
   try {
-    const [drugCategory] = await db.insert(Drugs_category).values(category).returning();
+    const [drugCategory] = await db.insert(Drug_categories).values(category).returning();
 
     return {
       success: true,

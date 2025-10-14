@@ -4,7 +4,7 @@ import {
   Patient_id_doc_type,
   Patient_wards,
   People,
-  People_Patients,
+  Patients,
   Wards,
 } from '$lib/server/db/schema';
 import { eq, like } from 'drizzle-orm';
@@ -81,7 +81,7 @@ export async function createPatient(patient: App.CustomTypes['PatientT']) {
       }
 
       const [p] = await tx
-        .insert(People_Patients)
+        .insert(Patients)
         .values({ ...patient, recent_ward: patient.admission_ward } as App.Require<
           App.CustomTypes['PatientT'],
           'person_id'
@@ -118,9 +118,9 @@ export async function transferPatient(transfer: typeof Patient_wards.$inferInser
         .returning();
 
       await tx
-        .update(People_Patients)
+        .update(Patients)
         .set({ recent_ward: transfer.ward })
-        .where(eq(People_Patients.id, transfer.patient_id));
+        .where(eq(Patients.id, transfer.patient_id));
 
       return transferInsert;
     });
@@ -144,13 +144,13 @@ export async function dischargePatient(patientDischarge: {
 }) {
   try {
     const [patient] = await db
-      .update(People_Patients)
+      .update(Patients)
       .set({
         discharge_date: patientDischarge.discharge_date,
         discharge_reason: patientDischarge.discharge_reason,
         discharge_notes: patientDischarge.discharge_notes ?? null,
       })
-      .where(eq(People_Patients.id, patientDischarge.id))
+      .where(eq(Patients.id, patientDischarge.id))
       .returning();
 
     return {
@@ -167,11 +167,9 @@ export async function dischargePatient(patientDischarge: {
 export async function getLastMedicalNumber() {
   const num = (
     await db
-      .select({ mId: People_Patients.id })
-      .from(People_Patients)
-      .where(
-        like(People_Patients.id, `${new Date().getFullYear().toString().slice(2, 4)}/%`)
-      )
+      .select({ mId: Patients.id })
+      .from(Patients)
+      .where(like(Patients.id, `${new Date().getFullYear().toString().slice(2, 4)}/%`))
   )
     .map((mn) => Number(mn?.mId.split('/')[1] || '0'))
     .sort((a, b) => a - b)
@@ -182,9 +180,7 @@ export async function getLastMedicalNumber() {
 
 export async function getDiagnoses() {
   // todo: turn to its own table logic
-  const diagnoses = await db
-    .select({ diagnosis: People_Patients.diagnosis })
-    .from(People_Patients);
+  const diagnoses = await db.select({ diagnosis: Patients.diagnosis }).from(Patients);
 
   const diagnoses_list = Array.from(
     new Set(

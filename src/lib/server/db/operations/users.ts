@@ -1,6 +1,6 @@
 import { generateKeyPairSync } from 'node:crypto';
 import { PV_KEY_ENCR_KEY } from '$env/static/private';
-import { Sys_Sec_pb_key, Sys_Sec_pv_key, Sys_Users } from '$lib/server/db/schema';
+import { Sys_Sec_pb_key, Sys_Sec_pv_key, Users } from '$lib/server/db/schema';
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
@@ -49,7 +49,7 @@ export async function createUser(newUserData: NewUserDataT) {
         .returning();
 
       const [user] = await tx
-        .insert(Sys_Users)
+        .insert(Users)
         .values({
           hashed_pw: passwordHash,
           pb_key_id: new_pb_key.id,
@@ -76,13 +76,13 @@ export async function createUser(newUserData: NewUserDataT) {
 
 export async function updateUser(
   userId: number,
-  values: Omit<Partial<typeof Sys_Users.$inferSelect>, 'id'>
+  values: Omit<Partial<typeof Users.$inferSelect>, 'id'>
 ) {
   try {
     const [user] = await db
-      .update(Sys_Users)
+      .update(Users)
       .set(values as any)
-      .where(eq(Sys_Users.id, userId))
+      .where(eq(Users.id, userId))
       .returning();
 
     return {
@@ -97,10 +97,10 @@ export async function updateUser(
 }
 
 export async function isUniqueValue(
-  field: keyof Omit<Partial<typeof Sys_Users.$inferSelect>, 'id'>,
+  field: keyof Omit<Partial<typeof Users.$inferSelect>, 'id'>,
   value: string | number | Date | boolean
 ) {
-  const result = await db.$count(Sys_Users, eq(Sys_Users[field], value));
+  const result = await db.$count(Users, eq(Users[field], value));
 
   return result === 0;
 }
