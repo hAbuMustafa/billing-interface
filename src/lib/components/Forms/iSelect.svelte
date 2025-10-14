@@ -30,6 +30,8 @@
 
   let selectList = $state([]);
 
+  let cancelPreviousFetch: (() => void) | undefined = $state();
+
   const debouncedFetch = debounce((text) => {
     let cancelled = false;
 
@@ -59,11 +61,19 @@
     if (shouldFetch) {
       selectList = [];
       isLoading = true;
-      debouncedFetch(inputText);
+
+      cancelPreviousFetch?.();
+
+      cancelPreviousFetch = debouncedFetch(inputText);
     } else {
       selectList = [];
       isLoading = false;
     }
+
+    return () => {
+      isLoading = false;
+      cancelPreviousFetch?.();
+    };
   });
 </script>
 
@@ -77,6 +87,7 @@
           e.stopPropagation();
           selectList = [];
           shouldFetch = false;
+          cancelPreviousFetch?.();
         }
       }}
       {...props}
