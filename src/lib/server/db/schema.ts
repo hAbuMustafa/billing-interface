@@ -1,4 +1,4 @@
-import { sqliteTable, index, integer, text, unique, real } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, integer, text, unique, real } from 'drizzle-orm/sqlite-core';
 
 export const Wards = sqliteTable('Wards', {
   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
@@ -16,21 +16,17 @@ export const Patient_id_doc_type = sqliteTable('Patient_id_doc_type', {
   name: text().notNull(),
 });
 
-export const Patient_wards = sqliteTable(
-  'Patient_wards',
-  {
-    id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
-    patient_id: text()
-      .notNull()
-      .references(() => Patients.id),
-    ward: integer()
-      .notNull()
-      .references(() => Wards.id),
-    notes: text(),
-    timestamp: integer({ mode: 'timestamp' }).notNull().default(new Date()),
-  },
-  (table) => [index('trans_patient_id_link_idx').on(table.patient_id)]
-);
+export const Patient_wards = sqliteTable('Patient_wards', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  patient_id: text()
+    .notNull()
+    .references(() => Patients.id),
+  ward: integer()
+    .notNull()
+    .references(() => Wards.id),
+  notes: text(),
+  timestamp: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+});
 
 export const People = sqliteTable('People', {
   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
@@ -120,48 +116,35 @@ export const Drugs = sqliteTable('Drugs', {
   cat_upa_quota: integer({ mode: 'boolean' }),
 });
 
-export const Ph_InEco_Stock = sqliteTable(
-  'Ph_InEco_Stock',
-  {
-    id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
-    drug_id: integer({ mode: 'number' })
-      .notNull()
-      .references(() => Drugs.id),
-    amount: integer({ mode: 'number' }).notNull().default(0),
-    price_purchase: real().notNull(),
-    expiry_date: integer({ mode: 'timestamp' }),
-    batch_number: text(),
-  },
-  (table) => [index('drug_id_stock_link').on(table.drug_id)]
-);
+export const Ph_InEco_Stock = sqliteTable('Ph_InEco_Stock', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  drug_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Drugs.id),
+  amount: integer({ mode: 'number' }).notNull().default(0),
+  price_purchase: real().notNull(),
+  expiry_date: integer({ mode: 'timestamp' }),
+  batch_number: text(),
+});
 
-export const Ph_InEco_Transactions = sqliteTable(
-  'Ph_InEco_Transactions',
-  {
-    id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
-    timestamp: integer({ mode: 'timestamp' }).notNull().default(new Date()),
-    item_id: integer({ mode: 'number' })
-      .notNull()
-      .references(() => Ph_InEco_Stock.id),
-    amount: integer().notNull(),
-    patient_id: text()
-      .notNull()
-      .references(() => Patients.id),
-    user_id: integer()
-      .notNull()
-      .references(() => Users.id),
-    pb_key_id: integer({ mode: 'number' })
-      .notNull()
-      .references(() => Sys_Sec_pb_key.id),
-    signature: text().notNull(),
-  },
-  (table) => [
-    index('item_id_tx_link_idx').on(table.item_id),
-    index('patient_id_tx_link').on(table.patient_id),
-    index('user_id_tx_link').on(table.user_id),
-    index('user_pb_key_id_tx_link').on(table.pb_key_id),
-  ]
-);
+export const Ph_InEco_Transactions = sqliteTable('Ph_InEco_Transactions', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  timestamp: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+  item_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Ph_InEco_Stock.id),
+  amount: integer().notNull(),
+  patient_id: text()
+    .notNull()
+    .references(() => Patients.id),
+  user_id: integer()
+    .notNull()
+    .references(() => Users.id),
+  pb_key_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Sys_Sec_pb_key.id),
+  signature: text().notNull(),
+});
 
 export const Users = sqliteTable(
   'Users',
@@ -189,22 +172,16 @@ export const Users = sqliteTable(
     unique('user_mobile_UNIQUE').on(table.phone_number),
     unique('user_email_UNIQUE').on(table.email),
     unique('user_national_id_UNIQUE').on(table.national_id),
-    index('pb_key_for_user_link').on(table.pb_key_id),
-    index('pv_key_for_user_link').on(table.pv_key_id),
   ]
 );
 
-export const Sessions = sqliteTable(
-  'Sessions',
-  {
-    id: text().primaryKey(),
-    user_id: integer({ mode: 'number' })
-      .notNull()
-      .references(() => Users.id),
-    expires_at: integer({ mode: 'timestamp' }).notNull(),
-  },
-  (table) => [index('sessions_user_link').on(table.user_id)]
-);
+export const Sessions = sqliteTable('Sessions', {
+  id: text().primaryKey(),
+  user_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Users.id),
+  expires_at: integer({ mode: 'timestamp' }).notNull(),
+});
 
 export const Sys_Sec_pb_key = sqliteTable('Sys_Sec_pb_key', {
   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
@@ -218,47 +195,32 @@ export const Sys_Sec_pv_key = sqliteTable('Sys_Sec_pv_key', {
   timestamp: integer({ mode: 'timestamp' }).notNull().default(new Date()),
 });
 
-export const Invoice = sqliteTable(
-  'Invoice',
-  {
-    id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
-    patient_id: text()
-      .notNull()
-      .references(() => Patients.id),
-    created_by: integer({ mode: 'number' })
-      .notNull()
-      .references(() => Users.id),
-    created_at: integer({ mode: 'timestamp' }).notNull().default(new Date()),
-    from: integer({ mode: 'timestamp' }).notNull(),
-    till: integer({ mode: 'timestamp' }).notNull(),
-    total: real().notNull(),
-    pb_key_id: integer({ mode: 'number' })
-      .notNull()
-      .references(() => Sys_Sec_pb_key.id),
-    signature: text().notNull(),
-  },
-  (table) => [
-    index('invoice_creator_link').on(table.created_by),
-    index('invoice_patient_link').on(table.patient_id),
-    index('invoice_pb_key_link').on(table.pb_key_id),
-  ]
-);
+export const Invoice = sqliteTable('Invoice', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  patient_id: text()
+    .notNull()
+    .references(() => Patients.id),
+  created_by: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Users.id),
+  created_at: integer({ mode: 'timestamp' }).notNull().default(new Date()),
+  from: integer({ mode: 'timestamp' }).notNull(),
+  till: integer({ mode: 'timestamp' }).notNull(),
+  total: real().notNull(),
+  pb_key_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Sys_Sec_pb_key.id),
+  signature: text().notNull(),
+});
 
-export const Invoice_Items = sqliteTable(
-  'Invoice_Items',
-  {
-    id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
-    invoice_id: integer({ mode: 'number' })
-      .notNull()
-      .references(() => Invoice.id),
-    item_id: integer({ mode: 'number' })
-      .notNull()
-      .references(() => Ph_InEco_Stock.id),
-    amount: integer({ mode: 'number' }).notNull().default(1),
-    unit_price: real().notNull(),
-  },
-  (table) => [
-    index('invoice_items_link').on(table.item_id),
-    index('invoice_invoice_id_link').on(table.invoice_id),
-  ]
-);
+export const Invoice_Items = sqliteTable('Invoice_Items', {
+  id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+  invoice_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Invoice.id),
+  item_id: integer({ mode: 'number' })
+    .notNull()
+    .references(() => Ph_InEco_Stock.id),
+  amount: integer({ mode: 'number' }).notNull().default(1),
+  unit_price: real().notNull(),
+});
