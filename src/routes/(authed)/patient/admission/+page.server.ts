@@ -25,7 +25,6 @@ export async function load() {
 export const actions = {
   default: async ({ request }) => {
     const data = await request.formData();
-    console.log('submitted');
 
     // Person Data
     let personId = data.get('person_id') as unknown as number;
