@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ListMaker from '../../../../lib/components/Forms/ListMaker.svelte';
+  import ListMaker from '$lib/components/Forms/ListMaker.svelte';
 
   import { page } from '$app/state';
   import { arabicTriadicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
