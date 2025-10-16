@@ -59,6 +59,12 @@ export const Patients = sqliteTable('Patients', {
   health_insurance: integer({ mode: 'boolean' }),
 });
 
+export const Diagnoses = sqliteTable('Diagnoses', {
+  id: integer().primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+  icd11: text(),
+});
+
 export const Drug_units = sqliteTable('Drug_units', {
   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
   name: text().notNull(),
