@@ -1,7 +1,6 @@
 <script lang="ts">
   import ListMaker from '$lib/components/Forms/ListMaker.svelte';
 
-  import { page } from '$app/state';
   import { arabicTriadicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
   import { formatDate } from '$lib/utils/date-format';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
@@ -12,7 +11,7 @@
 
   type FetchedPersonT = typeof People.$inferSelect;
 
-  const { form } = $props();
+  const { data, form } = $props();
 
   let medicalNumber = $state(form?.medicalNumber ?? '');
   let patientName = $state(form?.patientName ?? '');
@@ -75,7 +74,7 @@
     type="number"
     name="medical_number"
     id="medical_number"
-    placeholder={page.data.nextMedicalNumber}
+    placeholder={String(data.nextMedicalNumber)}
     autofocus
     bind:value={medicalNumber}
     required
@@ -105,7 +104,7 @@
   <Picker
     label="نوع الهوية"
     name="id_doc_type"
-    options={page.data.id_doc_type_list}
+    options={data.id_doc_type_list}
     bind:value={idDocType}
     locked={hasSelectedPerson}
   />
@@ -153,15 +152,15 @@
     label="التشخيص"
     bind:value={diagnosisText}
     list={diagnoses}
-    datalist={page.data.diagnoses_list}
+    datalist={data.diagnoses_list}
   />
 
   <Picker
     name="admission_ward"
     label="قسم الدخول"
-    options={page.data.wards_list}
+    options={data.wards_list}
     bind:value={admissionWard}
-    dividerList={page.data.floors_list}
+    dividerList={data.floors_list}
     dividerKey="floor"
   />
 

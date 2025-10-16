@@ -1,6 +1,5 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import { page } from '$app/state';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PatientButton from '$lib/components/Forms/PatientButton.svelte';
   import Picker from '$lib/components/Forms/Picker.svelte';
@@ -14,7 +13,7 @@
     recent_ward: number;
   };
 
-  const { form } = $props();
+  const { data, form } = $props();
 
   let patientName = $state(form?.patientName ?? '');
   let selectedPatientId = $state(form?.patientId ?? '');
@@ -70,7 +69,7 @@
   <Picker
     name="discharge_reason"
     label="سبب الخروج"
-    options={page.data.discharge_reasons}
+    options={data.discharge_reasons}
     bind:value={selectedDischargeReason}
   />
 

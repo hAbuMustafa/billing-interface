@@ -3,7 +3,7 @@
   import Nav from '$lib/components/Nav.svelte';
   import { toast, Toaster } from 'svelte-sonner';
   import './styles.css';
-  const { children } = $props();
+  const { data, children } = $props();
 
   $effect(() => {
     if (page.form?.message) {
@@ -24,18 +24,16 @@
       });
     }
 
-    if (page.data.user?.password_reset_required) {
+    if (data.user?.password_reset_required) {
       toast.warning('يلزم تغيير كلمة السر إذا كان هذا أول استخدام لك للمنصة', {
         duration: 10000,
       });
     }
 
     if (
-      page.data.user &&
-      !page.data.user?.password_reset_required &&
-      (!page.data.user?.email ||
-        !page.data.user?.phone_number ||
-        !page.data.user?.national_id)
+      data.user &&
+      !data.user?.password_reset_required &&
+      (!data.user?.email || !data.user?.phone_number || !data.user?.national_id)
     ) {
       toast.warning('يلزم استكمال بيانات الحساب', {
         duration: 10000,
@@ -50,7 +48,7 @@
   </title>
 </svelte:head>
 
-<Nav user={page.data.user} />
+<Nav user={data.user} />
 
 <Toaster richColors closeButton position="bottom-left" />
 
