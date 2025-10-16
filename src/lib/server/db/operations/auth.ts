@@ -65,7 +65,7 @@ export async function getUserFromSession(sessionId: string) {
     .where(eq(Sessions.id, sessionId));
   if (sessionsData.length === 0) return null;
 
-  if (sessionsData[0].Sys_Sessions.expires_at < new Date()) {
+  if (sessionsData[0].Sessions.expires_at < new Date()) {
     try {
       await db.delete(Sessions).where(eq(Sessions.id, sessionId));
     } catch (error) {
@@ -75,7 +75,7 @@ export async function getUserFromSession(sessionId: string) {
     return null;
   }
 
-  const { hashed_pw: droppedPwHash, ...user } = sessionsData[0].Sys_Users;
+  const { hashed_pw: droppedPwHash, ...user } = sessionsData[0].Users;
 
   const userObj = {
     ...user,
