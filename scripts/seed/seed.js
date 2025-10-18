@@ -10,6 +10,7 @@ import {
   createDischargeReason,
   createPatient,
   transferPatient,
+  createDiagnosis,
 } from '../../src/lib/server/db/operations/patients';
 import {
   createDrugUnit,
@@ -55,6 +56,16 @@ export async function beginSeed() {
     console.error('❌ BEWARE NOT TO SEED IN PRODUCTION!\n❌ ABORTING SEED!');
     process.exit(2);
   }
+  console.time('total seeding time');
+
+  const new_Diagnoses = Array.from(
+    new Set(
+      new_Patients
+        .map((p) => p.diagnosis?.split('+').map((d) => d.trim()))
+        .flat()
+        .sort()
+    )
+  );
 
   // Seed Menu Lists
   await seed(new_Wards, createWard);
@@ -62,10 +73,13 @@ export async function beginSeed() {
   await seed(new_Patient_discharge_reasons, createDischargeReason);
   await seed(new_Drugs_unit, createDrugUnit);
   await seed(new_Drugs_category, createDrugCategory);
+  await seed(new_Diagnoses, createDiagnosis);
 
   // Seed Initial Data
   await seed(new_Users, createUser);
   await seed(new_Drugs, createDrug);
   await seed(new_Patients, createPatient);
   await seed(new_PatientTransfers, transferPatient);
+
+  console.timeEnd('total seeding time');
 }

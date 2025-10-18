@@ -26,7 +26,7 @@ declare global {
         id: string;
         name: string;
         id_doc_num?: string;
-        diagnosis?: string;
+        diagnosis: string;
         admission_date: Date;
         dismissal_date?: Date;
         admission_notes?: string;

@@ -42,7 +42,6 @@ export const Patients = sqliteTable('Patients', {
   person_id: integer({ mode: 'number' })
     .notNull()
     .references(() => People.id),
-  diagnosis: text(),
   admission_date: integer({ mode: 'timestamp' }).notNull().default(new Date()),
   admission_notes: text(),
   admission_ward: integer()
@@ -59,6 +58,18 @@ export const Diagnoses = sqliteTable('Diagnoses', {
   id: integer().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   icd11: text(),
+});
+
+export const Patient_Diagnoses = sqliteTable('Patient_diagnoses', {
+  patient_id: text()
+    .notNull()
+    .references(() => Patients.id),
+  diagnosis_id: integer()
+    .notNull()
+    .references(() => Diagnoses.id),
+  timestamp: integer({ mode: 'timestamp' }).notNull(),
+  // diagnosing_physician_id:integer().references(()=>Staff.id),
+  // diagnosing_physician_signature:text()
 });
 
 export const Drug_units = sqliteTable('Drug_units', {

@@ -6,8 +6,11 @@ import {
   People,
   Patients,
   Wards,
+  Diagnoses,
+  Patient_Diagnoses,
 } from '$lib/server/db/schema';
-import { eq, like } from 'drizzle-orm';
+import { eq, like, type ExtractTablesWithRelations } from 'drizzle-orm';
+import type { SQLiteTransaction } from 'drizzle-orm/sqlite-core';
 
 export async function createWard(ward: typeof Wards.$inferInsert) {
   try {
@@ -59,10 +62,40 @@ export async function createDischargeReason(
   }
 }
 
+export async function createDiagnosis(
+  diagnosis: string | { name: string; icd11: string },
+  tx: SQLiteTransaction<
+    'async',
+    any,
+    typeof import('c:/Users/hosam/Desktop/billing-interface/src/lib/server/db/schema'),
+    ExtractTablesWithRelations<
+      typeof import('c:/Users/hosam/Desktop/billing-interface/src/lib/server/db/schema')
+    >
+  >
+) {
+  const conn = tx || db;
+
+  try {
+    const [newDiagnosis] = await conn
+      .insert(Diagnoses)
+      .values(typeof diagnosis === 'string' ? { name: diagnosis } : diagnosis)
+      .returning();
+
+    return {
+      success: true,
+      data: newDiagnosis,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
 export async function createPatient(patient: App.CustomTypes['PatientT']) {
   try {
     const new_patient = await db.transaction(async (tx) => {
-      let foundPerson;
+      let foundPerson: typeof People.$inferSelect | null = null;
 
       if (!patient.person_id) {
         if (patient.id_doc_num) {
@@ -80,7 +113,7 @@ export async function createPatient(patient: App.CustomTypes['PatientT']) {
         patient.person_id = foundPerson.id;
       }
 
-      const [p] = await tx
+      const [newPatient] = await tx
         .insert(Patients)
         .values({ ...patient, recent_ward: patient.admission_ward } as App.Require<
           App.CustomTypes['PatientT'],
@@ -89,13 +122,51 @@ export async function createPatient(patient: App.CustomTypes['PatientT']) {
         .returning();
 
       await tx.insert(Patient_wards).values({
-        patient_id: p.id,
+        patient_id: newPatient.id,
         ward: patient.admission_ward,
         timestamp: patient.admission_date,
         notes: 'admission',
       });
 
-      return p;
+      const pDiagnoses = patient.diagnosis.split('+').map((d) => d.trim());
+
+      for (let i = 0; i < pDiagnoses.length; i++) {
+        const currentDiagnosisText = pDiagnoses[i];
+
+        let diagnosis: typeof Diagnoses.$inferSelect;
+
+        const [foundDiagnosis] = await tx
+          .select()
+          .from(Diagnoses)
+          .where(eq(Diagnoses.name, currentDiagnosisText));
+
+        if (foundDiagnosis) {
+          diagnosis = foundDiagnosis;
+        } else {
+          const newRow = await createDiagnosis(currentDiagnosisText, tx);
+
+          if (newRow.success) {
+            diagnosis = newRow.data;
+          } else {
+            console.error(
+              'failed creating diagnosis',
+              currentDiagnosisText,
+              'for patient',
+              newPatient.id,
+              foundPerson?.name
+            );
+            continue;
+          }
+        }
+
+        await tx.insert(Patient_Diagnoses).values({
+          patient_id: newPatient.id,
+          diagnosis_id: diagnosis.id,
+          timestamp: patient.admission_date,
+        });
+      }
+
+      return newPatient;
     });
 
     return {
@@ -184,18 +255,7 @@ export async function getLastMedicalNumber() {
 }
 
 export async function getDiagnoses() {
-  // todo: turn to its own table logic
-  const diagnoses = await db.select({ diagnosis: Patients.diagnosis }).from(Patients);
+  const diagnoses_list = await db.select().from(Diagnoses);
 
-  const diagnoses_list = Array.from(
-    new Set(
-      diagnoses
-        .map((d) => d.diagnosis)
-        .map((d) => d?.split('+').map((c) => c.trim()))
-        .flat()
-        .sort()
-    )
-  );
-
-  return diagnoses_list || [];
+  return diagnoses_list.map((d) => d.name) || [];
 }
