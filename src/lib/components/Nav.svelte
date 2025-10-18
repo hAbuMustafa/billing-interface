@@ -16,6 +16,9 @@
           <li><a href="/patient/admission">تسجيل حالة دخول</a></li>
           <li><a href="/patient/discharge">تسجيل خروج مريض</a></li>
           <li><a href="/patient/transfer">تحويل مريض إلى قسم</a></li>
+          <hr />
+          <li><a href="/patient/all">سِجِل المرضى</a></li>
+          <li><a href="/patient/inquiry">استعلام عن مريض</a></li>
         </ul>
       </li>
       <li><a href="/patient-search">تسعير فاتورة</a></li>
@@ -101,10 +104,15 @@
     }
 
     ul {
-      display: grid;
-      grid-template-columns: 1fr;
-      row-gap: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
       z-index: 1;
+
+      hr {
+        margin-block: 0;
+        width: 100%;
+      }
     }
 
     & > ul > li {
