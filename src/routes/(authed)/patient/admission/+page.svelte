@@ -7,7 +7,6 @@
   import PersonButton from '$lib/components/Forms/PersonButton.svelte';
   import type { People } from '$lib/server/db/schema';
   import Picker from '$lib/components/Forms/Picker.svelte';
-  import { enhance } from '$app/forms';
 
   type FetchedPersonT = typeof People.$inferSelect;
 
@@ -67,7 +66,7 @@
   }
 </script>
 
-<form method="POST" use:enhance>
+<form method="POST">
   <label for="medical_number">الرقم الطبي</label>
   <!-- svelte-ignore a11y_autofocus -->
   <input

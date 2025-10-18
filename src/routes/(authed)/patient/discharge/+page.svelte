@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PatientButton from '$lib/components/Forms/PatientButton.svelte';
   import Picker from '$lib/components/Forms/Picker.svelte';
@@ -29,7 +28,7 @@
   );
 </script>
 
-<form method="POST" use:enhance>
+<form method="POST">
   <label for="name"> اسم المريض </label>
   <ISelect
     endpoint="/api/patients/"
