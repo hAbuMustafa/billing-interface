@@ -5,6 +5,7 @@
     value: any;
     locked?: boolean;
     name: string;
+    disable?: any[];
     dividerList?: any[];
     dividerKey?: string;
   };
@@ -15,6 +16,7 @@
     value = $bindable(),
     locked = $bindable(false),
     name = '',
+    disable,
     dividerList,
     dividerKey,
     ...otherProps
@@ -46,7 +48,7 @@
     {name}
     value={opt.id}
     bind:group={value}
-    disabled={locked}
+    disabled={locked || (disable && disable.includes(opt.id))}
     required
   />
   <label for="{name}_{opt.id}">
@@ -56,6 +58,7 @@
         e.stopPropagation();
         value = opt.id;
       }}
+      disabled={disable && disable.includes(opt.id)}
     >
       {opt.name}
     </button>
@@ -90,7 +93,7 @@
     }
 
     label {
-      &:is(:focus-within, :focus, :active, :hover) {
+      input:not([disabled]) + &:is(:focus-within, :focus, :active, :hover) {
         outline: var(--main-border);
         outline-offset: 0.25rem;
       }
