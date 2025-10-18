@@ -54,6 +54,7 @@ export const actions = {
     });
 
     if (!result.success) {
+      console.error(result.error);
       return failWithMessages([
         { message: 'حدث خطأ غير متوقع. برجاء المحاولة مرة أخرى', type: 'error' },
       ]);
@@ -61,7 +62,7 @@ export const actions = {
 
     return {
       success: true,
-      message: `تم تسجيل خروج رقم القيد "${result.data.id}" بنجاح`,
+      message: `تم تسجيل خروج المريض "${result.data.name}" (قيد ${result.data.id})`,
     };
   },
 };

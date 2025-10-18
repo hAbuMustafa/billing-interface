@@ -151,11 +151,16 @@ export async function dischargePatient(patientDischarge: {
         discharge_notes: patientDischarge.discharge_notes ?? null,
       })
       .where(eq(Patients.id, patientDischarge.id))
-      .returning();
+      .returning({ id: Patients.id, person_id: Patients.person_id });
+
+    const [person] = await db
+      .select()
+      .from(People)
+      .where(eq(People.id, patient.person_id));
 
     return {
       success: true,
-      data: patient,
+      data: { id: patient.id, name: person.name },
     };
   } catch (error) {
     return {
