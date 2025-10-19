@@ -17,7 +17,7 @@
           <li><a href="/patient/discharge">تسجيل خروج مريض</a></li>
           <li><a href="/patient/transfer">تحويل مريض إلى قسم</a></li>
           <hr />
-          <li><a href="/patient/all">سِجِل المرضى</a></li>
+          <li><a href="/patient/report">سِجِل المرضى</a></li>
           <li><a href="/patient/inquiry">استعلام عن مريض</a></li>
         </ul>
       </li>
