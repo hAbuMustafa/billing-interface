@@ -25,5 +25,6 @@
     border: var(--main-border);
     padding: 0.5rem;
     text-align: center;
+    text-wrap: wrap;
   }
 </style>
