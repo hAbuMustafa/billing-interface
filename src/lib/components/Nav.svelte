@@ -18,7 +18,7 @@
           <li><a href="/patient/transfer">تحويل مريض إلى قسم</a></li>
           <hr />
           <li><a href="/patient/report">سِجِل المرضى</a></li>
-          <li><a href="/patient/inquiry">استعلام عن مريض</a></li>
+          <li><a href="/patient/">استعلام عن مريض</a></li>
         </ul>
       </li>
       <li><a href="/patient-search">تسعير فاتورة</a></li>
