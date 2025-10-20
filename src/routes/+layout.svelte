@@ -24,6 +24,24 @@
       });
     }
 
+    if (page.data?.message) {
+      if (page.data.success) {
+        toast.success(page.data.message);
+      } else {
+        toast.error(page.data.message);
+      }
+    }
+
+    if (page.data?.messages) {
+      page.data.messages.forEach((message: string | ToastT) => {
+        if (typeof message === 'string') {
+          toast.warning(message);
+        } else {
+          toast[message.type](message.message);
+        }
+      });
+    }
+
     if (data.user?.password_reset_required) {
       toast.warning('يلزم تغيير كلمة السر إذا كان هذا أول استخدام لك للمنصة', {
         duration: 10000,
