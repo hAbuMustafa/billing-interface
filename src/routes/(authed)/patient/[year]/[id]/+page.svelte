@@ -63,6 +63,11 @@
           {getDuration(data.patient.admission_date, data.patient.discharge_date)} يوما
         </dd>
       {/if}
+
+      {#if !data.patient.discharge_date}
+        <dt>القسم:</dt>
+        <dd>{data.patient.Patient_wards.at(-1)?.Ward.name}</dd>
+      {/if}
     </dl>
 
     <details dir="ltr">
