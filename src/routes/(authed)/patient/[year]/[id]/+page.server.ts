@@ -3,11 +3,11 @@ export async function load({ fetch, params }) {
   const patientSerial = params.id;
 
   if (!patientSerial || !admission_year) {
-    return { messages: ['برجاء اختيار مريض أولا'] };
+    return { message: 'برجاء اختيار مريض أولا' };
   }
 
   if (!/^\d{2}$/.test(admission_year) || !/^\d+$/.test(patientSerial)) {
-    return { messages: ['برجاء إدخال أرقام صحيحة'] };
+    return { message: 'برجاء إدخال أرقام صحيحة' };
   }
 
   const castYear = Number(admission_year);
@@ -15,7 +15,7 @@ export async function load({ fetch, params }) {
   const currentYear = Number(new Date().getFullYear().toString().slice(2, 4));
 
   if (castYear < 24 || castYear > currentYear || patientSerial.length > 5) {
-    return { messages: ['المريض غير موجود'] };
+    return { message: 'المريض غير موجود' };
   }
 
   const patientId = [castYear, castSerial].join('/');
