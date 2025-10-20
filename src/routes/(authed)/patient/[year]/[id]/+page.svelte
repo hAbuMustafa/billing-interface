@@ -1,4 +1,13 @@
 <script lang="ts">
+  import {
+    Timeline,
+    TimelineItem,
+    TimelineContent,
+    TimelineOppositeContent,
+    TimelineConnector,
+    TimelineSeparator,
+    TimelineDot,
+  } from 'svelte-vertical-timeline';
   import { formatDate, getAge, getDuration } from '$lib/utils/date-format.js';
 
   let { data } = $props();
@@ -56,6 +65,50 @@
       {/if}
     </dl>
 
+    <details dir="ltr">
+      <summary dir="rtl">التنقلات</summary>
+      <Timeline position="alternate">
+        {#each data.patient.Patient_wards as transfer, i (i)}
+          <TimelineItem>
+            <TimelineOppositeContent slot="opposite-content">
+              <small class="transfer_time">
+                {formatDate(transfer.timestamp, 'YYYY/MM/DD (hh:mm)')}
+              </small>
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+              <TimelineDot style={'background-color: #7CD5E2;'} />
+              {#if !data.patient.discharge_date && data.patient.Patient_wards.length - 1 === i}
+                <TimelineConnector
+                  style="background: linear-gradient(#fff, 30%, transparent 99% 1%);"
+                />
+              {:else}
+                <TimelineConnector />
+              {/if}
+            </TimelineSeparator>
+            <TimelineContent>
+              <span class="transfer_ward_name">{transfer.Ward.name}</span>
+            </TimelineContent>
+          </TimelineItem>
+        {/each}
+
+        {#if data.patient.discharge_date}
+          <TimelineItem>
+            <TimelineOppositeContent slot="opposite-content">
+              <small class="transfer_time">
+                {formatDate(data.patient.discharge_date, 'YYYY/MM/DD (hh:mm)')}
+              </small>
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+              <TimelineDot style={'background-color: red;'} />
+            </TimelineSeparator>
+            <TimelineContent>
+              <span class="transfer_ward_name">خروج</span>
+            </TimelineContent>
+          </TimelineItem>
+        {/if}
+      </Timeline>
+    </details>
+
     <h2>التشخيص</h2>
     {#each data.patient.Patient_diagnoses as diagnosis, i (i)}
       <dl class="diagnosis_data">
@@ -111,7 +164,7 @@
   }
 
   dl.diagnosis_data {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
   }
 
   dl.other_admissions_data {
@@ -125,5 +178,14 @@
   dt,
   dd {
     place-content: center;
+  }
+
+  small.transfer_time {
+    color: gray;
+  }
+
+  span.transfer_ward_name {
+    font-weight: bolder;
+    font-size: 1.25rem;
   }
 </style>
