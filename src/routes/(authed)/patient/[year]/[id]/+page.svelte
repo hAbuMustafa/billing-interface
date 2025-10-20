@@ -7,29 +7,31 @@
 
 {#if data.patient}
   <section>
-    <h2>البيانات الشخصية</h2>
-    <dl class="personal_data">
-      <dt>رقم القيد:</dt>
-      <dd>{data.patient.id}</dd>
+    <details>
+      <summary>البيانات الشخصية</summary>
+      <dl class="personal_data">
+        <dt>رقم القيد:</dt>
+        <dd>{data.patient.id}</dd>
 
-      <dt>{data.patient.Person.Patient_id_doc_type?.name}:</dt>
-      <dd>{data.patient.Person.id_doc_num}</dd>
+        <dt>{data.patient.Person.Patient_id_doc_type?.name}:</dt>
+        <dd>{data.patient.Person.id_doc_num}</dd>
 
-      {#if data.patient.Person.birthdate}
-        <dt>تاريخ الميلاد:</dt>
-        <dd>
-          {formatDate(data.patient.Person.birthdate, 'YYYY/MM/DD')} ({getAge(
-            data.patient.Person.birthdate
-          )} سنة)
-        </dd>
-      {/if}
+        {#if data.patient.Person.birthdate}
+          <dt>تاريخ الميلاد:</dt>
+          <dd>
+            {formatDate(data.patient.Person.birthdate, 'YYYY/MM/DD')} ({getAge(
+              data.patient.Person.birthdate
+            )} سنة)
+          </dd>
+        {/if}
 
-      <dt>النوع:</dt>
-      <dd>{data.patient.Person.gender ? 'ذكر' : 'أنثى'}</dd>
+        <dt>النوع:</dt>
+        <dd>{data.patient.Person.gender ? 'ذكر' : 'أنثى'}</dd>
 
-      <dt>التأمين الصحي:</dt>
-      <dd>{data.patient.health_insurance ? '' : 'غير '} مؤمن عليه</dd>
-    </dl>
+        <dt>التأمين الصحي:</dt>
+        <dd>{data.patient.health_insurance ? '' : 'غير '} مؤمن عليه</dd>
+      </dl>
+    </details>
 
     <h2>بيانات الإقامة</h2>
     <dl class="stay-data">
@@ -77,6 +79,15 @@
 {/if}
 
 <style>
+  details {
+    padding: 1rem;
+    border-radius: 0.5rem;
+
+    &:is(:hover, :focus, :active) {
+      background-color: hsl(from var(--main-bg-color) h s 40%);
+    }
+  }
+
   dl {
     display: grid;
   }
