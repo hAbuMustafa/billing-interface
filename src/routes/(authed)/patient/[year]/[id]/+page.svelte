@@ -63,7 +63,9 @@
       <dl class="other_admissions_data">
         {#each data.patient.Person.Patients as patientAdmission, i (patientAdmission.id)}
           <dt>
-            <a href="/patient/{patientAdmission.id}">{patientAdmission.id}</a>
+            <a href="/patient/{patientAdmission.id}" class="button"
+              >{patientAdmission.id}</a
+            >
           </dt>
           <dd>من: {formatDate(patientAdmission.admission_date, 'YYYY/MM/DD (hh:mm)')}</dd>
           {#if patientAdmission.discharge_date}
