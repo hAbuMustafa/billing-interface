@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { formatDate } from '$lib/utils/date-format.js';
+  import { formatDate, getAge, getDuration } from '$lib/utils/date-format.js';
+  import dayjs from 'dayjs';
 
   let { data } = $props();
 </script>
@@ -11,9 +12,27 @@
       <dt>رقم القيد:</dt>
       <dd>{data.patient.id}</dd>
 
-      <dt>{data.patient.Person.Patient_id_doc_type.name}:</dt>
+      <dt>{data.patient.Person.Patient_id_doc_type?.name}:</dt>
       <dd>{data.patient.Person.id_doc_num}</dd>
 
+      {#if data.patient.Person.birthdate}
+        <dt>تاريخ الميلاد:</dt>
+        <dd>
+          {formatDate(data.patient.Person.birthdate, 'YYYY/MM/DD')} ({getAge(
+            data.patient.Person.birthdate
+          )} سنة)
+        </dd>
+      {/if}
+
+      <dt>النوع:</dt>
+      <dd>{data.patient.Person.gender ? 'ذكر' : 'أنثى'}</dd>
+
+      <dt>التأمين الصحي:</dt>
+      <dd>{data.patient.health_insurance ? '' : 'غير '} مؤمن عليه</dd>
+    </dl>
+
+    <h2>بيانات الإقامة</h2>
+    <dl class="stay-data">
       <dt>تاريخ الدخول:</dt>
       <dd>{formatDate(data.patient.admission_date, 'YYYY/MM/DD (hh:mm)')}</dd>
 
@@ -27,24 +46,29 @@
         <dd>{formatDate(data.patient.discharge_date, 'YYYY/MM/DD (hh:mm)')}</dd>
 
         <dt>سبب الخروج:</dt>
-        <dd>{data.patient.Patient_discharge_reason.name}</dd>
+        <dd>{data.patient.Patient_discharge_reason?.name}</dd>
+
+        <dt>مدة الإقامة:</dt>
+        <dd>
+          {getDuration(data.patient.admission_date, data.patient.discharge_date)} يوما
+        </dd>
       {/if}
-
-      <dt>التأمين الصحي:</dt>
-      <dd>{data.patient.health_insurance ? '' : 'غير '} مؤمن عليه</dd>
     </dl>
-
+  </section>
+  <section>
     {#if data.patient.Person.Patients}
-      <h3>الإقامات الأخرى</h3>
+      <h2>الإقامات الأخرى</h2>
       <dl class="other_admissions_data">
         {#each data.patient.Person.Patients as patientAdmission, i (patientAdmission.id)}
-          <dt><a href="/patient/{patientAdmission.id}">{patientAdmission.id}</a></dt>
+          <dt>
+            <a href="/patient/{patientAdmission.id}">{patientAdmission.id}</a>
+          </dt>
           <dd>من: {formatDate(patientAdmission.admission_date, 'YYYY/MM/DD (hh:mm)')}</dd>
           {#if patientAdmission.discharge_date}
             <dd>
               إلى: {formatDate(patientAdmission.discharge_date, 'YYYY/MM/DD (hh:mm)')}
             </dd>
-            <dd>{patientAdmission.Patient_discharge_reason.name}</dd>
+            <dd>{patientAdmission.Patient_discharge_reason?.name}</dd>
           {/if}
         {/each}
       </dl>
@@ -57,7 +81,8 @@
     display: grid;
   }
 
-  dl.personal_data {
+  dl.personal_data,
+  dl.stay-data {
     grid-template-columns: 1fr 80%;
   }
 
