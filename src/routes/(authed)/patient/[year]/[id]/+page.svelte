@@ -1,6 +1,5 @@
 <script lang="ts">
   import { formatDate, getAge, getDuration } from '$lib/utils/date-format.js';
-  import dayjs from 'dayjs';
 
   let { data } = $props();
 </script>
@@ -56,6 +55,18 @@
         </dd>
       {/if}
     </dl>
+
+    <h2>التشخيص</h2>
+    {#each data.patient.Patient_diagnoses as diagnosis, i (i)}
+      <dl class="diagnosis_data">
+        <dt>{diagnosis.Diagnosis.name}</dt>
+        <dd>
+          {diagnosis.timestamp === data.patient.admission_date
+            ? '(أولي)'
+            : formatDate(diagnosis.timestamp, 'YYYY/MM/DD (hh:mm)')}
+        </dd>
+      </dl>
+    {/each}
   </section>
   <section>
     {#if data.patient.Person.Patients}
@@ -97,6 +108,10 @@
   dl.personal_data,
   dl.stay-data {
     grid-template-columns: 1fr 80%;
+  }
+
+  dl.diagnosis_data {
+    grid-template-columns: 1fr 1fr;
   }
 
   dl.other_admissions_data {
