@@ -36,6 +36,8 @@ export async function GET({ url }) {
     where: eq(Patients.id, patient_id),
   });
 
+  if (!patient_data) return new Response('Bad Request', { status: 401 });
+
   return new Response(JSON.stringify(patient_data), {
     headers: {
       'content-type': 'application/json',
