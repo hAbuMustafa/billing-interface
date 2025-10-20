@@ -1,4 +1,7 @@
-import dayjs from 'dayjs';
+import dayjs, { type OpUnitType, type QUnitType } from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
+dayjs.extend(duration);
 
 export function formatDate(date: number | Date, format = 'YYYY-MM-DD') {
   return dayjs(date).format(format);
@@ -20,4 +23,12 @@ export function getAge(birthdate: number | Date | string) {
   const msInADay = 60 * 60 * 24 * 1000;
 
   return Math.floor((new Date().getTime() - dateSerial) / (msInADay * 365.25));
+}
+
+export function getDuration(
+  start: Date,
+  end: Date,
+  unit: QUnitType | OpUnitType = 'days'
+) {
+  return dayjs(end).diff(dayjs(start), unit);
 }
