@@ -27,5 +27,6 @@
         goto(`/patient/${patient.id}`);
       }}
     />
+    <!-- todo: color on discharged -->
   {/snippet}
 </ISelect>
