@@ -8,6 +8,7 @@
     name: string;
     id_doc_num: string;
     admission_date: Date;
+    discharge_date?: Date;
     recent_ward: number;
   };
 </script>
@@ -27,6 +28,5 @@
         goto(`/patient/${patient.id}`);
       }}
     />
-    <!-- todo: color on discharged -->
   {/snippet}
 </ISelect>

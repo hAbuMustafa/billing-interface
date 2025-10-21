@@ -21,6 +21,7 @@ export async function GET({ url }) {
       name: People.name,
       id_doc_num: People.id_doc_num,
       admission_date: Patients.admission_date,
+      discharge_date: Patients.discharge_date,
       recent_ward_id: Patients.recent_ward,
       recent_ward: Wards.name,
     })
