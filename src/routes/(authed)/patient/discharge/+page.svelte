@@ -31,7 +31,7 @@
 <form method="POST">
   <label for="name"> اسم المريض </label>
   <ISelect
-    endpoint="/api/patients/"
+    endpoint="/api/patients/?cro=true"
     type="text"
     id="name"
     name="patient_name"

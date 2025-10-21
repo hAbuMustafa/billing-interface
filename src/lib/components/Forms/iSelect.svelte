@@ -36,7 +36,7 @@
   const debouncedFetch = debounce((text) => {
     let cancelled = false;
 
-    fetch(`${endpoint}?q=${text}`)
+    fetch(`${endpoint}${endpoint.includes('?') ? '&' : '?'}q=${text}`)
       .then((response) => response.json())
       .then((data) => {
         if (!cancelled) {

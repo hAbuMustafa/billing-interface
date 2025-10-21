@@ -2,11 +2,14 @@ import { db } from '$lib/server/db';
 import { People, Patients, Wards } from '$lib/server/db/schema';
 import { regexp } from '$lib/utils/drizzle';
 import { regexifiedPersonName } from '$lib/utils/querying';
-import { and, desc, eq, isNull, like, or } from 'drizzle-orm';
+import { and, desc, eq, isNotNull, isNull, like, or } from 'drizzle-orm';
 
 export async function GET({ url }) {
   let query = url.searchParams.get('q') || '';
+  let currentResidentsOnly = url.searchParams.get('cro') || '';
+
   query = query.trim();
+  currentResidentsOnly = currentResidentsOnly.trim();
 
   if (query === '') return new Response('Bad request', { status: 401 });
 
@@ -26,7 +29,7 @@ export async function GET({ url }) {
     .leftJoin(Wards, eq(Patients.recent_ward, Wards.id))
     .where(
       and(
-        isNull(Patients.discharge_date),
+        currentResidentsOnly ? isNull(Patients.discharge_date) : isNotNull(Patients.id),
         isNumber
           ? or(like(Patients.id, `%${query}%`), like(People.id_doc_num, `%${query}%`))
           : regexp(`"People"."name"`, regexifiedPersonName(query))
