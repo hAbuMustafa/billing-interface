@@ -40,7 +40,9 @@
         <dd>{data.patient.health_insurance ? '' : 'غير '} مؤمن عليه</dd>
       </dl>
     </details>
+  </section>
 
+  <section>
     <h2>بيانات الإقامة</h2>
     <dl class="stay-data">
       <dt>تاريخ الدخول:</dt>
@@ -71,7 +73,7 @@
     </dl>
 
     <details dir="ltr">
-      <summary dir="rtl">التنقلات</summary>
+      <summary dir="rtl"><h3 style="display: inline-block;">التنقلات</h3></summary>
       <Timeline position="alternate">
         {#each data.patient.Patient_wards as transfer, i (i)}
           <TimelineItem>
@@ -114,7 +116,7 @@
       </Timeline>
     </details>
 
-    <h2>التشخيص</h2>
+    <h3>التشخيص</h3>
     {#each data.patient.Patient_diagnoses as diagnosis, i (i)}
       <dl class="diagnosis_data">
         <dt>{diagnosis.Diagnosis.name}</dt>
@@ -150,11 +152,22 @@
 {/if}
 
 <style>
+  section {
+    border: var(--main-border);
+    border-radius: 0.5rem;
+    margin-block-end: 1rem;
+    padding-inline: 1rem;
+  }
+
   details {
     padding: 1rem;
     border-radius: 0.5rem;
 
-    &:is(:hover, :focus, :active) {
+    summary {
+      border-radius: 0.5rem;
+    }
+
+    &:is(:hover, :focus, :active):not(:open) summary {
       background-color: hsl(from var(--main-bg-color) h s 40%);
     }
   }
