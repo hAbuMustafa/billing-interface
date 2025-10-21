@@ -72,6 +72,20 @@
       {/if}
     </dl>
 
+    <h3>التشخيص</h3>
+    <ol class="diagnosis_list">
+      {#each data.patient.Patient_diagnoses as diagnosis, i (i)}
+        <li class="diagnosis_pair">
+          <span class="diagnosis_name">{diagnosis.Diagnosis.name}</span>
+          <span class="diagnosis_time">
+            {diagnosis.timestamp === data.patient.admission_date
+              ? '(أولي)'
+              : formatDate(diagnosis.timestamp, 'YYYY/MM/DD (hh:mm)')}
+          </span>
+        </li>
+      {/each}
+    </ol>
+
     <details dir="ltr">
       <summary dir="rtl"><h3 style="display: inline-block;">التنقلات</h3></summary>
       <Timeline position="alternate">
@@ -115,18 +129,6 @@
         {/if}
       </Timeline>
     </details>
-
-    <h3>التشخيص</h3>
-    {#each data.patient.Patient_diagnoses as diagnosis, i (i)}
-      <dl class="diagnosis_data">
-        <dt>{diagnosis.Diagnosis.name}</dt>
-        <dd>
-          {diagnosis.timestamp === data.patient.admission_date
-            ? '(أولي)'
-            : formatDate(diagnosis.timestamp, 'YYYY/MM/DD (hh:mm)')}
-        </dd>
-      </dl>
-    {/each}
   </section>
   <section>
     {#if data.patient.Person.Patients}
@@ -181,8 +183,32 @@
     grid-template-columns: 1fr 80%;
   }
 
-  dl.diagnosis_data {
-    grid-template-columns: 1fr 2fr;
+  ol.diagnosis_list {
+    padding: 0;
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    justify-content: center;
+
+    li {
+      background-color: gold;
+      color: light-dark(var(--main-text-color), var(--main-bg-color));
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
+      text-align: center;
+
+      .diagnosis_name {
+        font-weight: bold;
+      }
+
+      .diagnosis_time {
+        display: none;
+      }
+
+      &:is(:hover, :focus, :active) .diagnosis_time {
+        display: inline;
+      }
+    }
   }
 
   dl.other_admissions_data {
