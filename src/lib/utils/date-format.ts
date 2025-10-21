@@ -32,3 +32,15 @@ export function getDuration(
 ) {
   return dayjs(end).diff(dayjs(start), unit);
 }
+
+export function getTermed(number: number, term: string, termPlural: string) {
+  return `${number < 3 ? '' : number + ' '}${
+    number === 1
+      ? term + ' واحد'
+      : number === 2
+      ? term + 'ان'
+      : number < 11
+      ? termPlural
+      : term + 'ا'
+  }`;
+}

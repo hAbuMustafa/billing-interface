@@ -1,5 +1,6 @@
 <script lang="ts">
   import Sheet from '$lib/components/Sheet/Sheet.svelte';
+  import { getTermed } from '$lib/utils/date-format.js';
 
   let { data } = $props();
   let patientsByWard = Object.groupBy(
@@ -14,7 +15,7 @@
       {data.wards.find((w) => w.id === Number(ward_id))?.name}
     </span>
     <span>
-      ({patientsByWard[ward_id]?.length})
+      ({getTermed(patientsByWard[ward_id]?.length, 'مريض', 'مرضى')})
     </span>
   </h2>
   <Sheet
