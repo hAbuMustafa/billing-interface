@@ -25,4 +25,11 @@
   tr {
     border: var(--main-border);
   }
+
+  tr:is(:hover, :focus-within, :active) {
+    background-color: light-dark(
+      hsl(from var(--main-bg-color) h s 80%),
+      hsl(from var(--main-bg-color) h s 30%)
+    );
+  }
 </style>
