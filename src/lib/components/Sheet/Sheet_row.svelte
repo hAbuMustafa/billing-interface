@@ -24,6 +24,9 @@
 <style>
   tr {
     border: var(--main-border);
+    transition:
+      transform 0.2s ease-in-out,
+      background-color 0.5s ease-in-out;
   }
 
   tr:is(:hover, :focus-within, :active) {
@@ -31,5 +34,6 @@
       hsl(from var(--main-bg-color) h s 80%),
       hsl(from var(--main-bg-color) h s 30%)
     );
+    transform: scale(1.03);
   }
 </style>
