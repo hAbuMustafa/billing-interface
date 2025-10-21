@@ -8,7 +8,7 @@
     TimelineSeparator,
     TimelineDot,
   } from 'svelte-vertical-timeline';
-  import { formatDate, getAge, getDuration } from '$lib/utils/date-format.js';
+  import { formatDate, getAge, getDuration, getTermed } from '$lib/utils/date-format.js';
 
   let { data } = $props();
 
@@ -70,13 +70,7 @@
           data.patient.discharge_date
         )}
         <dd>
-          {daysOfStay < 3 ? '' : daysOfStay + ' '}{daysOfStay === 1
-            ? 'يوم واحد'
-            : daysOfStay === 2
-              ? 'يومان'
-              : daysOfStay < 11
-                ? 'أيام'
-                : 'يومًا'}
+          {getTermed(daysOfStay, 'يوم', 'أيام')}
         </dd>
       {/if}
 
