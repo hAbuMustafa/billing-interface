@@ -14,9 +14,9 @@
 <tr>
   {#each colNames() as column, j (j)}
     {#if dataObj.hasOwnProperty(column) && dataObj[column] !== ''}
-      <Cell dataTuple={[column, dataObj[column]]} />
+      <Cell row={dataObj} dataTuple={[column, dataObj[column]]} />
     {:else}
-      <Cell dataTuple={[column, '']} />
+      <Cell row={dataObj} dataTuple={[column, '']} />
     {/if}
   {/each}
 </tr>

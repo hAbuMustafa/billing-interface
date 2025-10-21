@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { setContext } from 'svelte';
+  import { onMount, setContext } from 'svelte';
 
   import SheetHead from '$lib/components/Sheet/Sheet_head.svelte';
   import Row from '$lib/components/Sheet/Sheet_row.svelte';
@@ -11,18 +11,23 @@
     rows: RowT[];
     dateColumns?: Record<string, string | undefined>;
     renameColumns?: Record<string, string>;
+    actionColumns?: Record<string, Function>;
   };
 
-  const { rows, dateColumns, renameColumns }: PropsT = $props();
+  const { rows, dateColumns, renameColumns, actionColumns }: PropsT = $props();
 
   let columnNames: string[] = $state([]);
   if (rows && rows.length > 0 && typeof rows[0] === 'object') {
-    columnNames = Array.from(new Set(rows.map((r) => Object.keys(r)).flat()));
+    columnNames.push(...Array.from(new Set(rows.map((r) => Object.keys(r)).flat())));
+    if (actionColumns) {
+      columnNames.push(...Object.keys(actionColumns));
+    }
   }
 
   setContext('column names', () => columnNames);
   if (dateColumns) setContext('date columns', dateColumns);
   if (renameColumns) setContext('rename columns', renameColumns);
+  if (actionColumns) setContext('action columns', actionColumns);
 </script>
 
 <table>
