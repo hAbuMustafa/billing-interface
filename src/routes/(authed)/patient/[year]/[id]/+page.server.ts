@@ -104,7 +104,6 @@ export async function load({ fetch, params }) {
       title: `لا يوجد مريض بالرقم ${patientId}`,
     };
 
-  console.log(patientData);
   return {
     title: patientData.Person.name,
     patient: patientData,
