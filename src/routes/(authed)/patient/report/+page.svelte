@@ -10,29 +10,31 @@
 </script>
 
 {#each Object.keys(patientsByWard) as ward_id, i (i)}
-  <h2>
-    <span>
-      {data.wards.find((w) => w.id === Number(ward_id))?.name}
-    </span>
-    <span>
-      ({getTermed(patientsByWard[ward_id]?.length, 'مريض', 'مرضى')})
-    </span>
-  </h2>
-  <Sheet
-    rows={patientsByWard[ward_id]!.map((p) => {
-      const { recent_ward, ...rest } = p;
-      return rest;
-    })}
-    dateColumns={{ admission_date: 'YYYY/MM/DD' }}
-    renameColumns={{
-      admission_date: 'تاريخ الدخول',
-      id: 'رقم القيد',
-      name: 'اسم المريض',
-      recent_ward: 'القسم الحالي',
-      diagnosis: 'التشخيص',
-    }}
-  />
-  <!-- todo: add action column to have buttons that take you to pages or display modals (execute custom functions) -->
+  {#if patientsByWard[ward_id]}
+    <h2>
+      <span>
+        {data.wards.find((w) => w.id === Number(ward_id))?.name}
+      </span>
+      <span>
+        ({getTermed(patientsByWard[ward_id].length, 'مريض', 'مرضى')})
+      </span>
+    </h2>
+    <Sheet
+      rows={patientsByWard[ward_id]!.map((p) => {
+        const { recent_ward, ...rest } = p;
+        return rest;
+      })}
+      dateColumns={{ admission_date: 'YYYY/MM/DD' }}
+      renameColumns={{
+        admission_date: 'تاريخ الدخول',
+        id: 'رقم القيد',
+        name: 'اسم المريض',
+        recent_ward: 'القسم الحالي',
+        diagnosis: 'التشخيص',
+      }}
+    />
+    <!-- todo: add action column to have buttons that take you to pages or display modals (execute custom functions) -->
+  {/if}
 {/each}
 
 <style>
