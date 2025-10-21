@@ -9,7 +9,14 @@
 </script>
 
 {#each Object.keys(patientsByWard) as ward_id, i (i)}
-  <h2>{data.wards.find((w) => w.id === Number(ward_id))?.name}</h2>
+  <h2>
+    <span>
+      {data.wards.find((w) => w.id === Number(ward_id))?.name}
+    </span>
+    <span>
+      ({patientsByWard[ward_id]?.length})
+    </span>
+  </h2>
   <Sheet
     rows={patientsByWard[ward_id]!.map((p) => {
       const { recent_ward, ...rest } = p;
@@ -26,3 +33,10 @@
   />
   <!-- todo: add action column to have buttons that take you to pages or display modals (execute custom functions) -->
 {/each}
+
+<style>
+  h2 {
+    display: flex;
+    justify-content: space-around;
+  }
+</style>
