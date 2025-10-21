@@ -61,8 +61,18 @@
         <dd>{data.patient.Patient_discharge_reason?.name}</dd>
 
         <dt>مدة الإقامة:</dt>
+        {@const daysOfStay = getDuration(
+          data.patient.admission_date,
+          data.patient.discharge_date
+        )}
         <dd>
-          {getDuration(data.patient.admission_date, data.patient.discharge_date)} يوما
+          {daysOfStay < 3 ? '' : daysOfStay + ' '}{daysOfStay === 1
+            ? 'يوم واحد'
+            : daysOfStay === 2
+              ? 'يومان'
+              : daysOfStay < 11
+                ? 'أيام'
+                : 'يومًا'}
         </dd>
       {/if}
 
