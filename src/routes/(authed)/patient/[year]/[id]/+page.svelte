@@ -11,6 +11,10 @@
   import { formatDate, getAge, getDuration } from '$lib/utils/date-format.js';
 
   let { data } = $props();
+
+  const dateAndTime = (date: number | Date) => {
+    return formatDate(date, 'YYYY/MM/DD (hh:mm)');
+  };
 </script>
 
 {#if data.patient}
@@ -46,7 +50,7 @@
     <h2>بيانات الإقامة</h2>
     <dl class="stay-data">
       <dt>تاريخ الدخول:</dt>
-      <dd>{formatDate(data.patient.admission_date, 'YYYY/MM/DD (hh:mm)')}</dd>
+      <dd>{dateAndTime(data.patient.admission_date)}</dd>
 
       {#if data.patient.admission_notes}
         <dt>ملاحظات الدخول:</dt>
@@ -55,7 +59,7 @@
 
       {#if data.patient.discharge_date}
         <dt>تاريخ الخروج:</dt>
-        <dd>{formatDate(data.patient.discharge_date, 'YYYY/MM/DD (hh:mm)')}</dd>
+        <dd>{dateAndTime(data.patient.discharge_date)}</dd>
 
         <dt>سبب الخروج:</dt>
         <dd>{data.patient.Patient_discharge_reason?.name}</dd>
@@ -90,7 +94,7 @@
           <span class="diagnosis_time">
             {diagnosis.timestamp === data.patient.admission_date
               ? '(أولي)'
-              : formatDate(diagnosis.timestamp, 'YYYY/MM/DD (hh:mm)')}
+              : dateAndTime(diagnosis.timestamp)}
           </span>
         </li>
       {/each}
@@ -103,7 +107,7 @@
           <TimelineItem>
             <TimelineOppositeContent slot="opposite-content">
               <small class="transfer_time">
-                {formatDate(transfer.timestamp, 'YYYY/MM/DD (hh:mm)')}
+                {dateAndTime(transfer.timestamp)}
               </small>
             </TimelineOppositeContent>
             <TimelineSeparator>
@@ -126,7 +130,7 @@
           <TimelineItem>
             <TimelineOppositeContent slot="opposite-content">
               <small class="transfer_time">
-                {formatDate(data.patient.discharge_date, 'YYYY/MM/DD (hh:mm)')}
+                {dateAndTime(data.patient.discharge_date)}
               </small>
             </TimelineOppositeContent>
             <TimelineSeparator>
@@ -150,10 +154,10 @@
               >{patientAdmission.id}</a
             >
           </dt>
-          <dd>من: {formatDate(patientAdmission.admission_date, 'YYYY/MM/DD (hh:mm)')}</dd>
+          <dd>من: {dateAndTime(patientAdmission.admission_date)}</dd>
           {#if patientAdmission.discharge_date}
             <dd>
-              إلى: {formatDate(patientAdmission.discharge_date, 'YYYY/MM/DD (hh:mm)')}
+              إلى: {dateAndTime(patientAdmission.discharge_date)}
             </dd>
             <dd>{patientAdmission.Patient_discharge_reason?.name}</dd>
           {/if}
