@@ -133,8 +133,8 @@
     box-shadow: black 10px 10px 25px;
 
     transition-property: position, opacity;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
 
     li {
       text-wrap: nowrap;
@@ -149,7 +149,7 @@
   li > ul:has(:hover, :focus-within, :focus) {
     visibility: visible;
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(-0.25rem);
   }
 
   .gravatar {
