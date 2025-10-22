@@ -11,7 +11,8 @@
   const [colName, colValue] = $derived(dataTuple);
 
   const dateColumns: Record<string, string | undefined> = getContext('date columns');
-  const actionColumns: Record<string, Function> = getContext('action columns');
+  const actionColumns: Record<string, { actionName: string; onclick: Function }> =
+    getContext('action columns');
 </script>
 
 <td>
@@ -23,9 +24,9 @@
       onclick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        actionColumns[colName](row);
+        actionColumns[colName].onclick(row);
       }}
-      value={colName}
+      value={actionColumns[colName].actionName}
     />
   {:else}
     {colValue}

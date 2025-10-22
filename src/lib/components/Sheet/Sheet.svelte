@@ -11,7 +11,7 @@
     rows: RowT[];
     dateColumns?: Record<string, string | undefined>;
     renameColumns?: Record<string, string>;
-    actionColumns?: Record<string, Function>;
+    actionColumns?: Record<string, { actionName: string; onclick: Function }>;
   };
 
   const { rows, dateColumns, renameColumns, actionColumns }: PropsT = $props();
