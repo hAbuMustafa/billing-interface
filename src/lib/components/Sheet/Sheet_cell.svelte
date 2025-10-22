@@ -56,6 +56,7 @@
   input[type='button'] {
     font-size: 1rem;
     padding: 0.25rem 0.5rem;
+    cursor: pointer;
 
     background-color: var(--background-color);
     color: var(--color);
