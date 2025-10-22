@@ -56,6 +56,9 @@
           },
         },
       }}
+      detailsColumn={{
+        id: (p: any) => `/patient/${p.id}`,
+      }}
     />
   {/if}
 {/each}
