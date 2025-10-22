@@ -2,10 +2,35 @@ import { new_Wards } from '$lib/server/db/menus';
 import { transferPatient } from '$lib/server/db/operations/patients.js';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 
-export function load() {
-  return {
+export async function load({ fetch, url }) {
+  const pageProps = {
     title: 'تحويل مريض إلى قسم',
     wards: new_Wards,
+  };
+  const patientId = url.searchParams.get('patientId');
+
+  if (!patientId) return pageProps;
+
+  if (!/\d{2}\/\d+/.test(patientId)) {
+    return { ...pageProps, message: 'رقم القيد غير صحيح' };
+  }
+
+  const patientData = await fetch(`/api/patients/patient?id=${patientId}`).then((r) => {
+    if (r.ok) {
+      return r.json();
+    }
+  });
+
+  if (!patientData)
+    return {
+      ...pageProps,
+      title: `لا يوجد مريض بالرقم ${patientId}`,
+    };
+
+  return {
+    ...pageProps,
+
+    patient: patientData,
   };
 }
 

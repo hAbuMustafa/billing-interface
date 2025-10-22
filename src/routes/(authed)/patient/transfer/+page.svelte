@@ -14,12 +14,18 @@
 
   const { data, form } = $props();
 
-  let patientName = $state(form?.patientName ?? '');
-  let selectedPatientId = $state(form?.patientId ?? '');
-  let selectedPatientRecentWardId = $state(
-    form?.selectedPatientRecentWardId ? form.selectedPatientRecentWardId : 0
-  );
-  let selectedWard = $state(form?.transferTo ? Number(form.transferTo) : 0);
+  let patientName = $state(data.patient?.Person?.name ?? form?.patientName ?? '');
+  let selectedPatientId = $state(data.patient?.id ?? form?.patientId ?? '');
+  let selectedPatientRecentWardId = $derived.by(() => {
+    if (data.patient?.recent_ward) {
+      return data.patient?.recent_ward;
+    } else if (form?.selectedPatientRecentWardId) {
+      return form?.selectedPatientRecentWardId;
+    } else {
+      return 0;
+    }
+  });
+  let selectedWard = $state(form?.transferTo ? Number(form?.transferTo) : 0);
   let transferDate = $state(
     form?.transferDate ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
   );

@@ -14,8 +14,8 @@
 
   const { data, form } = $props();
 
-  let patientName = $state(form?.patientName ?? '');
-  let selectedPatientId = $state(form?.patientId ?? '');
+  let patientName = $state(data.patient?.Person.name ?? form?.patientName ?? '');
+  let selectedPatientId = $state(data.patient?.id ?? form?.patientId ?? '');
   let selectedDischargeReason = $state(
     form?.dischargeReason ? Number(form.dischargeReason) : 0
   );
