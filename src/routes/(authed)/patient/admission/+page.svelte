@@ -68,16 +68,26 @@
 
 <form method="POST">
   <label for="medical_number">الرقم الطبي</label>
-  <!-- svelte-ignore a11y_autofocus -->
-  <input
-    type="number"
-    name="medical_number"
-    id="medical_number"
-    placeholder={String(data.nextMedicalNumber)}
-    autofocus
-    bind:value={medicalNumber}
-    required
-  />
+  <div class="medical_number_input">
+    <!-- svelte-ignore a11y_autofocus -->
+    <input
+      type="number"
+      name="medical_number"
+      id="medical_number"
+      placeholder={String(data.nextMedicalNumber)}
+      autofocus
+      bind:value={medicalNumber}
+      required
+    />
+    {#if !medicalNumber}
+      <button
+        type="button"
+        onclick={() => {
+          medicalNumber = data.nextMedicalNumber;
+        }}>{String(data.nextMedicalNumber)}</button
+      >
+    {/if}
+  </div>
 
   <label for="name" class={hasSelectedPerson ? 'locked' : ''}> اسم المريض </label>
   <ISelect
@@ -197,6 +207,15 @@
     input[type='submit'] {
       margin-block-start: 2rem;
       padding-block: 0.5rem;
+    }
+
+    div.medical_number_input {
+      display: flex;
+      gap: 0.25rem;
+
+      & > * {
+        flex: 1;
+      }
     }
   }
 </style>
