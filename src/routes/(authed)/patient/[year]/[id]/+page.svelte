@@ -138,8 +138,8 @@
       </Timeline>
     </details>
   </section>
-  <section>
-    {#if data.patient.Person.Patients}
+  {#if data.patient.Person.Patients?.length}
+    <section>
       <h2>الإقامات الأخرى</h2>
       <dl class="other_admissions_data">
         {#each data.patient.Person.Patients as patientAdmission, i (patientAdmission.id)}
@@ -157,8 +157,8 @@
           {/if}
         {/each}
       </dl>
-    {/if}
-  </section>
+    </section>
+  {/if}
 {/if}
 
 <style>
