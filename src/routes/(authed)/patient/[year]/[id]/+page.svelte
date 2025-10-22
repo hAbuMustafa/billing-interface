@@ -229,6 +229,16 @@
     text-wrap: nowrap;
   }
 
+  dt:hover,
+  dt:hover + dd,
+  dt + dd:hover,
+  dt:has(+ dd:hover) {
+    background-color: light-dark(
+      hsl(from var(--main-bg-color) h s 80%),
+      hsl(from var(--main-bg-color) h s 30%)
+    );
+  }
+
   dt,
   dd {
     place-content: center;
