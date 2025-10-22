@@ -21,7 +21,6 @@
   thead {
     position: sticky;
     inset-block-start: 0;
-    z-index: 1;
   }
 
   tr {

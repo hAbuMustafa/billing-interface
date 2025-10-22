@@ -57,6 +57,7 @@
     font-size: 1rem;
     padding: 0.25rem 0.5rem;
     cursor: pointer;
+    position: static;
 
     background-color: var(--background-color);
     color: var(--color);
