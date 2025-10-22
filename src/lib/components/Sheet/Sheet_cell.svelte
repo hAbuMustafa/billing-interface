@@ -11,8 +11,14 @@
   const [colName, colValue] = $derived(dataTuple);
 
   const dateColumns: Record<string, string | undefined> = getContext('date columns');
-  const actionColumns: Record<string, { actionName: string; onclick: Function }> =
-    getContext('action columns');
+  const actionColumns: Record<
+    string,
+    {
+      actionName: string;
+      onclick: Function;
+      style?: { color?: string; backgroundColor?: string };
+    }
+  > = getContext('action columns');
 </script>
 
 <td>
@@ -27,6 +33,9 @@
         actionColumns[colName].onclick(row);
       }}
       value={actionColumns[colName].actionName}
+      style:--color={actionColumns[colName].style?.color ?? 'var(--main-text-color)'}
+      style:--background-color={actionColumns[colName].style?.backgroundColor ??
+        'var(--main-bg-color)'}
     />
   {:else}
     {colValue}
@@ -44,5 +53,16 @@
   input[type='button'] {
     font-size: 1rem;
     padding: 0.25rem 0.5rem;
+
+    background-color: var(--background-color);
+    color: var(--color);
+
+    &:is(:hover, :focus) {
+      background-color: hsl(from var(--background-color) h 150% l);
+    }
+
+    &:active {
+      background-color: hsl(from var(--background-color) h 70% l);
+    }
   }
 </style>
