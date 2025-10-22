@@ -9,8 +9,7 @@
   {#if user}
     <ul>
       <li>
-        <input type="checkbox" id="patients-nav-list" />
-        <label for="patients-nav-list">المرضى</label>
+        <span>المرضى</span>
 
         <ul>
           <li><a href="/patient/admission">تسجيل حالة دخول</a></li>
@@ -24,8 +23,6 @@
       <li><a href="/patient-search">تسعير فاتورة</a></li>
     </ul>
     <ul>
-      <li><a href="/account">الحساب</a></li>
-      <li><a href="/logout">تسجيل الخروج</a></li>
       <li>
         <img
           class="gravatar"
@@ -34,6 +31,11 @@
           width="40px"
           height="40px"
         />
+
+        <ul>
+          <li><a href="/account">الحساب</a></li>
+          <li><a href="/logout">تسجيل الخروج</a></li>
+        </ul>
       </li>
     </ul>
   {:else}
@@ -66,7 +68,7 @@
     text-decoration: none;
   }
 
-  li:is(:hover, :focus):not(:has(> img:only-child)) {
+  li:is(:hover, :focus):not(:has(.gravatar)) {
     background-color: hsl(from var(--main-bg-color) h s 50%);
   }
 
@@ -86,15 +88,7 @@
   li:has(ul) {
     position: relative;
 
-    & > input {
-      display: none;
-    }
-
-    & > label {
-      all: unset;
-    }
-
-    &::after {
+    &:not(:has(.gravatar))::after {
       content: '▼';
       font-size: 0.7rem;
       margin-inline-start: 0.25rem;
@@ -147,8 +141,11 @@
     }
   }
 
+  li:has(.gravatar) ul {
+    inset-inline-start: -200%;
+  }
+
   li:has(:hover, :focus-within, :focus) > ul,
-  li:has(> input[type='checkbox']:checked) > ul,
   li > ul:has(:hover, :focus-within, :focus) {
     visibility: visible;
     opacity: 1;
