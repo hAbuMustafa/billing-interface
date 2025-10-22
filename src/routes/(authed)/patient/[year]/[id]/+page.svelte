@@ -184,6 +184,7 @@
 
   dl {
     display: grid;
+    row-gap: 0.5rem;
   }
 
   dl.personal_data,
@@ -225,6 +226,7 @@
 
   dt {
     font-weight: 700;
+    text-wrap: nowrap;
   }
 
   dt,
