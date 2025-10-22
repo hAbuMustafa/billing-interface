@@ -11,6 +11,7 @@
   const [colName, colValue] = $derived(dataTuple);
 
   const dateColumns: Record<string, string | undefined> = getContext('date columns');
+  const detailsColumn: Record<string, Function> = getContext('details column');
   const actionColumns: Record<
     string,
     {
@@ -37,6 +38,8 @@
       style:--background-color={actionColumns[colName].style?.backgroundColor ??
         'var(--main-bg-color)'}
     />
+  {:else if detailsColumn && detailsColumn.hasOwnProperty(colName)}
+    <a href={detailsColumn[colName](row)} class="button">{colValue}</a>
   {:else}
     {colValue}
   {/if}

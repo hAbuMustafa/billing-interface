@@ -11,6 +11,7 @@
     rows: RowT[];
     dateColumns?: Record<string, string | undefined>;
     renameColumns?: Record<string, string>;
+    detailsColumn?: Record<string, Function>;
     actionColumns?: Record<
       string,
       {
@@ -21,7 +22,8 @@
     >;
   };
 
-  const { rows, dateColumns, renameColumns, actionColumns }: PropsT = $props();
+  const { rows, dateColumns, renameColumns, actionColumns, detailsColumn }: PropsT =
+    $props();
 
   let columnNames: string[] = $state([]);
   if (rows && rows.length > 0 && typeof rows[0] === 'object') {
@@ -35,6 +37,7 @@
   if (dateColumns) setContext('date columns', dateColumns);
   if (renameColumns) setContext('rename columns', renameColumns);
   if (actionColumns) setContext('action columns', actionColumns);
+  if (detailsColumn) setContext('details column', detailsColumn);
 </script>
 
 <table>
