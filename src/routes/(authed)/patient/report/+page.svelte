@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import Sheet from '$lib/components/Sheet/Sheet.svelte';
   import { getTermed } from '$lib/utils/date-format.js';
 
@@ -31,9 +32,31 @@
         name: 'اسم المريض',
         recent_ward: 'القسم الحالي',
         diagnosis: 'التشخيص',
+        discharge: 'خروج',
+        transfer: 'تحويل',
+      }}
+      actionColumns={{
+        discharge: {
+          actionName: 'خروج',
+          onclick: function (p: any) {
+            goto(`/patient/discharge?patientId=${p.id}`);
+          },
+          style: {
+            backgroundColor: 'light-dark(salmon, maroon)',
+          },
+        },
+        transfer: {
+          actionName: 'تحويل',
+          onclick: function (p: any) {
+            goto(`/patient/transfer?patientId=${p.id}`);
+          },
+          style: {
+            color: 'var(--main-bg-color)',
+            backgroundColor: 'orange',
+          },
+        },
       }}
     />
-    <!-- todo: add action column to have buttons that take you to pages or display modals (execute custom functions) -->
   {/if}
 {/each}
 
