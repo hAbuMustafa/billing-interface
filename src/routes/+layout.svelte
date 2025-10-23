@@ -83,7 +83,7 @@
 <style>
   .main-wrapper {
     display: grid;
-    grid-template-columns: 3fr 6fr 3fr;
+    grid-template-columns: 1fr 80vw 1fr;
     grid-template-rows: min-content 1fr;
 
     @media (max-width: 400px) {

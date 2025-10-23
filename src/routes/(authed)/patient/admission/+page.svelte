@@ -210,12 +210,8 @@
     }
 
     div.medical_number_input {
-      display: flex;
-      gap: 0.25rem;
-
-      & > * {
-        flex: 1;
-      }
+      display: grid;
+      grid-template-columns: 1fr max-content;
     }
   }
 </style>
