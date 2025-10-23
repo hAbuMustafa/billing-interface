@@ -91,20 +91,20 @@ export const actions: Actions = {
     }
 
     // username used before?
-    const usersWithSameUsername = await isUniqueValue('username', username);
-    if (usersWithSameUsername) failMessages.push('اسم المستخدم مسجل مسبقا.');
+    const isUniqueUsername = await isUniqueValue('username', username);
+    if (!isUniqueUsername) failMessages.push('اسم المستخدم مسجل مسبقا.');
 
     // email registered before?
-    const usersWithSameEmail = await isUniqueValue('email', email);
-    if (usersWithSameEmail) failMessages.push('البريد الإلكتروني مسجل مسبقا.');
+    const isUniqueEmail = await isUniqueValue('email', email);
+    if (!isUniqueEmail) failMessages.push('البريد الإلكتروني مسجل مسبقا.');
 
     // phone-number registered before?
-    const usersWithSamePhone_number = await isUniqueValue('phone_number', phone_number);
-    if (usersWithSamePhone_number) failMessages.push('رقم الهاتف مسجل مسبقا.');
+    const isUniquePhone_number = await isUniqueValue('phone_number', phone_number);
+    if (!isUniquePhone_number) failMessages.push('رقم الهاتف مسجل مسبقا.');
 
     // national id registered before?
-    const usersWithSameNationalId = await isUniqueValue('national_id', national_id);
-    if (usersWithSameNationalId) failMessages.push('الرقم القومي مسجل مسبقا.');
+    const isUniqueNationalId = await isUniqueValue('national_id', national_id);
+    if (!isUniqueNationalId) failMessages.push('الرقم القومي مسجل مسبقا.');
 
     if (failMessages.length) return failWithMessages(failMessages);
 
