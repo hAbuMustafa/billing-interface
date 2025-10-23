@@ -20,7 +20,7 @@
           <li><a href="/patient/">استعلام عن مريض</a></li>
         </ul>
       </li>
-      <li><a href="/patient-search">تسعير فاتورة</a></li>
+      <li><!-- <a href="/patient-search">تسعير فاتورة</a> --></li>
     </ul>
     <ul>
       <li>
