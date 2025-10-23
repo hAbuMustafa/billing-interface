@@ -77,6 +77,11 @@
     gap: 1.5rem;
     list-style: none;
     align-items: center;
+
+    li {
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.2rem;
+    }
   }
 
   nav a:focus {
