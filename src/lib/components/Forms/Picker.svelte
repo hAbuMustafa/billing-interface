@@ -29,8 +29,6 @@
   $effect(() => {
     if (otherText !== '') value = otherText;
   });
-
-  $inspect(value);
 </script>
 
 <fieldset class={locked ? 'locked' : ''} {...otherProps}>
