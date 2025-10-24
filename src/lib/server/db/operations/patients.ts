@@ -64,12 +64,7 @@ export async function createDischargeReason(
 
 export async function createDiagnosis(
   diagnosis: string | { name: string; icd11: string },
-  tx: SQLiteTransaction<
-    'async',
-    any,
-    typeof import('../schema'),
-    ExtractTablesWithRelations<typeof import('../schema')>
-  >
+  tx: any
 ) {
   const conn = tx || db;
 
@@ -89,6 +84,107 @@ export async function createDiagnosis(
     };
   }
 }
+
+type newPatientT = {
+  id: string;
+  name: string;
+  id_doc_type: number;
+  id_doc_num: string;
+  admission_ward: number;
+  admission_date: Date;
+  admission_notes: string;
+  diagnosis: string[];
+  security_status: boolean;
+  referred_from: string;
+  person_id?: number;
+};
+export async function createPatient(patient: newPatientT) {
+  try {
+    const new_patient = await db.transaction(async (tx) => {
+      let foundPerson: typeof People.$inferSelect | null = null;
+
+      if (!patient.person_id) {
+        if (patient.id_doc_num) {
+          [foundPerson] = await tx
+            .select()
+            .from(People)
+            .where(eq(People.id_doc_num, patient.id_doc_num));
+        }
+
+        if (!foundPerson) {
+          const { id: droppedPatientId, ...restOfPatientData } = patient;
+          [foundPerson] = await tx.insert(People).values(restOfPatientData).returning();
+        }
+
+        patient.person_id = foundPerson.id;
+      }
+
+      const [newPatient] = await tx
+        .insert(Patients)
+        .values({ ...patient, recent_ward: patient.admission_ward } as App.Require<
+          newPatientT,
+          'person_id'
+        >)
+        .returning();
+
+      await tx.insert(Patient_wards).values({
+        patient_id: newPatient.id,
+        ward: patient.admission_ward,
+        timestamp: patient.admission_date,
+        notes: 'admission',
+      });
+
+      for (let i = 0; i < patient.diagnosis.length; i++) {
+        const currentDiagnosisText = patient.diagnosis[i];
+
+        let diagnosis: typeof Diagnoses.$inferSelect;
+
+        const [foundDiagnosis] = await tx
+          .select()
+          .from(Diagnoses)
+          .where(eq(Diagnoses.name, currentDiagnosisText));
+
+        if (foundDiagnosis) {
+          diagnosis = foundDiagnosis;
+        } else {
+          const newRow = await createDiagnosis(currentDiagnosisText, tx);
+
+          if (newRow.success) {
+            diagnosis = newRow.data;
+          } else {
+            console.error(
+              'failed creating diagnosis',
+              currentDiagnosisText,
+              'for patient',
+              newPatient.id,
+              foundPerson?.name
+            );
+            continue;
+          }
+        }
+
+        await tx.insert(Patient_Diagnoses).values({
+          patient_id: newPatient.id,
+          diagnosis_id: diagnosis.id,
+          timestamp: patient.admission_date,
+        });
+      }
+
+      return newPatient;
+    });
+
+    return {
+      success: true,
+      data: new_patient,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
+// todo: make sure createPatientSeed references data correctly ('inmate' in admission_notes => patient.security_status)
 
 export async function createPatientFromSeed(patient: App.CustomTypes['PatientSeedT']) {
   try {
