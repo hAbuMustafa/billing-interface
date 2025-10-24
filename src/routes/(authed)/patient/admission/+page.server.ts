@@ -33,13 +33,15 @@ export const actions = {
     const idDocNum = data.get('id_doc_num') as unknown as string;
     let gender = data.get('gender') as unknown as boolean;
     let birthdate = data.get('birthdate') as unknown as Date;
-    let heathInsurance = data.get('health_insurance') as unknown as boolean;
 
     // Patient Data
     let medicalNumber = data.get('medical_number') as unknown as number;
     let admissionWard = data.get('admission_ward') as unknown as number;
-    let admissionDate = data.get('admission_date') as unknown as Date;
     let diagnosis = data.getAll('diagnosis') as unknown as string[];
+    let heathInsurance = data.get('health_insurance') as unknown as boolean;
+    let referredFrom = data.get('referred_from') as unknown as string;
+    let securityStatus = data.get('security_status') as unknown as boolean;
+    let admissionDate = data.get('admission_date') as unknown as Date;
     let admissionNotes = data.get('admission_notes') as unknown as string;
 
     const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
@@ -55,6 +57,8 @@ export const actions = {
       admissionDate,
       personId,
       admissionNotes,
+      referredFrom,
+      securityStatus,
     });
 
     const failMessages = [];
@@ -72,6 +76,9 @@ export const actions = {
     if (!admissionDate) failMessages.push('تاريخ الدخول مطلوب');
     if (!admissionNotes && idDocType == 6)
       failMessages.push('يلزم الإفادة بملاحظات حال لم يتم كتابة رقم هوية');
+    if (!referredFrom)
+      failMessages.push('يجب تحديد الجهة التي أوصت بتحويل المريض لدخول المستشفى');
+    if (!securityStatus) failMessages.push('يجب تحديد الحالة الأمنية للمريض');
 
     if (failMessages.length) return failWithMessages(failMessages);
 
@@ -83,6 +90,7 @@ export const actions = {
 
       gender = Boolean(Number(gender));
       heathInsurance = Boolean(Number(heathInsurance));
+      securityStatus = Boolean(Number(securityStatus));
 
       birthdate = new Date(birthdate);
       admissionDate = new Date(admissionDate);
@@ -101,7 +109,10 @@ export const actions = {
       admission_ward: admissionWard,
       admission_date: admissionDate,
       admission_notes: admissionNotes,
-      diagnosis: diagnosis.map((d) => d.trim()).join(' + '),
+      diagnosis: diagnosis.map((d) => d.trim()),
+      security_status: securityStatus,
+      referred_from: referredFrom,
+      person_id: personId ?? undefined,
     });
 
     if (

@@ -47,11 +47,13 @@ export const Patients = sqliteTable('Patients', {
   admission_ward: integer()
     .notNull()
     .references(() => Wards.id),
+  referred_from: text(),
   recent_ward: integer().references(() => Wards.id),
   discharge_date: integer({ mode: 'timestamp' }),
   discharge_reason: integer().references(() => Patient_discharge_reasons.id),
   discharge_notes: text(),
   health_insurance: integer({ mode: 'boolean' }),
+  security_status: integer({ mode: 'boolean' }).notNull().default(false),
 });
 
 export const Diagnoses = sqliteTable('Diagnoses', {

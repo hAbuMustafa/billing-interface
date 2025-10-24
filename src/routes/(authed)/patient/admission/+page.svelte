@@ -49,6 +49,9 @@
   let hasSelectedPerson = $state(!!form?.personId || false);
   let selectedPersonId = $state(0);
 
+  let referredFrom = $state(0);
+  let securityStatus = $state(0);
+
   function selectPerson(person: FetchedPersonT) {
     hasSelectedPerson = true;
 
@@ -181,6 +184,24 @@
       { id: 0, name: 'غير مؤمن عليه' },
     ]}
     bind:value={healthInsurance}
+  />
+
+  <Picker
+    name="referred_from"
+    label="محول من"
+    options={[{ id: 'reception', name: 'الاستقبال' }]}
+    bind:value={referredFrom}
+    other
+  />
+
+  <Picker
+    name="security_status"
+    label="الوضع الأمني"
+    options={[
+      { id: 0, name: 'حر' },
+      { id: 1, name: 'مسجون' },
+    ]}
+    bind:value={securityStatus}
   />
 
   <label for="admission_date">وقت وتاريخ الدخول</label>
