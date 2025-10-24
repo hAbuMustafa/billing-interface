@@ -8,6 +8,7 @@
     disable?: any[];
     dividerList?: any[];
     dividerKey?: string;
+    other?: boolean;
   };
 
   let {
@@ -19,8 +20,17 @@
     disable,
     dividerList,
     dividerKey,
+    other,
     ...otherProps
   }: PropsT = $props();
+
+  let otherText = $state('');
+
+  $effect(() => {
+    if (otherText !== '') value = otherText;
+  });
+
+  $inspect(value);
 </script>
 
 <fieldset class={locked ? 'locked' : ''} {...otherProps}>
@@ -37,6 +47,25 @@
         {/each}
       </fieldset>
     {/each}
+  {/if}
+  {#if other}
+    <input
+      type="radio"
+      {name}
+      value={otherText}
+      id="{name}_other"
+      bind:group={value}
+      required
+      disabled={locked || (disable && disable.includes('other'))}
+    />
+    <label for="{name}_other"
+      >جهة أخرى:
+      <input
+        type="text"
+        bind:value={otherText}
+        disabled={locked || (disable && disable.includes('other'))}
+      />
+    </label>
   {/if}
   <input type="hidden" {name} bind:value />
 </fieldset>
@@ -100,6 +129,21 @@
 
       & > button {
         all: unset;
+      }
+
+      &:has(input[type='text']) {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        > input[type='text'] {
+          all: unset;
+
+          max-width: 20vw;
+          background-color: var(--main-bg-color);
+          border: var(--main-border);
+          border-radius: 0.25rem;
+        }
       }
     }
   }
