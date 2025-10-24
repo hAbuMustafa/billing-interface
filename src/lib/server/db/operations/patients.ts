@@ -67,10 +67,8 @@ export async function createDiagnosis(
   tx: SQLiteTransaction<
     'async',
     any,
-    typeof import('c:/Users/hosam/Desktop/billing-interface/src/lib/server/db/schema'),
-    ExtractTablesWithRelations<
-      typeof import('c:/Users/hosam/Desktop/billing-interface/src/lib/server/db/schema')
-    >
+    typeof import('../schema'),
+    ExtractTablesWithRelations<typeof import('../schema')>
   >
 ) {
   const conn = tx || db;
@@ -92,7 +90,7 @@ export async function createDiagnosis(
   }
 }
 
-export async function createPatient(patient: App.CustomTypes['PatientT']) {
+export async function createPatientFromSeed(patient: App.CustomTypes['PatientSeedT']) {
   try {
     const new_patient = await db.transaction(async (tx) => {
       let foundPerson: typeof People.$inferSelect | null = null;
@@ -116,7 +114,7 @@ export async function createPatient(patient: App.CustomTypes['PatientT']) {
       const [newPatient] = await tx
         .insert(Patients)
         .values({ ...patient, recent_ward: patient.admission_ward } as App.Require<
-          App.CustomTypes['PatientT'],
+          App.CustomTypes['PatientSeedT'],
           'person_id'
         >)
         .returning();

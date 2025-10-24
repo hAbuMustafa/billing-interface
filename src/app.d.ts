@@ -22,7 +22,7 @@ declare global {
     // interface PageState {}
     // interface Platform {}
     interface CustomTypes {
-      PatientT: {
+      PatientSeedT: {
         id: string;
         name: string;
         id_doc_num?: string;
