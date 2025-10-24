@@ -159,6 +159,7 @@
 
   <input type="hidden" name="person_id" bind:value={selectedPersonId} />
 
+  <!-- todo: use ISelect to insert diagnoses -->
   <ListMaker
     name="diagnosis"
     label="التشخيص"
