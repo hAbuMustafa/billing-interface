@@ -8,7 +8,7 @@ import {
   createWard,
   createIdDocType,
   createDischargeReason,
-  createPatient,
+  createPatientFromSeed,
   transferPatient,
   createDiagnosis,
 } from '../../src/lib/server/db/operations/patients';
@@ -78,7 +78,7 @@ export async function beginSeed() {
   // Seed Initial Data
   await seed(new_Users, createUser);
   await seed(new_Drugs, createDrug);
-  await seed(new_Patients, createPatient);
+  await seed(new_Patients, createPatientFromSeed);
   await seed(new_PatientTransfers, transferPatient);
 
   console.timeEnd('total seeding time');
