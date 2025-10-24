@@ -36,15 +36,6 @@
         transfer: 'تحويل',
       }}
       actionColumns={{
-        discharge: {
-          actionName: 'خروج',
-          onclick: function (p: any) {
-            goto(`/patient/discharge?patientId=${p.id}`);
-          },
-          style: {
-            backgroundColor: 'light-dark(salmon, maroon)',
-          },
-        },
         transfer: {
           actionName: 'تحويل',
           onclick: function (p: any) {
@@ -53,6 +44,15 @@
           style: {
             color: 'var(--main-bg-color)',
             backgroundColor: 'orange',
+          },
+        },
+        discharge: {
+          actionName: 'خروج',
+          onclick: function (p: any) {
+            goto(`/patient/discharge?patientId=${p.id}`);
+          },
+          style: {
+            backgroundColor: 'light-dark(salmon, maroon)',
           },
         },
       }}
