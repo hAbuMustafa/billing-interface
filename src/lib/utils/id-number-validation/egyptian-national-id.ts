@@ -14,7 +14,8 @@ import { nationalIdPattern } from '$lib/stores/patterns';
 export function verifyEgyptianNationalId(num: number | string) {
   if (typeof num === 'number') num = String(num);
 
-  if (!nationalIdPattern.test(num)) throw new Error('Wrong Egyptian national ID format.');
+  if (!nationalIdPattern.test(num))
+    throw new Error(`Wrong Egyptian national ID format ${num}.`);
 
   const numList = num.split('').map((n) => Number(n));
 
@@ -30,5 +31,7 @@ export function verifyEgyptianNationalId(num: number | string) {
     sum += numList.at(i)! * weights[i % weights.length];
   }
 
-  return (11 - (sum % 11)) % 11 === checksum;
+  const modulus = (11 - (sum % 11)) % 11;
+
+  return (modulus === 0 ? 1 : modulus) === checksum;
 }
