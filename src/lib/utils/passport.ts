@@ -39,7 +39,7 @@ export function verifyChecksum(num: number | string, checksum?: number) {
   const weights = [7, 3, 1];
 
   for (let i = 0; i < numValue.length; i++) {
-    sum += numValue.at(i)! * weights[i % 3];
+    sum += numValue.at(i)! * weights[i % weights.length];
   }
 
   return sum % 10 === checksum;
