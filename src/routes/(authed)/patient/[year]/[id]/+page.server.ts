@@ -10,6 +10,7 @@ type PatientDataT =
       discharge_reason: number | null;
       discharge_notes: string | null;
       health_insurance: boolean | null;
+      security_status: boolean | null;
       Patient_wards: {
         id: number;
         timestamp: Date;
@@ -59,6 +60,7 @@ type PatientDataT =
               discharge_reason: number | null;
               discharge_notes: string | null;
               health_insurance: boolean | null;
+              security_status: boolean | null;
               Patient_discharge_reason: {
                 id: number;
                 name: string;

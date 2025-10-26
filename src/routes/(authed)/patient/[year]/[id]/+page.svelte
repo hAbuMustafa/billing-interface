@@ -57,6 +57,11 @@
         <dd>{data.patient.admission_notes}</dd>
       {/if}
 
+      {#if data.patient.security_status}
+        <dt>الوضع الأمني:</dt>
+        <dd>مسجون</dd>
+      {/if}
+
       {#if data.patient.discharge_date}
         <dt>تاريخ الخروج:</dt>
         <dd>{dateAndTime(data.patient.discharge_date)}</dd>
