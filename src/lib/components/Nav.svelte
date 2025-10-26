@@ -121,8 +121,6 @@
   }
 
   li > ul {
-    visibility: hidden;
-
     list-style: none;
     position: absolute;
     inset-block-start: 100%;
@@ -141,6 +139,8 @@
     transition-duration: 0.5s;
     transition-timing-function: ease-in-out;
 
+    pointer-events: none;
+
     li {
       text-wrap: nowrap;
     }
@@ -152,9 +152,8 @@
 
   li:has(:hover, :focus-within, :focus) > ul,
   li > ul:has(:hover, :focus-within, :focus) {
-    visibility: visible;
     opacity: 1;
-    transform: translateY(-0.25rem);
+    pointer-events: all;
   }
 
   .gravatar {
