@@ -9,6 +9,7 @@ import {
 } from '$lib/stores/patterns';
 import { redirect, type Actions } from '@sveltejs/kit';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
+import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
 
 export function load() {
   return {
@@ -86,7 +87,7 @@ export const actions: Actions = {
       failMessages.push('البريد الإلكتروني بصيغة غير صحيحة');
     }
 
-    if (!nationalIdPattern.test(national_id)) {
+    if (!nationalIdPattern.test(national_id) || !verifyEgyptianNationalId(national_id)) {
       failMessages.push('الرقم القومي غير صحيح');
     }
 

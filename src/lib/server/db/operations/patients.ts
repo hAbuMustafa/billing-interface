@@ -9,6 +9,7 @@ import {
   Diagnoses,
   Patient_Diagnoses,
 } from '$lib/server/db/schema';
+import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
 import { eq, like } from 'drizzle-orm';
 
 export async function createWard(ward: typeof Wards.$inferInsert) {
@@ -197,6 +198,17 @@ export async function createPatientFromSeed(patient: App.CustomTypes['PatientSee
         }
 
         if (!foundPerson) {
+          let numberValidity;
+
+          if (patient.id_doc_type === 1 && patient.id_doc_num) {
+            try {
+              numberValidity = verifyEgyptianNationalId(patient.id_doc_num);
+              if (!numberValidity) patient.id_doc_num = patient.id_doc_num + ' INVALID';
+            } catch (e) {
+              patient.id_doc_num = patient.id_doc_num + ' INVALID';
+            }
+          }
+
           const { id: droppedPatientId, ...restOfPatientData } = patient;
           [foundPerson] = await tx.insert(People).values(restOfPatientData).returning();
         }

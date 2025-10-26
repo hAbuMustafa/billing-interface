@@ -5,6 +5,7 @@ import {
   getLastMedicalNumber,
 } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
+import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id.js';
 import { DrizzleQueryError } from 'drizzle-orm';
 
 export async function load() {
@@ -67,6 +68,8 @@ export const actions = {
     if (!patientName) failMessages.push(' اسم المريض مطلوب');
     if (!idDocType) failMessages.push('نوع الهوية مطلوبة');
     if (!idDocNum && idDocType != 6) failMessages.push('رقم الهوية مطلوب');
+    if (idDocType === 1 && !verifyEgyptianNationalId(idDocNum))
+      failMessages.push('صيغة رقم الهوية غير صحيحة');
     if (!gender) failMessages.push('الجنس/النوع مطلوب');
     if (!birthdate) failMessages.push('تاريخ الميلاد مطلوب');
     if (!heathInsurance) failMessages.push('موقف المريض من التأمين الصحي مطلوب');
