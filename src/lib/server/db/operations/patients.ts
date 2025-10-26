@@ -9,8 +9,7 @@ import {
   Diagnoses,
   Patient_Diagnoses,
 } from '$lib/server/db/schema';
-import { eq, like, type ExtractTablesWithRelations } from 'drizzle-orm';
-import type { SQLiteTransaction } from 'drizzle-orm/sqlite-core';
+import { eq, like } from 'drizzle-orm';
 
 export async function createWard(ward: typeof Wards.$inferInsert) {
   try {
@@ -184,8 +183,6 @@ export async function createPatient(patient: newPatientT) {
   }
 }
 
-// todo: make sure createPatientSeed references data correctly ('inmate' in admission_notes => patient.security_status)
-
 export async function createPatientFromSeed(patient: App.CustomTypes['PatientSeedT']) {
   try {
     const new_patient = await db.transaction(async (tx) => {
@@ -207,12 +204,17 @@ export async function createPatientFromSeed(patient: App.CustomTypes['PatientSee
         patient.person_id = foundPerson.id;
       }
 
+      if (patient.admission_notes?.includes('مسجون')) {
+        patient.security_status = true;
+        patient.admission_notes?.replace('مسجون', '');
+      }
+
       const [newPatient] = await tx
         .insert(Patients)
-        .values({ ...patient, recent_ward: patient.admission_ward } as App.Require<
-          App.CustomTypes['PatientSeedT'],
-          'person_id'
-        >)
+        .values({
+          ...patient,
+          recent_ward: patient.admission_ward,
+        } as App.Require<App.CustomTypes['PatientSeedT'], 'person_id'>)
         .returning();
 
       await tx.insert(Patient_wards).values({

@@ -36,6 +36,7 @@ declare global {
         id_doc_type?: number;
         dismissal_reason?: number;
         admission_ward: number;
+        security_status: boolean;
         person_id?: number;
       };
     }
