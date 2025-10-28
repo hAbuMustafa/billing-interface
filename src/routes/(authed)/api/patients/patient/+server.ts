@@ -2,13 +2,8 @@ import { db } from '$lib/server/db/index.js';
 import { Patients } from '$lib/server/db/schema';
 import { eq, ne } from 'drizzle-orm';
 
-export async function GET({ url }) {
-  const patient_id = url.searchParams.get('id');
-
-  if (!patient_id || !/^\d{2}\/\d{1,}$/.test(patient_id))
-    return new Response('Bad Request', { status: 401 });
-
-  const patient_data = await db.query.Patients.findFirst({
+function getPatientQuery(patient_id: string) {
+  return db.query.Patients.findFirst({
     with: {
       Person: {
         with: {
@@ -35,6 +30,15 @@ export async function GET({ url }) {
     },
     where: eq(Patients.id, patient_id),
   });
+}
+
+export async function GET({ url }) {
+  const patient_id = url.searchParams.get('id');
+
+  if (!patient_id || !/^\d{2}\/\d{1,}$/.test(patient_id))
+    return new Response('Bad Request', { status: 401 });
+
+  const patient_data = await getPatientQuery(patient_id).execute();
 
   if (!patient_data) return new Response('Bad Request', { status: 401 });
 
@@ -44,3 +48,5 @@ export async function GET({ url }) {
     },
   });
 }
+
+export type PatientWithComprehensiveDataT = Awaited<ReturnType<typeof getPatientQuery>>;

@@ -1,75 +1,4 @@
-type PatientDataT =
-  | {
-      id: string;
-      person_id: number;
-      admission_date: Date;
-      admission_notes: string | null;
-      admission_ward: number;
-      recent_ward: number | null;
-      discharge_date: Date | null;
-      discharge_reason: number | null;
-      discharge_notes: string | null;
-      health_insurance: boolean | null;
-      security_status: boolean | null;
-      Patient_wards: {
-        id: number;
-        timestamp: Date;
-        patient_id: string;
-        ward: number;
-        notes: string | null;
-        Ward: {
-          id: number;
-          name: string;
-          floor: number;
-        };
-      }[];
-      Patient_diagnoses: {
-        timestamp: Date;
-        patient_id: string;
-        diagnosis_id: number;
-        Diagnosis: {
-          id: number;
-          name: string;
-          icd11: string | null;
-        };
-      }[];
-      Patient_discharge_reason: {
-        id: number;
-        name: string;
-      } | null;
-      Person: {
-        id: number;
-        name: string;
-        id_doc_type: number | null;
-        id_doc_num: string | null;
-        gender: boolean | null;
-        birthdate: Date | null;
-        Patient_id_doc_type: {
-          id: number;
-          name: string;
-        } | null;
-        Patients:
-          | {
-              id: string;
-              person_id: number;
-              admission_date: Date;
-              admission_notes: string | null;
-              admission_ward: number;
-              recent_ward: number | null;
-              discharge_date: Date | null;
-              discharge_reason: number | null;
-              discharge_notes: string | null;
-              health_insurance: boolean | null;
-              security_status: boolean | null;
-              Patient_discharge_reason: {
-                id: number;
-                name: string;
-              } | null;
-            }[]
-          | null;
-      };
-    }
-  | undefined;
+import type { PatientWithComprehensiveDataT } from '../../../api/patients/patient/+server';
 
 export async function load({ fetch, params }) {
   const admission_year = params.year;
@@ -93,7 +22,7 @@ export async function load({ fetch, params }) {
 
   const patientId = [castYear, castSerial].join('/');
 
-  const patientData: PatientDataT = await fetch(
+  const patientData: PatientWithComprehensiveDataT = await fetch(
     `/api/patients/patient?id=${patientId}`
   ).then((r) => {
     if (r.ok) {
