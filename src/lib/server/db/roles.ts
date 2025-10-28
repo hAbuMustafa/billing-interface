@@ -92,3 +92,5 @@ export const roles = [
     title: 'Physician',
   },
 ];
+
+// todo: make pre-made role lists for different entities (pharmacies, warehouses) that include member, managers, supervisors
