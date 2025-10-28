@@ -4,9 +4,10 @@
   type PropsT = {
     patient: any;
     onclick?: Function;
+    disableIfDischarged?: boolean;
   };
 
-  let { patient = $bindable(), onclick }: PropsT = $props();
+  let { patient = $bindable(), onclick, disableIfDischarged = false }: PropsT = $props();
 </script>
 
 <button
@@ -17,6 +18,7 @@
     onclick?.();
   }}
   class:discharged={!!patient.discharge_date}
+  disabled={disableIfDischarged && !!patient.discharge_date}
 >
   <span>{patient.id}</span>
   <strong>{patient.name}</strong>
