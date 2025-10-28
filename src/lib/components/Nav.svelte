@@ -93,7 +93,7 @@
     text-decoration: none;
   }
 
-  li:is(:hover, :focus):not(:has(.gravatar)) {
+  li:is(:hover, :focus, :focus-within):not(:has(.gravatar)) {
     background-color: hsl(from var(--main-bg-color) h s 50%);
   }
 
