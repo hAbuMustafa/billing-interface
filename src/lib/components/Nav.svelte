@@ -20,7 +20,33 @@
           <li><a href="/patient/">استعلام عن مريض</a></li>
         </ul>
       </li>
-      <li><!-- <a href="/patient-search">تسعير فاتورة</a> --></li>
+
+      <li>
+        <span>الصيدلية</span>
+
+        <ul>
+          <li><a href="/pharmacy/dispense">صرف لمريض</a></li>
+          <li><a href="/pharmacy/return">مرتجع مريض</a></li>
+          <li><a href="/pharmacy/manual-bill">تسعير فاتورة لمريض</a></li>
+          <hr />
+          <li>
+            <a href="/pharmacy/antibiotics-report">احصائية المضادات الحيوية</a>
+          </li>
+          <li><a href="/pharmacy/daily-report">المنصرف اليومي</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <span>المخزون</span>
+
+        <ul>
+          <li><a href="/stock/dispense">صرف لجهة</a></li>
+          <li><a href="/stock/receive">استلام طلبية</a></li>
+          <hr />
+          <li><a href="/stock/edit-stock">تعديل أرصدة</a></li>
+          <li><a href="/stock/stock-report">تقرير المخزون</a></li>
+        </ul>
+      </li>
     </ul>
     <ul>
       <li>
@@ -29,8 +55,7 @@
           src={'/api/proxy-images/?url=' + user.gravatar}
           alt={`صورة حساب ${user.name}`}
           width="40px"
-          height="40px"
-        />
+          height="40px" />
 
         <ul>
           <li><a href="/account">الحساب</a></li>
