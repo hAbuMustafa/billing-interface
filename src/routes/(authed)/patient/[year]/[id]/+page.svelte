@@ -7,18 +7,13 @@
     TimelineConnector,
     TimelineSeparator,
     TimelineDot,
-  } from "svelte-vertical-timeline";
-  import {
-    formatDate,
-    getAge,
-    getDuration,
-    getTermed,
-  } from "$lib/utils/date-format.js";
+  } from 'svelte-vertical-timeline';
+  import { formatDate, getAge, getDuration, getTermed } from '$lib/utils/date-format.js';
 
   let { data } = $props();
 
   const dateAndTime = (date: number | Date) => {
-    return formatDate(date, "YYYY/MM/DD (hh:mm)");
+    return formatDate(date, 'YYYY/MM/DD (hh:mm)');
   };
 </script>
 
@@ -27,8 +22,8 @@
     <details>
       <summary>البيانات الشخصية</summary>
       <dl class="personal_data">
-        <dt>رقم القيد:</dt>
-        <dd>{data.patient.id}</dd>
+        <dt>الرقم الموحد:</dt>
+        <dd>{data.patient.Person.id}</dd>
 
         <dt>{data.patient.Person.Patient_id_doc_type?.name}:</dt>
         <dd>{data.patient.Person.id_doc_num}</dd>
@@ -36,19 +31,19 @@
         {#if data.patient.Person.birthdate}
           <dt>تاريخ الميلاد:</dt>
           <dd>
-            {formatDate(data.patient.Person.birthdate, "YYYY/MM/DD")} ({getAge(
-              data.patient.Person.birthdate,
+            {formatDate(data.patient.Person.birthdate, 'YYYY/MM/DD')} ({getAge(
+              data.patient.Person.birthdate
             )} سنة)
           </dd>
         {/if}
 
         {#if data.patient.Person.gender}
           <dt>النوع:</dt>
-          <dd>{data.patient.Person.gender ? "ذكر" : "أنثى"}</dd>
+          <dd>{data.patient.Person.gender ? 'ذكر' : 'أنثى'}</dd>
         {/if}
 
         <dt>التأمين الصحي:</dt>
-        <dd>{data.patient.health_insurance ? "" : "غير "} مؤمن عليه</dd>
+        <dd>{data.patient.health_insurance ? '' : 'غير '} مؤمن عليه</dd>
       </dl>
     </details>
   </section>
@@ -56,6 +51,9 @@
   <section>
     <h2>بيانات الإقامة</h2>
     <dl class="stay-data">
+      <dt>رقم الملف:</dt>
+      <dd>{data.patient.id}</dd>
+
       <dt>تاريخ الدخول:</dt>
       <dd>{dateAndTime(data.patient.admission_date)}</dd>
 
@@ -79,10 +77,10 @@
         <dt>مدة الإقامة:</dt>
         {@const daysOfStay = getDuration(
           data.patient.admission_date,
-          data.patient.discharge_date,
+          data.patient.discharge_date
         )}
         <dd>
-          {getTermed(daysOfStay, "يوم", "أيام")}
+          {getTermed(daysOfStay, 'يوم', 'أيام')}
         </dd>
       {/if}
 
@@ -99,7 +97,7 @@
           <span class="diagnosis_name">{diagnosis.Diagnosis.name}</span>
           <span class="diagnosis_time">
             {diagnosis.timestamp === data.patient.admission_date
-              ? "(أولي)"
+              ? '(أولي)'
               : dateAndTime(diagnosis.timestamp)}
           </span>
         </li>
@@ -107,9 +105,7 @@
     </ol>
 
     <details dir="ltr">
-      <summary dir="rtl"
-        ><h3 style="display: inline-block;">التنقلات</h3></summary
-      >
+      <summary dir="rtl"><h3 style="display: inline-block;">التنقلات</h3></summary>
       <Timeline position="alternate">
         {#each data.patient.Patient_wards as transfer, i (i)}
           <TimelineItem>
@@ -119,7 +115,7 @@
               </small>
             </TimelineOppositeContent>
             <TimelineSeparator>
-              <TimelineDot style={"background-color: #7CD5E2;"} />
+              <TimelineDot style={'background-color: #7CD5E2;'} />
               {#if !data.patient.discharge_date && data.patient.Patient_wards.length - 1 === i}
                 <TimelineConnector
                   style="background: linear-gradient(#fff, 30%, transparent 99% 1%);"
@@ -142,7 +138,7 @@
               </small>
             </TimelineOppositeContent>
             <TimelineSeparator>
-              <TimelineDot style={"background-color: red;"} />
+              <TimelineDot style={'background-color: red;'} />
             </TimelineSeparator>
             <TimelineContent>
               <span class="transfer_ward_name">خروج</span>
