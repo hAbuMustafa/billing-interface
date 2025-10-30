@@ -25,6 +25,12 @@
         <dt>الرقم الموحد:</dt>
         <dd>{data.patient.Person.id}</dd>
 
+        {#if data.patient.Person.id_doc_type !== 1}
+          <!-- todo: separate nationality in a separate column -->
+          <dt>الجنسية:</dt>
+          <dd>{data.patient.admission_notes}</dd>
+        {/if}
+
         <dt>{data.patient.Person.Patient_id_doc_type?.name}:</dt>
         <dd>{data.patient.Person.id_doc_num}</dd>
 
