@@ -18,6 +18,9 @@
           <hr />
           <li><a href="/patient/report">بيان الإشغال</a></li>
           <li><a href="/patient/">استعلام عن مريض</a></li>
+          <li>
+            <a href="/patient/monthly-report"> تقرير الإشغال الشهري </a>
+          </li>
         </ul>
       </li>
 
@@ -55,7 +58,8 @@
           src={'/api/proxy-images/?url=' + user.gravatar}
           alt={`صورة حساب ${user.name}`}
           width="40px"
-          height="40px" />
+          height="40px"
+        />
 
         <ul>
           <li><a href="/account">الحساب</a></li>
