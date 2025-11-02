@@ -45,6 +45,28 @@ main > form {
   }
 }
 
+.flex-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .input-pair {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  hr {
+    width: 100%;
+  }
+}
+
+form.flex-form {
+  input[type='submit'] {
+    padding-block: 0.5rem;
+  }
+}
+
 .input-pair {
   display: flex;
   gap: 0.5rem;
@@ -115,8 +137,6 @@ a.button {
   color: #ccc;
 
   font-weight: 700;
-
-  height: 100%;
 
   padding: 0.25rem 0.5rem;
 

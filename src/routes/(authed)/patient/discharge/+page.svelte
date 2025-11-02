@@ -28,43 +28,48 @@
   );
 </script>
 
-<form method="POST">
-  <label for="name"> اسم المريض </label>
-  <ISelect
-    endpoint="/api/patients/?cro=true"
-    type="text"
-    id="name"
-    name="patient_name"
-    bind:value={patientName}
-    bind:done={hasSelectedPatient}
-    readonly={hasSelectedPatient ?? false}
-    onclear={() => {
-      selectedPatientId = '';
-    }}
-    autocomplete="off"
-    required={Boolean(!selectedPatientId) ?? null}
-    autofocus
-  >
-    {#snippet optionSnippet(patient: PatientT)}
-      <PatientButton
-        {patient}
-        onclick={() => {
-          patientName = patient.name;
-          selectedPatientId = patient.id;
-        }}
-      />
-    {/snippet}
-  </ISelect>
-  <input type="hidden" name="patient_id" bind:value={selectedPatientId} required />
+<form method="POST" class="flex-form">
+  <div class="input-pair">
+    <label for="name"> اسم المريض </label>
+    <ISelect
+      endpoint="/api/patients/?cro=true"
+      type="text"
+      id="name"
+      name="patient_name"
+      bind:value={patientName}
+      bind:done={hasSelectedPatient}
+      readonly={hasSelectedPatient ?? false}
+      onclear={() => {
+        selectedPatientId = '';
+      }}
+      autocomplete="off"
+      required={Boolean(!selectedPatientId) ?? null}
+      autofocus
+    >
+      {#snippet optionSnippet(patient: PatientT)}
+        <PatientButton
+          {patient}
+          onclick={() => {
+            patientName = patient.name;
+            selectedPatientId = patient.id;
+          }}
+        />
+      {/snippet}
+    </ISelect>
+    <input type="hidden" name="patient_id" bind:value={selectedPatientId} required />
+  </div>
 
-  <label for="discharge_date">وقت الخروج</label>
-  <input
-    type="datetime-local"
-    name="discharge_date"
-    id="discharge_date"
-    bind:value={dischargeDate}
-    required
-  />
+  <div class="input-pair">
+    <label for="discharge_date">وقت الخروج</label>
+    <input
+      type="datetime-local"
+      name="discharge_date"
+      id="discharge_date"
+      bind:value={dischargeDate}
+      required
+    />
+  </div>
+
   <Picker
     name="discharge_reason"
     label="سبب الخروج"
@@ -72,24 +77,14 @@
     bind:value={selectedDischargeReason}
   />
 
-  <label for="discharge_notes">ملاحظات</label>
-  <textarea
-    name="discharge_notes"
-    id="discharge_notes"
-    required={[3, 9].some((id) => selectedDischargeReason === id)}
-  ></textarea>
+  <div class="input-pair">
+    <label for="discharge_notes">ملاحظات</label>
+    <textarea
+      name="discharge_notes"
+      id="discharge_notes"
+      required={[3, 9].some((id) => selectedDischargeReason === id)}
+    ></textarea>
+  </div>
 
   <input type="submit" value="تسجيل" />
 </form>
-
-<style>
-  form {
-    display: flex;
-    flex-direction: column;
-
-    input[type='submit'] {
-      margin-block-start: 2rem;
-      padding-block: 0.5rem;
-    }
-  }
-</style>

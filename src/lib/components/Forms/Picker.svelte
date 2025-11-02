@@ -94,8 +94,6 @@
 
 <style>
   fieldset {
-    margin-block-start: 1rem;
-
     &:has(> [type='radio'] + label) {
       display: flex;
       gap: 1rem;
@@ -105,8 +103,6 @@
     }
 
     & > fieldset {
-      margin-block-start: unset;
-
       border: none;
       border-radius: unset;
 
@@ -144,9 +140,5 @@
         }
       }
     }
-  }
-
-  input[type='radio']:not(:first-of-type) {
-    margin-inline-start: 1.5rem;
   }
 </style>

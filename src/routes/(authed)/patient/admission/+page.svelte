@@ -69,49 +69,53 @@
   }
 </script>
 
-<form method="POST">
-  <label for="medical_number">الرقم الطبي</label>
-  <div class="medical_number_input">
-    <!-- svelte-ignore a11y_autofocus -->
-    <input
-      type="number"
-      name="medical_number"
-      id="medical_number"
-      placeholder={String(data.nextMedicalNumber)}
-      autofocus
-      bind:value={medicalNumber}
-      required
-    />
-    {#if !medicalNumber}
-      <button
-        type="button"
-        onclick={() => {
-          medicalNumber = data.nextMedicalNumber;
-        }}>{String(data.nextMedicalNumber)}</button
-      >
-    {/if}
+<form method="POST" class="flex-form">
+  <div class="input-pair">
+    <label for="medical_number">الرقم الطبي</label>
+    <div class="medical_number_input">
+      <!-- svelte-ignore a11y_autofocus -->
+      <input
+        type="number"
+        name="medical_number"
+        id="medical_number"
+        placeholder={String(data.nextMedicalNumber)}
+        autofocus
+        bind:value={medicalNumber}
+        required
+      />
+      {#if !medicalNumber}
+        <button
+          type="button"
+          onclick={() => {
+            medicalNumber = data.nextMedicalNumber;
+          }}>{String(data.nextMedicalNumber)}</button
+        >
+      {/if}
+    </div>
   </div>
 
-  <label for="name" class={hasSelectedPerson ? 'locked' : ''}> اسم المريض </label>
-  <ISelect
-    endpoint="/api/people/"
-    name="name"
-    type="text"
-    id="name"
-    bind:done={hasSelectedPerson}
-    bind:value={patientName}
-    pattern={arabicTriadicNamesPattern.source}
-    readonly={hasSelectedPerson}
-    onclear={() => {
-      selectedPersonId = 0;
-    }}
-    autocomplete="off"
-    required
-  >
-    {#snippet optionSnippet(person: FetchedPersonT)}
-      <PersonButton {person} onclick={() => selectPerson(person)} />
-    {/snippet}
-  </ISelect>
+  <div class="input-pair">
+    <label for="name" class={hasSelectedPerson ? 'locked' : ''}> اسم المريض </label>
+    <ISelect
+      endpoint="/api/people/"
+      name="name"
+      type="text"
+      id="name"
+      bind:done={hasSelectedPerson}
+      bind:value={patientName}
+      pattern={arabicTriadicNamesPattern.source}
+      readonly={hasSelectedPerson}
+      onclear={() => {
+        selectedPersonId = 0;
+      }}
+      autocomplete="off"
+      required
+    >
+      {#snippet optionSnippet(person: FetchedPersonT)}
+        <PersonButton {person} onclick={() => selectPerson(person)} />
+      {/snippet}
+    </ISelect>
+  </div>
 
   <Picker
     label="نوع الهوية"
@@ -121,18 +125,20 @@
     locked={hasSelectedPerson}
   />
 
-  <label for="id_doc_num" class={hasSelectedPerson ? 'locked' : ''}>رقم الهوية</label>
-  <input
-    name="id_doc_num"
-    id="id_doc_num"
-    type="text"
-    placeholder="22222222222222"
-    bind:value={idDocNum}
-    pattern={idDocType === 1 ? nationalIdPattern.source : null}
-    readonly={hasSelectedPerson}
-    required={idDocType !== 6}
-    disabled={idDocType === 6}
-  />
+  <div class="input-pair">
+    <label for="id_doc_num" class={hasSelectedPerson ? 'locked' : ''}>رقم الهوية</label>
+    <input
+      name="id_doc_num"
+      id="id_doc_num"
+      type="text"
+      placeholder="22222222222222"
+      bind:value={idDocNum}
+      pattern={idDocType === 1 ? nationalIdPattern.source : null}
+      readonly={hasSelectedPerson}
+      required={idDocType !== 6}
+      disabled={idDocType === 6}
+    />
+  </div>
 
   <Picker
     name="gender"
@@ -145,17 +151,19 @@
     locked={hasSelectedPerson}
   />
 
-  <label for="birthdate" class={hasSelectedPerson ? 'locked' : ''}>تاريخ الميلاد</label>
-  <input
-    name="birthdate"
-    id="birthdate"
-    type="date"
-    bind:value={birthdate}
-    readonly={hasSelectedPerson}
-    required
-  />
+  <div class="input-pair">
+    <label for="birthdate" class={hasSelectedPerson ? 'locked' : ''}>تاريخ الميلاد</label>
+    <input
+      name="birthdate"
+      id="birthdate"
+      type="date"
+      bind:value={birthdate}
+      readonly={hasSelectedPerson}
+      required
+    />
+  </div>
 
-  <hr style="width: 100%; margin-block-start: 2rem;" />
+  <hr />
 
   <input type="hidden" name="person_id" bind:value={selectedPersonId} />
 
@@ -205,32 +213,28 @@
     bind:value={securityStatus}
   />
 
-  <label for="admission_date">وقت وتاريخ الدخول</label>
-  <input
-    type="datetime-local"
-    name="admission_date"
-    id="admission_date"
-    bind:value={admissionDate}
-    required
-  />
+  <div class="input-pair">
+    <label for="admission_date">وقت وتاريخ الدخول</label>
+    <input
+      type="datetime-local"
+      name="admission_date"
+      id="admission_date"
+      bind:value={admissionDate}
+      required
+    />
+  </div>
 
-  <label for="admission_notes">ملاحظات</label>
-  <textarea name="admission_notes" id="admission_notes" required={idDocType === 6}
-  ></textarea>
+  <div class="input-pair">
+    <label for="admission_notes">ملاحظات</label>
+    <textarea name="admission_notes" id="admission_notes" required={idDocType === 6}
+    ></textarea>
+  </div>
 
   <input type="submit" value="تسجيل" />
 </form>
 
 <style>
   form {
-    display: flex;
-    flex-direction: column;
-
-    input[type='submit'] {
-      margin-block-start: 2rem;
-      padding-block: 0.5rem;
-    }
-
     div.medical_number_input {
       display: grid;
       grid-template-columns: 1fr max-content;
