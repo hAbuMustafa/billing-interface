@@ -1,6 +1,8 @@
 export async function load({ params, fetch }) {
   const pageData = {
-    title: `إحصائية الإشغال لشهر ${params.month}/${params.year}`,
+    title: `إحصائية الإشغال لشهر ${params.month.padStart(2, '0')} من العام ${
+      params.year
+    }`,
   };
 
   if (
@@ -19,7 +21,7 @@ export async function load({ params, fetch }) {
   });
 
   return {
-    title: `إحصائية الإشغال لشهر ${params.month}/${params.year}`,
+    ...pageData,
     stats: result,
   };
 }
