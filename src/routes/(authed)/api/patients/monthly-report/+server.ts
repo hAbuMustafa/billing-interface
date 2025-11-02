@@ -12,14 +12,6 @@ export async function GET({ url }) {
 
   const castYear = Number(year);
   const castMonth = Number(month);
-  /* 
-- admission count (male/female) 
-- of whom are beneficiaries of health insurance
-- of whom are not egyptian
-
-- discharges count (male/female)
-- total residence count (days) of discharged patients
-*/
 
   const admissions = await db.query.Patients.findMany({
     with: {
