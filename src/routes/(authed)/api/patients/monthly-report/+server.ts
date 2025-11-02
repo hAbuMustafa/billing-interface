@@ -1,5 +1,6 @@
 import { db } from '$lib/server/db/index.js';
 import { Patients } from '$lib/server/db/schema.js';
+import { json } from '@sveltejs/kit';
 import { between } from 'drizzle-orm';
 
 export async function GET({ url }) {
@@ -35,9 +36,5 @@ export async function GET({ url }) {
     ),
   });
 
-  return new Response(JSON.stringify({ admissions, discharges }), {
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
+  return json({ admissions, discharges });
 }

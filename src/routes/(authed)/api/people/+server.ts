@@ -2,6 +2,7 @@ import { db } from '$lib/server/db/';
 import { People } from '$lib/server/db/schema';
 import { regexp } from '$lib/utils/drizzle';
 import { regexifiedPersonName } from '$lib/utils/querying';
+import { json } from '@sveltejs/kit';
 import { like } from 'drizzle-orm';
 
 export async function GET({ url }) {
@@ -23,9 +24,5 @@ export async function GET({ url }) {
     );
 
   // return people data
-  return new Response(JSON.stringify(matchedPeople), {
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
+  return json(matchedPeople);
 }

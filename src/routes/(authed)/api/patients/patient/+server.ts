@@ -1,5 +1,6 @@
 import { db } from '$lib/server/db/index.js';
 import { Patients } from '$lib/server/db/schema';
+import { json } from '@sveltejs/kit';
 import { eq, ne } from 'drizzle-orm';
 
 function getPatientQuery(patient_id: string) {
@@ -42,11 +43,7 @@ export async function GET({ url }) {
 
   if (!patient_data) return new Response('Bad Request', { status: 401 });
 
-  return new Response(JSON.stringify(patient_data), {
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
+  return json(patient_data);
 }
 
 export type PatientWithComprehensiveDataT = Awaited<ReturnType<typeof getPatientQuery>>;

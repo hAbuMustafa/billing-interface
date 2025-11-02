@@ -6,6 +6,7 @@ import {
   People,
   Wards,
 } from '$lib/server/db/schema';
+import { json } from '@sveltejs/kit';
 import { eq, isNull, sql } from 'drizzle-orm';
 
 export async function GET() {
@@ -29,9 +30,5 @@ export async function GET() {
     .orderBy(Patients.admission_date)
     .groupBy(Patients.id);
 
-  return new Response(JSON.stringify(allPatients), {
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
+  return json(allPatients);
 }
