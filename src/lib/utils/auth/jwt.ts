@@ -47,8 +47,9 @@ export async function generateRefreshToken(
 }
 
 export async function verifyAccessToken(
-  token: string
+  token: string | undefined
 ): Promise<AccessTokenPayload | null> {
+  if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, ACCESS_TOKEN_SECRET);
     return payload as AccessTokenPayload;
