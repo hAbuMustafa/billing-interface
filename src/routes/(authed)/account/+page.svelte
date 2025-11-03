@@ -68,6 +68,7 @@
   <hr />
 
   <a class="button" href="/account/change-password">تغيير كلمة السر</a>
+  <a class="button danger" href="/logout-everywhere">تسجيل خروج من جميع الأجهزة</a>
 </div>
 
 <style>
