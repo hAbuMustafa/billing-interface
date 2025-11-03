@@ -61,7 +61,6 @@ export async function createTokens(
 
 export async function refreshAccessToken(refreshToken: string) {
   const refreshTokenPayload = await verifyRefreshToken(refreshToken);
-  console.log('REFRESHING ACCESS TOKEN');
 
   if (!refreshTokenPayload) {
     throw new Error('Invalid refresh token');
