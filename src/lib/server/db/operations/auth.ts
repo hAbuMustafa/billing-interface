@@ -1,8 +1,18 @@
-import { getGravatarHash } from '$lib/utils/gravatar';
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
-import { Users, Sessions } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { RefreshTokens, Users } from '$lib/server/db/schema';
+import { and, eq, gt } from 'drizzle-orm';
+import { getGravatarHash } from '$lib/utils/gravatar';
+import {
+  generateTokenId,
+  generateAccessToken,
+  generateRefreshToken,
+  hashToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+  type RefreshTokenPayload,
+  type AccessTokenPayload,
+} from '$lib/utils/auth/jwt';
 
 export async function validateLogin(username: string, password: string) {
   const [user] = await db.select().from(Users).where(eq(Users.username, username));
@@ -22,67 +32,124 @@ export async function validateLogin(username: string, password: string) {
   return otherUserData;
 }
 
-export async function createSession(
-  userId: number,
-  sessionId: string,
+export async function createTokens(
+  userData: NonNullable<App.Locals['user']>,
   sessionMaxAge: Date
 ) {
-  try {
-    const newSession = await db.transaction(async (tx) => {
-      const [sessionInsert] = await tx
-        .insert(Sessions)
-        .values({
-          id: sessionId,
-          user_id: userId,
-          expires_at: sessionMaxAge,
-        })
-        .returning();
+  const tokenId = generateTokenId();
 
-      const [updatedUser] = await tx
-        .update(Users)
-        .set({ last_login: new Date() })
-        .returning();
+  const refreshPayload: RefreshTokenPayload = {
+    userId: userData.id,
+    tokenId,
+  };
 
-      return sessionInsert;
-    });
+  const accessToken = await generateAccessToken(userData);
+  const refreshToken = await generateRefreshToken(refreshPayload, sessionMaxAge);
 
-    return {
-      success: true,
-      data: newSession,
-    };
-  } catch (error) {
-    return {
-      error,
-    };
-  }
+  await db.insert(RefreshTokens).values({
+    id: tokenId,
+    user_id: userData.id,
+    token_hash: hashToken(refreshToken),
+    expires_at: sessionMaxAge,
+  });
+
+  return {
+    success: true,
+    accessToken,
+    refreshToken,
+  };
 }
 
-export async function getUserFromSession(sessionId: string) {
-  const sessionsData = await db
-    .select()
-    .from(Sessions)
-    .innerJoin(Users, eq(Sessions.user_id, Users.id))
-    .where(eq(Sessions.id, sessionId));
-  if (sessionsData.length === 0) return null;
+export async function refreshAccessToken(refreshToken: string, accessToken: string) {
+  const refreshTokenPayload = await verifyRefreshToken(refreshToken);
+  const accessTokenPayload = await verifyAccessToken(accessToken);
 
-  if (sessionsData[0].Sessions.expires_at < new Date()) {
-    try {
-      await db.delete(Sessions).where(eq(Sessions.id, sessionId));
-    } catch (error) {
-      console.error(error);
-    }
-
-    return null;
+  if (!refreshTokenPayload) {
+    throw new Error('Invalid refresh token');
   }
 
-  const { hashed_pw: droppedPwHash, ...user } = sessionsData[0].Users;
+  if (!accessTokenPayload) {
+    throw new Error('Invalid access token');
+  }
 
-  const userObj = {
+  const tokenHash = hashToken(refreshToken);
+  const tokenRecord = await db.query.RefreshTokens.findFirst({
+    where: and(
+      eq(RefreshTokens.id, refreshTokenPayload.tokenId),
+      eq(RefreshTokens.user_id, Users.id),
+      eq(RefreshTokens.token_hash, tokenHash),
+      gt(RefreshTokens.expires_at, new Date())
+    ),
+    with: {
+      User: true,
+    },
+  });
+
+  if (!tokenRecord) {
+    throw new Error('Refresh token not found or expired');
+  }
+
+  await db
+    .update(RefreshTokens)
+    .set({
+      last_used_at: new Date(),
+    })
+    .where(eq(RefreshTokens.id, refreshTokenPayload.tokenId));
+
+  const accessPayload: AccessTokenPayload = {
+    id: refreshTokenPayload.userId,
+    username: accessTokenPayload.username,
+    name: accessTokenPayload.name,
+    created_at: accessTokenPayload.created_at,
+    password_reset_required: accessTokenPayload.password_reset_required,
+    phone_number: accessTokenPayload.phone_number,
+    national_id: accessTokenPayload.national_id,
+    role: tokenRecord.User.role,
+    last_login: accessTokenPayload.last_login,
+    gravatar: accessTokenPayload.gravatar,
+    email: accessTokenPayload.email,
+  };
+
+  const newAccessToken = await generateAccessToken(accessPayload);
+
+  return {
+    accessToken: newAccessToken,
+    user: accessPayload,
+  };
+}
+
+export async function logoutUser(refreshToken: string) {
+  const payload = await verifyRefreshToken(refreshToken);
+  if (!payload) {
+    return;
+  }
+  await db.delete(RefreshTokens).where(eq(RefreshTokens.id, payload.tokenId));
+}
+
+export async function logoutAllDevices(userId: number) {
+  await db.delete(RefreshTokens).where(eq(RefreshTokens.user_id, userId));
+}
+
+export async function rotateRefreshToken(oldRefreshToken: string, sessionMaxAge: Date) {
+  const payload = await verifyRefreshToken(oldRefreshToken);
+  if (!payload) {
+    throw new Error('Invalid refresh token');
+  }
+
+  await db.delete(RefreshTokens).where(eq(RefreshTokens.id, payload.tokenId));
+
+  const user = await db.query.Users.findFirst({ where: eq(Users.id, payload.userId) });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const userData = {
     ...user,
     gravatar: user.email
       ? `https://0.gravatar.com/avatar/${getGravatarHash(user.email)}`
       : '/default-profile.jpg',
   };
 
-  return userObj;
+  return await createTokens(userData, sessionMaxAge);
 }
