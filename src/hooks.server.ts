@@ -1,38 +1,60 @@
-import { getUserFromSession } from '$lib/server/db/operations/auth';
+import { refreshAccessToken } from '$lib/server/db/operations/auth';
+import {
+  ACCESS_COOKIE_NAME,
+  ACCESS_TOKEN_MAX_AGE,
+  COOKIE_OPTIONS,
+  REFRESH_COOKIE_NAME,
+  verifyAccessToken,
+} from '$lib/utils/auth/jwt';
 import { redirect } from '@sveltejs/kit';
 
 export async function handle({ event, resolve }) {
-  if (event.locals.user) console.log(event.locals.user);
-
-  const sessionId = event.cookies.get('session_id');
+  const accessToken = event.cookies.get(ACCESS_COOKIE_NAME);
 
   const authedOnly = event.route.id?.startsWith('/(authed)');
 
   if (event.url.pathname.startsWith('/api') && !authedOnly) return await resolve(event);
   if (event.url.pathname.startsWith('/log')) return await resolve(event);
 
-  if (!sessionId && !authedOnly) return await resolve(event);
+  if (!accessToken && !authedOnly) return await resolve(event);
 
   const redirectURL = new URL('/login', event.url.origin);
 
   if (!event.url.pathname.startsWith('/login') && event.url.pathname !== '/')
     redirectURL.searchParams.set('redirectTo', event.url.pathname);
 
-  if (!sessionId) return redirect(303, redirectURL);
+  if (!accessToken) return redirect(303, redirectURL);
 
-  const user = await getUserFromSession(sessionId);
+  let userPayload = await verifyAccessToken(accessToken);
 
-  if (!user) {
-    event.cookies.delete('session_id', {
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
-    event.locals.user = null;
-    return redirect(303, redirectURL);
+  if (!userPayload) {
+    const refreshToken = event.cookies.get(REFRESH_COOKIE_NAME);
+    if (!refreshToken) {
+      event.cookies.delete(ACCESS_COOKIE_NAME, COOKIE_OPTIONS);
+      event.locals.user = null;
+      return redirect(303, redirectURL);
+    }
+
+    try {
+      const { accessToken: newAccessToken, user } = await refreshAccessToken(
+        refreshToken,
+        accessToken
+      );
+
+      event.cookies.set(ACCESS_COOKIE_NAME, newAccessToken, {
+        ...COOKIE_OPTIONS,
+        maxAge: ACCESS_TOKEN_MAX_AGE,
+      });
+
+      userPayload = user;
+    } catch (error) {
+      event.cookies.delete(ACCESS_COOKIE_NAME, { path: '/' });
+      event.cookies.delete(REFRESH_COOKIE_NAME, { path: '/' });
+      return redirect(303, redirectURL);
+    }
   }
 
-  event.locals.user = user;
+  event.locals.user = userPayload;
 
   if (
     event.locals.user.password_reset_required &&
