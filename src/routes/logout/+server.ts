@@ -12,10 +12,10 @@ export async function GET({ cookies }) {
 
   if (refreshToken) {
     await logoutUser(refreshToken);
-
-    cookies.delete(ACCESS_COOKIE_NAME, COOKIE_OPTIONS);
-    cookies.delete(REFRESH_COOKIE_NAME, COOKIE_OPTIONS);
   }
+
+  cookies.delete(ACCESS_COOKIE_NAME, COOKIE_OPTIONS);
+  cookies.delete(REFRESH_COOKIE_NAME, COOKIE_OPTIONS);
 
   return redirect(303, '/');
 }
