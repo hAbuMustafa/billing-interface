@@ -37,6 +37,7 @@
     "dayjs": "^1.11.18",
     "drizzle-orm": "^0.44.6",
     "extend-arabic-query": "^0.3.2",
+    "jose": "^6.1.0",
     "lodash.debounce": "^4.0.8",
     "svelte-sonner": "^1.0.5",
     "svelte-vertical-timeline": "^2.0.0"
