@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import { createSession, validateLogin } from '$lib/server/db/operations/auth';
 import { usernamePattern } from '$lib/stores/patterns';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
@@ -65,7 +66,7 @@ export const actions: Actions = {
     cookies.set('session_id', sessionId, {
       path: '/',
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: !dev,
       sameSite: 'strict',
       expires: sessionMaxAge,
     });
