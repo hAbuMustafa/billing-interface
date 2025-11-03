@@ -2,13 +2,12 @@ import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
 import { RefreshTokens, Users } from '$lib/server/db/schema';
 import { and, eq, gt } from 'drizzle-orm';
-import { getGravatarHash } from '$lib/utils/gravatar';
+import { getGravatarLinkFromUserRecord } from '$lib/utils/gravatar';
 import {
   generateTokenId,
   generateAccessToken,
   generateRefreshToken,
   hashToken,
-  verifyAccessToken,
   verifyRefreshToken,
   type RefreshTokenPayload,
   type AccessTokenPayload,
@@ -60,23 +59,19 @@ export async function createTokens(
   };
 }
 
-export async function refreshAccessToken(refreshToken: string, accessToken: string) {
+export async function refreshAccessToken(refreshToken: string) {
   const refreshTokenPayload = await verifyRefreshToken(refreshToken);
-  const accessTokenPayload = await verifyAccessToken(accessToken);
+  console.log('REFRESHING ACCESS TOKEN');
 
   if (!refreshTokenPayload) {
     throw new Error('Invalid refresh token');
-  }
-
-  if (!accessTokenPayload) {
-    throw new Error('Invalid access token');
   }
 
   const tokenHash = hashToken(refreshToken);
   const tokenRecord = await db.query.RefreshTokens.findFirst({
     where: and(
       eq(RefreshTokens.id, refreshTokenPayload.tokenId),
-      eq(RefreshTokens.user_id, Users.id),
+      eq(RefreshTokens.user_id, refreshTokenPayload.userId),
       eq(RefreshTokens.token_hash, tokenHash),
       gt(RefreshTokens.expires_at, new Date())
     ),
@@ -98,16 +93,16 @@ export async function refreshAccessToken(refreshToken: string, accessToken: stri
 
   const accessPayload: AccessTokenPayload = {
     id: refreshTokenPayload.userId,
-    username: accessTokenPayload.username,
-    name: accessTokenPayload.name,
-    created_at: accessTokenPayload.created_at,
-    password_reset_required: accessTokenPayload.password_reset_required,
-    phone_number: accessTokenPayload.phone_number,
-    national_id: accessTokenPayload.national_id,
+    username: tokenRecord.User.username,
+    name: tokenRecord.User.name,
+    created_at: tokenRecord.User.created_at,
+    password_reset_required: tokenRecord.User.password_reset_required,
+    phone_number: tokenRecord.User.phone_number,
+    national_id: tokenRecord.User.national_id,
     role: tokenRecord.User.role,
-    last_login: accessTokenPayload.last_login,
-    gravatar: accessTokenPayload.gravatar,
-    email: accessTokenPayload.email,
+    last_login: tokenRecord.User.last_login,
+    gravatar: getGravatarLinkFromUserRecord(tokenRecord.User),
+    email: tokenRecord.User.email,
   };
 
   const newAccessToken = await generateAccessToken(accessPayload);
@@ -146,9 +141,7 @@ export async function rotateRefreshToken(oldRefreshToken: string, sessionMaxAge:
 
   const userData = {
     ...user,
-    gravatar: user.email
-      ? `https://0.gravatar.com/avatar/${getGravatarHash(user.email)}`
-      : '/default-profile.jpg',
+    gravatar: getGravatarLinkFromUserRecord(user),
   };
 
   return await createTokens(userData, sessionMaxAge);

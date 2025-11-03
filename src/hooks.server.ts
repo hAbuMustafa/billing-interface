@@ -23,22 +23,23 @@ export async function handle({ event, resolve }) {
   if (!event.url.pathname.startsWith('/login') && event.url.pathname !== '/')
     redirectURL.searchParams.set('redirectTo', event.url.pathname);
 
-  if (!accessToken) return redirect(303, redirectURL);
+  const refreshToken = event.cookies.get(REFRESH_COOKIE_NAME);
+
+  if (!accessToken && !refreshToken) return redirect(303, redirectURL);
 
   let userPayload = await verifyAccessToken(accessToken);
 
   if (!userPayload) {
-    const refreshToken = event.cookies.get(REFRESH_COOKIE_NAME);
     if (!refreshToken) {
       event.cookies.delete(ACCESS_COOKIE_NAME, COOKIE_OPTIONS);
+      event.cookies.delete(REFRESH_COOKIE_NAME, COOKIE_OPTIONS);
       event.locals.user = null;
       return redirect(303, redirectURL);
     }
 
     try {
       const { accessToken: newAccessToken, user } = await refreshAccessToken(
-        refreshToken,
-        accessToken
+        refreshToken
       );
 
       event.cookies.set(ACCESS_COOKIE_NAME, newAccessToken, {
@@ -48,8 +49,9 @@ export async function handle({ event, resolve }) {
 
       userPayload = user;
     } catch (error) {
-      event.cookies.delete(ACCESS_COOKIE_NAME, { path: '/' });
-      event.cookies.delete(REFRESH_COOKIE_NAME, { path: '/' });
+      console.error(error);
+      event.cookies.delete(ACCESS_COOKIE_NAME, COOKIE_OPTIONS);
+      event.cookies.delete(REFRESH_COOKIE_NAME, COOKIE_OPTIONS);
       return redirect(303, redirectURL);
     }
   }
