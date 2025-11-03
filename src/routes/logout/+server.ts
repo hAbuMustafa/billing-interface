@@ -1,19 +1,16 @@
-import { db } from '$lib/server/db';
-import { Sessions } from '$lib/server/db/schema.js';
+import { ACCESS_COOKIE_NAME, REFRESH_COOKIE_NAME } from '$lib/utils/auth/jwt';
+import { logoutUser } from '$lib/server/db/operations/auth';
+
 import { redirect } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
 
 export async function GET({ cookies }) {
-  const currentSessionId = cookies.get('session_id');
+  const refreshToken = cookies.get(REFRESH_COOKIE_NAME);
 
-  if (currentSessionId) {
-    await db.delete(Sessions).where(eq(Sessions.id, currentSessionId));
+  if (refreshToken) {
+    await logoutUser(refreshToken);
 
-    cookies.delete('session_id', {
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
+    cookies.delete(ACCESS_COOKIE_NAME, { path: '/' });
+    cookies.delete(REFRESH_COOKIE_NAME, { path: '/' });
   }
 
   return redirect(303, '/');
