@@ -195,11 +195,9 @@ export const RefreshTokens = sqliteTable('RefreshTokens', {
     .notNull()
     .references(() => Users.id),
   token_hash: text().notNull(),
-  created_at: integer({ mode: 'timestamp' })
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  created_at: integer({ mode: 'timestamp' }).notNull().default(new Date()),
   expires_at: integer({ mode: 'timestamp' }).notNull(),
-  last_used_at: integer({ mode: 'timestamp' }).default(sql`CURRENT_TIMESTAMP`),
+  last_used_at: integer({ mode: 'timestamp' }).default(new Date()),
 });
 
 export const Sys_Sec_pb_key = sqliteTable('Sys_Sec_pb_key', {
