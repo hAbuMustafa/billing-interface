@@ -1,6 +1,14 @@
-import { dev } from '$app/environment';
-import { createSession, validateLogin } from '$lib/server/db/operations/auth';
+import { validateLogin } from '$lib/server/db/operations/auth';
+import { getEndOfSessionTime } from '$lib/utils/auth/session';
+import {
+  ACCESS_COOKIE_NAME,
+  REFRESH_COOKIE_NAME,
+  COOKIE_OPTIONS,
+  ACCESS_TOKEN_MAX_AGE,
+} from '$lib/utils/auth/jwt';
+import { createTokens } from '$lib/server/db/operations/auth';
 import { usernamePattern } from '$lib/stores/patterns';
+import { getGravatarHash } from '$lib/utils/gravatar';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export function load({ locals }) {
@@ -54,20 +62,28 @@ export const actions: Actions = {
       });
     }
 
-    // create session
-    const sessionId = crypto.randomUUID();
     const sessionMaxAge = getEndOfSessionTime();
 
-    const result = await createSession(userData.id, sessionId, sessionMaxAge);
+    const result = await createTokens(
+      {
+        ...userData,
+        gravatar: userData.email
+          ? `https://0.gravatar.com/avatar/${getGravatarHash(userData.email)}`
+          : '/default-profile.jpg',
+      },
+      sessionMaxAge
+    );
 
     if (!result.success)
       return fail(401, { message: 'حدث خطأ غير متوقع أثناء إثبات الجلسة' });
 
-    cookies.set('session_id', sessionId, {
-      path: '/',
-      httpOnly: true,
-      secure: !dev,
-      sameSite: 'strict',
+    cookies.set(ACCESS_COOKIE_NAME, result.accessToken, {
+      ...COOKIE_OPTIONS,
+      maxAge: ACCESS_TOKEN_MAX_AGE,
+    });
+
+    cookies.set(REFRESH_COOKIE_NAME, result.refreshToken, {
+      ...COOKIE_OPTIONS,
       expires: sessionMaxAge,
     });
 
@@ -78,22 +94,3 @@ export const actions: Actions = {
     }
   },
 };
-
-function getEndOfSessionTime(): Date {
-  const now = new Date();
-  const currentHour = now.getHours();
-  const endOfSession = new Date(now);
-
-  if (currentHour < 8) {
-    endOfSession.setHours(8, 0, 0, 0);
-  } else if (currentHour < 14) {
-    endOfSession.setHours(14, 0, 0, 0);
-  } else if (currentHour < 20) {
-    endOfSession.setHours(20, 0, 0, 0);
-  } else {
-    endOfSession.setDate(endOfSession.getDate() + 1);
-    endOfSession.setHours(8, 0, 0, 0);
-  }
-
-  return endOfSession;
-}
