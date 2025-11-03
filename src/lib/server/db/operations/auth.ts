@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
 import { RefreshTokens, Users } from '$lib/server/db/schema';
-import { and, eq, gt } from 'drizzle-orm';
+import { and, eq, gt, lt } from 'drizzle-orm';
 import { getGravatarLinkFromUserRecord } from '$lib/utils/gravatar';
 import {
   generateTokenId,
@@ -145,3 +145,10 @@ export async function rotateRefreshToken(oldRefreshToken: string, sessionMaxAge:
 
   return await createTokens(userData, sessionMaxAge);
 }
+
+async function deleteAllExpiredRefreshTokens() {
+  console.log('CLEANED EXPIRED REFRESH TOKENS');
+  await db.delete(RefreshTokens).where(lt(RefreshTokens.expires_at, new Date()));
+}
+
+setInterval(deleteAllExpiredRefreshTokens, 24 * 60 * 60 * 1000);
