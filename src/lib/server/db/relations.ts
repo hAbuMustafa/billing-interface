@@ -20,7 +20,7 @@ import {
   People,
   Patient_id_doc_type,
   Ph_InEco_Transactions,
-  Sessions,
+  RefreshTokens,
   Sys_Sec_pv_key,
 } from './schema';
 
@@ -124,7 +124,7 @@ export const Sys_Sec_pb_keyRelations = relations(Sys_Sec_pb_key, ({ many }) => (
 export const UsersRelations = relations(Users, ({ one, many }) => ({
   Invoices: many(Invoice),
   Ph_InEco_Transactions: many(Ph_InEco_Transactions),
-  Sessions: many(Sessions),
+  RefreshTokens: many(RefreshTokens),
   Sys_Sec_pv_key: one(Sys_Sec_pv_key, {
     fields: [Users.pv_key_id],
     references: [Sys_Sec_pv_key.id],
@@ -251,9 +251,9 @@ export const Ph_InEco_TransactionsRelations = relations(
   })
 );
 
-export const SessionsRelations = relations(Sessions, ({ one }) => ({
+export const RefreshTokensRelations = relations(RefreshTokens, ({ one }) => ({
   User: one(Users, {
-    fields: [Sessions.user_id],
+    fields: [RefreshTokens.user_id],
     references: [Users.id],
   }),
 }));

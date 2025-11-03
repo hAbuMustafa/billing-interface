@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import { sqliteTable, integer, text, unique, real } from 'drizzle-orm/sqlite-core';
 
 export const Wards = sqliteTable('Wards', {
@@ -188,12 +189,17 @@ export const Users = sqliteTable(
   ]
 );
 
-export const Sessions = sqliteTable('Sessions', {
+export const RefreshTokens = sqliteTable('RefreshTokens', {
   id: text().primaryKey(),
   user_id: integer({ mode: 'number' })
     .notNull()
     .references(() => Users.id),
+  token_hash: text().notNull(),
+  created_at: integer({ mode: 'timestamp' })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
   expires_at: integer({ mode: 'timestamp' }).notNull(),
+  last_used_at: integer({ mode: 'timestamp' }).default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const Sys_Sec_pb_key = sqliteTable('Sys_Sec_pb_key', {
