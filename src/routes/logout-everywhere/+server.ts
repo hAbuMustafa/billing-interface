@@ -8,9 +8,6 @@ import { logoutAllDevices } from '$lib/server/db/operations/auth';
 import { redirect } from '@sveltejs/kit';
 
 export async function GET({ cookies, locals }) {
-  console.log('deleting all sessions');
-  console.log({ user: locals.user });
-
   if (locals.user) {
     await logoutAllDevices(locals.user.id);
   }
