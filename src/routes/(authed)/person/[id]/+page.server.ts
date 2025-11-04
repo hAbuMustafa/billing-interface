@@ -20,3 +20,10 @@ export async function load({ params, fetch }) {
     id_doc_type_list: new_id_doc_type,
   };
 }
+
+export const actions = {
+  default: async ({ params }) => {
+    const personId = params.id;
+    // todo: implement editing person details
+  },
+};
