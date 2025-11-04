@@ -23,6 +23,7 @@ export async function GET({ url }) {
       new Date(castYear, castMonth - 1, 1),
       new Date(castYear, castMonth, 0)
     ),
+    // change: check if admission in December displays correctly
   });
 
   const discharges = await db.query.Patients.findMany({
