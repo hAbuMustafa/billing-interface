@@ -19,7 +19,7 @@
 </script>
 
 {#if data.patient}
-  <section>
+  <section class="personal_details">
     <details>
       <summary>البيانات الشخصية</summary>
       <dl class="personal_data">
@@ -53,6 +53,7 @@
         <dd>{data.patient.health_insurance ? '' : 'غير '} مؤمن عليه</dd>
       </dl>
     </details>
+    <a href="/person/{data.patient.person_id}" class="button">تعديل البيانات الشخصية</a>
   </section>
 
   <section>
@@ -189,6 +190,16 @@
     border-radius: 0.5rem;
     margin-block-end: 1rem;
     padding-inline: 1rem;
+  }
+
+  section.personal_details {
+    display: grid;
+    grid-template-columns: 1fr 10%;
+    padding-block: 1rem;
+
+    a.button {
+      place-self: start;
+    }
   }
 
   section.other_admissions {
