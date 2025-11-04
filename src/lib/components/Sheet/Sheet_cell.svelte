@@ -70,4 +70,9 @@
       background-color: hsl(from var(--background-color) h 70% l);
     }
   }
+
+  a.button {
+    display: inline-block;
+    width: 80%;
+  }
 </style>

@@ -9,6 +9,7 @@
     TimelineDot,
   } from 'svelte-vertical-timeline';
   import { formatDate, getAge, getDuration, getTermed } from '$lib/utils/date-format.js';
+  import Sheet from '$lib/components/Sheet/Sheet.svelte';
 
   let { data } = $props();
 
@@ -155,24 +156,29 @@
     </details>
   </section>
   {#if data.patient.Person.Patients?.length}
-    <section>
+    {@const sheetRows = data.patient.Person.Patients.map((p) => {
+      const { id, admission_date, discharge_date } = p;
+
+      return {
+        id,
+        admission_date: new Date(admission_date),
+        discharge_date: discharge_date ? new Date(discharge_date) : null,
+        discharge_reason: p.Patient_discharge_reason?.name,
+      };
+    })}
+    <section class="other_admissions">
       <h2>الإقامات الأخرى</h2>
-      <dl class="other_admissions_data">
-        {#each data.patient.Person.Patients as patientAdmission, i (patientAdmission.id)}
-          <dt>
-            <a href="/patient/{patientAdmission.id}" class="button"
-              >{patientAdmission.id}</a
-            >
-          </dt>
-          <dd>من: {dateAndTime(patientAdmission.admission_date)}</dd>
-          {#if patientAdmission.discharge_date}
-            <dd>
-              إلى: {dateAndTime(patientAdmission.discharge_date)}
-            </dd>
-            <dd>{patientAdmission.Patient_discharge_reason?.name}</dd>
-          {/if}
-        {/each}
-      </dl>
+      <Sheet
+        rows={sheetRows}
+        dateColumns={{ admission_date: 'YYYY/MM/DD', discharge_date: 'YYYY/MM/DD' }}
+        renameColumns={{
+          id: 'رقم القيد',
+          admission_date: 'تاريخ الدخول',
+          discharge_date: 'تاريخ الخروج',
+          discharge_reason: 'سبب الخروج',
+        }}
+        detailsColumn={{ id: (p: any) => `/patient/${p.id}` }}
+      />
     </section>
   {/if}
 {/if}
@@ -183,6 +189,13 @@
     border-radius: 0.5rem;
     margin-block-end: 1rem;
     padding-inline: 1rem;
+  }
+
+  section.other_admissions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-block-end: 1rem;
   }
 
   details {
@@ -234,10 +247,6 @@
         display: inline;
       }
     }
-  }
-
-  dl.other_admissions_data {
-    grid-template-columns: 1fr 2fr 2fr 2fr;
   }
 
   dt {
