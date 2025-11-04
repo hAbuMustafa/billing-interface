@@ -6,6 +6,10 @@
   const { data, children } = $props();
 
   $effect(() => {
+    if (page.error?.message) {
+      toast.error(page.error.message);
+    }
+
     if (page.form?.message) {
       if (page.form.success) {
         toast.success(page.form.message);
