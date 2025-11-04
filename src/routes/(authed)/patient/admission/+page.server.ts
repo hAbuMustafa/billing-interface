@@ -68,7 +68,7 @@ export const actions = {
     if (!patientName) failMessages.push(' اسم المريض مطلوب');
     if (!idDocType) failMessages.push('نوع الهوية مطلوبة');
     if (!idDocNum && idDocType != 6) failMessages.push('رقم الهوية مطلوب');
-    if (idDocType === 1 && !verifyEgyptianNationalId(idDocNum))
+    if (idDocType == 1 && !verifyEgyptianNationalId(idDocNum))
       failMessages.push('صيغة رقم الهوية غير صحيحة');
     if (!gender) failMessages.push('الجنس/النوع مطلوب');
     if (!birthdate) failMessages.push('تاريخ الميلاد مطلوب');
