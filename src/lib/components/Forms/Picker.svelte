@@ -85,7 +85,7 @@
         e.stopPropagation();
         value = opt.id;
       }}
-      disabled={disable && disable.includes(opt.id)}
+      disabled={locked || (disable && disable.includes(opt.id))}
     >
       {opt.name}
     </button>
