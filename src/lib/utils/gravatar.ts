@@ -10,3 +10,9 @@ export function getGravatarHash(email: string) {
 
   return hash;
 }
+
+export function getGravatarLinkFromUserRecord(user: { email: string | null }) {
+  return user.email
+    ? `https://0.gravatar.com/avatar/${getGravatarHash(user.email)}`
+    : '/default-profile.jpg';
+}

@@ -1,11 +1,15 @@
-import { createUser, isUniqueUser } from '$lib/server/auth';
+import { createUser, isUniqueValue } from '$lib/server/db/operations/users';
 import {
-  arabicTetradicNamesPattern,
+  arabicTriadicNamesPattern,
   egyptianMobileNumberPattern,
+  emailPattern,
+  nationalIdPattern,
   passwordPattern,
   usernamePattern,
 } from '$lib/stores/patterns';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { redirect, type Actions } from '@sveltejs/kit';
+import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
+import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
 
 export function load() {
   return {
@@ -14,66 +18,117 @@ export function load() {
 }
 
 export const actions: Actions = {
-  default: async ({ request, fetch }) => {
+  default: async ({ request }) => {
     const formData = await request.formData();
-    let username = formData.get('username');
-    let name = formData.get('name');
-    let mobile = formData.get('mobile');
-    const password = formData.get('password');
-    const confirmPassword = formData.get('confirm-password');
 
-    username = (username as string).trim();
-    name = (name as string).trim();
-    mobile = (mobile as string).trim();
+    let name = formData.get('name') as string;
+    let national_id = formData.get('national-id') as string;
+    let username = formData.get('username') as string;
+    let phone_number = formData.get('phone-number') as string;
+    let email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const confirmPassword = formData.get('confirm-password') as string;
 
-    if (!username || !password || !name || !mobile || !confirmPassword) {
-      return fail(400, {
-        message: 'برجاء إدخال جميع البيانات المطلوبة',
-      });
+    name = name?.trim();
+    national_id = national_id?.trim();
+    username = username?.trim();
+    phone_number = phone_number?.trim();
+    email = email?.trim();
+
+    const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
+      name,
+      national_id,
+      username,
+      phone_number,
+      email,
+    });
+
+    if (
+      !username ||
+      !password ||
+      !confirmPassword ||
+      !name ||
+      !national_id ||
+      !phone_number ||
+      !email
+    ) {
+      return failWithMessages(['برجاء إدخال جميع البيانات المطلوبة']);
     }
 
+    const failMessages = [];
+
     if (!usernamePattern.test(username as string)) {
-      return fail(401, {
-        message:
-          'اسم المستخدم بصيغة غير صحيحة. يمكنك استخدام الأحرف والشرطات (-) فقط. ويجب أن يكون من 5 أحرف على الأقل',
-      });
+      failMessages.push(
+        'اسم المستخدم بصيغة غير صحيحة. يمكنك استخدام الأحرف والشرطات (-) فقط. ويجب أن يكون من 4 أحرف على الأقل أو 16 حرفا بحد أقصى'
+      );
     }
 
     if (!passwordPattern.test(password as string)) {
-      return fail(401, {
-        message:
-          'كلمة المرور بصيغة غير صحيحة. أحرف وأرقام ورموز (@$!%*?&) فقط. ومن 8 أحرف على الأقل.',
-      });
+      failMessages.push(
+        'كلمة المرور بصيغة غير صحيحة. أحرف وأرقام ورموز (@$!%*?&) فقط. ومن 7 أحرف على الأقل.'
+      );
     }
 
     if (password !== confirmPassword) {
-      return fail(401, {
-        message: 'كلمة السر وتأكيدها غير متطابقان',
-      });
+      failMessages.push('كلمة السر وتأكيدها غير متطابقان');
     }
 
-    if (!arabicTetradicNamesPattern.test(name as string)) {
-      return fail(401, {
-        message: 'اسم الموظف بصيغة غير صحيحة. يجب أن يكون اسما ثلاثيا على الأقل',
-      });
+    if (!arabicTriadicNamesPattern.test(name)) {
+      failMessages.push(
+        'اسم الموظف بصيغة غير صحيحة. يجب أن يكون اسما ثلاثيا على الأقل بحروف عربية فقط'
+      );
     }
 
-    if (!egyptianMobileNumberPattern.test(mobile as string)) {
-      return fail(401, {
-        message: 'رقم الموبايل بصيغة غير صحيحة',
-      });
+    if (!egyptianMobileNumberPattern.test(phone_number)) {
+      failMessages.push('رقم الموبايل بصيغة غير صحيحة');
     }
 
-    const isUnique = await isUniqueUser(username as string, fetch);
-
-    if (!isUnique) {
-      return fail(401, {
-        message: 'المستخدم مسجل مسبقا',
-      });
+    if (!emailPattern.test(email)) {
+      failMessages.push('البريد الإلكتروني بصيغة غير صحيحة');
     }
 
-    const result = await createUser(username, name, mobile, password as string, fetch);
+    if (!nationalIdPattern.test(national_id) || !verifyEgyptianNationalId(national_id)) {
+      failMessages.push('الرقم القومي غير صحيح');
+    }
 
-    return redirect(303, '/');
+    // username used before?
+    const isUniqueUsername = await isUniqueValue('username', username);
+    if (!isUniqueUsername) failMessages.push('اسم المستخدم مسجل مسبقا.');
+
+    // email registered before?
+    const isUniqueEmail = await isUniqueValue('email', email);
+    if (!isUniqueEmail) failMessages.push('البريد الإلكتروني مسجل مسبقا.');
+
+    // phone-number registered before?
+    const isUniquePhone_number = await isUniqueValue('phone_number', phone_number);
+    if (!isUniquePhone_number) failMessages.push('رقم الهاتف مسجل مسبقا.');
+
+    // national id registered before?
+    const isUniqueNationalId = await isUniqueValue('national_id', national_id);
+    if (!isUniqueNationalId) failMessages.push('الرقم القومي مسجل مسبقا.');
+
+    if (failMessages.length) return failWithMessages(failMessages);
+
+    // EXECUTE Registration
+    const registrationResult = await createUser({
+      username,
+      password: password as string,
+      name,
+      national_id,
+      email,
+      phone_number,
+    });
+
+    if (!registrationResult.success) {
+      return failWithMessages(['حدث خطأ غير متوقع']);
+    }
+
+    return {
+      messages: [
+        { message: `تم إنشاء حسابك ${username} بنجاح`, type: 'success' },
+        { message: 'يلزم التواصل مع مدير النظام لتفعيل حسابك!', type: 'info' },
+      ],
+      redirect: redirect(303, '/'),
+    };
   },
 };

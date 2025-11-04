@@ -1,30 +1,21 @@
-import { PUBLIC_users_spreadsheetId } from '$env/static/public';
+import {
+  ACCESS_COOKIE_NAME,
+  COOKIE_OPTIONS,
+  REFRESH_COOKIE_NAME,
+} from '$lib/utils/auth/jwt';
+import { logoutUser } from '$lib/server/db/operations/auth';
+
 import { redirect } from '@sveltejs/kit';
 
-export async function GET({ cookies, fetch }) {
-  const currentSessionId = cookies.get('session_id');
+export async function GET({ cookies }) {
+  const refreshToken = cookies.get(REFRESH_COOKIE_NAME);
 
-  if (currentSessionId) {
-    cookies.delete('session_id', {
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
-
-    await fetch('/api/sheets/delete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        spreadsheetId: PUBLIC_users_spreadsheetId,
-        sheetName: 'sessions',
-        sheetRange: 'A:C',
-        columnIndex: 0,
-        targetValue: currentSessionId,
-      }),
-    });
+  if (refreshToken) {
+    await logoutUser(refreshToken);
   }
+
+  cookies.delete(ACCESS_COOKIE_NAME, COOKIE_OPTIONS);
+  cookies.delete(REFRESH_COOKIE_NAME, COOKIE_OPTIONS);
 
   return redirect(303, '/');
 }

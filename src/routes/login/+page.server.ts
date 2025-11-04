@@ -1,5 +1,14 @@
-import { createSession, validateUser } from '$lib/server/auth';
-import { passwordPattern, usernamePattern } from '$lib/stores/patterns';
+import { validateLogin } from '$lib/server/db/operations/auth';
+import { getEndOfSessionTime } from '$lib/utils/auth/session';
+import {
+  ACCESS_COOKIE_NAME,
+  REFRESH_COOKIE_NAME,
+  COOKIE_OPTIONS,
+  ACCESS_TOKEN_MAX_AGE,
+} from '$lib/utils/auth/jwt';
+import { createTokens } from '$lib/server/db/operations/auth';
+import { usernamePattern } from '$lib/stores/patterns';
+import { getGravatarLinkFromUserRecord } from '$lib/utils/gravatar';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export function load({ locals }) {
@@ -11,10 +20,12 @@ export function load({ locals }) {
 }
 
 export const actions: Actions = {
-  default: async ({ request, cookies, fetch }) => {
+  default: async ({ request, cookies }) => {
     const formData = await request.formData();
-    const username = formData.get('username');
-    const password = formData.get('password');
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+
+    const redirectTo = formData.get('redirectTo');
 
     if (!username || !password) {
       return fail(400, {
@@ -23,24 +34,61 @@ export const actions: Actions = {
     }
 
     if (
-      !usernamePattern.test(username as string) ||
-      !passwordPattern.test(password as string)
+      !usernamePattern.test(username) ||
+      !(password.length > 6 || password.length < 33)
     ) {
       return fail(401, {
         message: 'اسم المستخدم أو كلمة المرور غير صحيحة',
       });
     }
 
-    const userId = await validateUser(username as string, password as string, fetch);
+    const userData = await validateLogin(username, password);
 
-    if (!userId) {
+    if (!userData) {
       return fail(401, {
         message: 'اسم المستخدم أو كلمة المرور غير صحيحة',
       });
     }
 
-    await createSession(userId as string, cookies, fetch);
+    if (!userData.role) {
+      return fail(401, {
+        message: 'حسابك لم يتم تفعيله بعد',
+      });
+    }
 
-    throw redirect(303, '/');
+    if (userData.role === -1) {
+      return fail(401, {
+        message: 'لقد تم تعطيل حسابك. إذا كنت تظن هذا خطأ، برجاء الرجوع لمدير النظام.',
+      });
+    }
+
+    const sessionMaxAge = getEndOfSessionTime();
+
+    const result = await createTokens(
+      {
+        ...userData,
+        gravatar: getGravatarLinkFromUserRecord(userData),
+      },
+      sessionMaxAge
+    );
+
+    if (!result.success)
+      return fail(401, { message: 'حدث خطأ غير متوقع أثناء إثبات الجلسة' });
+
+    cookies.set(ACCESS_COOKIE_NAME, result.accessToken, {
+      ...COOKIE_OPTIONS,
+      maxAge: ACCESS_TOKEN_MAX_AGE,
+    });
+
+    cookies.set(REFRESH_COOKIE_NAME, result.refreshToken, {
+      ...COOKIE_OPTIONS,
+      expires: sessionMaxAge,
+    });
+
+    if (!redirectTo) {
+      return redirect(303, '/');
+    } else {
+      return redirect(303, redirectTo as string);
+    }
   },
 };

@@ -9,9 +9,202 @@
 
   --main-bg-color: light-dark(var(--main-bg-light), var(--main-bg-dark));
   --main-text-color: light-dark(var(--main-text-light), var(--main-text-dark));
+  --main-accent-color: light-dark(
+    hsl(from royalblue h 100% 65%),
+    hsl(from royalblue h 100% 55%)
+  );
+  --main-unselected-accent-color: lightslategray;
+
+  --main-border: 1px solid light-dark(#333, #ccc);
 }
 
 body {
   background-color: var(--main-bg-color);
   color: var(--main-text-color);
+
+  font-family: serif;
+}
+
+main > form {
+  padding: 2rem;
+
+  border-radius: 0.25rem;
+  border: var(--main-border);
+
+  box-shadow: black 10px 10px 10px;
+
+  fieldset {
+    padding-block: 1rem;
+
+    border-color: light-dark(#333, #ccc);
+    border-radius: 0.25rem;
+  }
+
+  @media (max-width: 400px) {
+    padding: 1rem;
+  }
+}
+
+.flex-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .input-pair {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  hr {
+    width: 100%;
+  }
+}
+
+form.flex-form {
+  input[type='submit'] {
+    padding-block: 0.5rem;
+  }
+}
+
+.input-pair {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+input,
+select {
+  font-size: 1.5rem;
+  direction: rtl;
+  position: relative;
+  border-radius: 4px;
+  text-align: center;
+}
+
+input {
+  border: var(--main-border);
+
+  @media (max-width: 400px) {
+    font-size: 1rem;
+    line-height: 2;
+  }
+}
+
+input:user-valid,
+input.equal {
+  border-color: light-dark(#008080, green);
+  background-color: light-dark(hsl(from green h s 80%), hsl(from green h s 20%));
+}
+
+input:user-invalid,
+input.unequal {
+  border-color: light-dark(maroon, salmon);
+  background-color: light-dark(hsl(from salmon h s 80%), hsl(from salmon h s 20%));
+}
+
+:is(
+    label:has(+ input:required:not([type='radio']):not([type='checkbox'])),
+    label:has(+ div input:required:not([type='radio']):not([type='checkbox'])),
+    label:has(+ select:required),
+    label:has(+ textarea:required),
+    :not(fieldset) > fieldset:has(:required) > legend
+  )::after {
+  content: '*';
+
+  -webkit-margin-start: 0.25rem;
+
+  margin-inline-start: 0.25rem;
+  color: red;
+}
+
+.locked {
+  position: relative;
+
+  &::before {
+    content: '🔒';
+
+    position: absolute;
+    inset-inline-end: 100%;
+    -webkit-margin-end: 0.25rem;
+    margin-inline-end: 0.25rem;
+  }
+}
+
+input:is([type='submit'], [type='button']),
+a.button {
+  background-color: var(--main-accent-color);
+  color: #ccc;
+
+  font-weight: 700;
+
+  padding: 0.25rem 0.5rem;
+
+  &:is(:hover, :focus) {
+    background-color: hsl(from var(--main-accent-color) h s 60%);
+  }
+
+  &:is(:active) {
+    background-color: hsl(from var(--main-accent-color) h s 50%);
+  }
+
+  &.danger {
+    background-color: maroon;
+
+    &:hover,
+    &:focus {
+      background-color: chocolate;
+    }
+
+    &:active {
+      background-color: red;
+    }
+  }
+}
+
+a.button {
+  text-align: center;
+  text-decoration: none;
+  padding: 0.25rem;
+  border: var(--main-border);
+  border-radius: 0.25rem;
+}
+
+:is(input[type='radio'], input[type='checkbox']) {
+  display: none;
+
+  & + label {
+    background-color: var(--main-unselected-accent-color);
+    color: var(--main-bg-color);
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+    text-wrap: nowrap;
+
+    border-radius: 0.25rem;
+  }
+
+  &:checked + label {
+    background-color: var(--main-accent-color);
+    font-weight: 700;
+    color: light-dark(var(--main-bg-color), var(--main-text-color));
+  }
+
+  &:disabled + label {
+    background-color: light-dark(
+      hsl(from var(--main-unselected-accent-color) h 20% 80%),
+      hsl(from var(--main-unselected-accent-color) h 5% 35%)
+    );
+  }
+
+  &:checked:disabled + label {
+    background-color: light-dark(
+      hsl(from var(--main-accent-color) h 80% 80%),
+      hsl(from var(--main-accent-color) h 60% l)
+    );
+  }
+}
+
+input:is([type='text'], [type='number'], [type*='date']):read-only,
+input:is([type='radio'], [type='checkbox']):disabled + label {
+  opacity: 0.5;
 }
