@@ -12,12 +12,19 @@
 
     <dt>عدد حالات الدخول (إناث):</dt>
     <dd>{data.stats.admissions.filter((p: any) => !p.Person.gender).length}</dd>
+  </dl>
 
+  <dl>
     <dt>عدد حالات الدخول المنتفعين بالتأمين الصحي:</dt>
     <dd>{data.stats.admissions.filter((p: any) => p.health_insurance).length}</dd>
 
     <dt>غير المصريين:</dt>
     <dd>{data.stats.admissions.filter((p: any) => p.Person.id_doc_type !== 1).length}</dd>
+  </dl>
+
+  <dl>
+    <dt><strong>إجمالي حالات الدخول:</strong></dt>
+    <dd>{data.stats.admissions.length}</dd>
   </dl>
 
   <h2>إحصائيات الخروج</h2>
@@ -27,7 +34,9 @@
 
     <dt>عدد حالات الخروج (إناث):</dt>
     <dd>{data.stats.discharges.filter((p: any) => !p.Person.gender).length}</dd>
+  </dl>
 
+  <dl>
     <dt>إجمالي مدة الإقامة لحالات الخروج:</dt>
     <dd>
       {data.stats.discharges.reduce(
@@ -37,6 +46,11 @@
         0
       )}
     </dd>
+  </dl>
+
+  <dl>
+    <dt><strong>إجمالي حالات الخروج:</strong></dt>
+    <dd>{data.stats.discharges.length}</dd>
   </dl>
 {/if}
 
