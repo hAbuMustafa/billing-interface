@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { onMount, setContext } from 'svelte';
+  import { setContext } from 'svelte';
 
   import SheetHead from '$lib/components/Sheet/Sheet_head.svelte';
   import Row from '$lib/components/Sheet/Sheet_row.svelte';
   import NoData from '$lib/components/Sheet/Sheet_no_data.svelte';
 
-  type RowT = Record<string, string | number | Date>;
+  type RowT = Record<string, string | number | Date | null | undefined>;
 
   type PropsT = {
     rows: RowT[];
