@@ -14,8 +14,10 @@ import { nationalIdPattern } from '$lib/stores/patterns';
 export function verifyEgyptianNationalId(num: number | string) {
   if (typeof num === 'number') num = String(num);
 
-  if (!nationalIdPattern.test(num))
-    throw new Error(`Wrong Egyptian national ID format ${num}.`);
+  if (!nationalIdPattern.test(num)) {
+    console.error(`Wrong Egyptian national ID format ${num}.`);
+    return false;
+  }
 
   const numList = num.split('').map((n) => Number(n));
 

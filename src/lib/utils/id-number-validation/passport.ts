@@ -12,10 +12,12 @@
  * */
 export function verifyChecksum(num: number | string, checksum?: number) {
   if (typeof num === 'number') num = String(num);
-  if (!/(\d|[A-Z]< ){2,}/.test(num) || num.length < 2)
-    throw new Error(
+  if (!/(\d|[A-Z]< ){2,}/.test(num) || num.length < 2) {
+    console.error(
       'Wrong number format. Only alphanumeric digits, and the filler character "<" (or a space) are allowed.'
     );
+    return false;
+  }
 
   const numList = num.toUpperCase().split('');
 
@@ -28,10 +30,12 @@ export function verifyChecksum(num: number | string, checksum?: number) {
   if (!checksum) {
     checksum = numValue.pop();
 
-    if (typeof checksum !== 'number')
-      throw new Error(
+    if (typeof checksum !== 'number') {
+      console.error(
         'Wrong arguments specified. Please either provide the checksum digit as an argument, or append it at the end of the first argument.'
       );
+      return false;
+    }
   }
 
   let sum = 0;

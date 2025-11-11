@@ -70,7 +70,6 @@ export const actions = {
     if (!idDocType) failMessages.push('نوع الهوية مطلوبة');
     if (!idDocNum && idDocType != 6) failMessages.push('رقم الهوية مطلوب');
     if (idDocType == 1 && !verifyEgyptianNationalId(idDocNum))
-      // todo: handle invalid numbers
       failMessages.push('صيغة رقم الهوية غير صحيحة');
     if (!gender) failMessages.push('الجنس/النوع مطلوب');
     if (!birthdate) failMessages.push('تاريخ الميلاد مطلوب');
