@@ -1,8 +1,30 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import { getDuration } from '$lib/utils/date-format';
 
   let { data } = $props();
+
+  const { nextMonth, prevMonth, nextYear, prevYear } = $derived.by(() => {
+    const currentMonth = Number(page.params.month);
+    const currentYear = Number(page.params.year);
+
+    return {
+      nextMonth: currentMonth < 12 ? currentMonth + 1 : 1,
+      prevMonth: currentMonth > 1 ? currentMonth - 1 : 12,
+      nextYear: currentMonth < 12 ? currentYear : currentYear + 1,
+      prevYear: currentMonth > 1 ? currentYear : currentYear - 1,
+    };
+  });
 </script>
+
+<nav>
+  <a class="button" href="/patient/monthly-report/{prevYear}/{prevMonth}"
+    >&Lt; {prevMonth}/{prevYear}</a
+  >
+  <a class="button" href="/patient/monthly-report/{nextYear}/{nextMonth}"
+    >{nextMonth}/{nextYear} &Gt;</a
+  >
+</nav>
 
 {#if data.stats}
   {@const icuAdmissions = data.stats.transfers.filter(
@@ -116,6 +138,11 @@
 {/if}
 
 <style>
+  nav {
+    display: flex;
+    justify-content: space-between;
+  }
+
   dl {
     display: grid;
     grid-template-columns: 2fr 1fr;
