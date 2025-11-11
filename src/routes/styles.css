@@ -175,8 +175,6 @@ a.button {
   display: none;
 
   & + label {
-    background-color: var(--main-unselected-accent-color);
-    color: var(--main-bg-color);
     padding: 0.25rem 0.5rem;
     text-align: center;
     text-wrap: nowrap;
@@ -185,8 +183,18 @@ a.button {
   }
 
   &:checked + label {
-    background-color: var(--main-accent-color);
     font-weight: 700;
+  }
+}
+
+input[type='radio'] {
+  & + label {
+    background-color: var(--main-unselected-accent-color);
+    color: var(--main-bg-color);
+  }
+
+  &:checked + label {
+    background-color: var(--main-accent-color);
     color: light-dark(var(--main-bg-color), var(--main-text-color));
   }
 
