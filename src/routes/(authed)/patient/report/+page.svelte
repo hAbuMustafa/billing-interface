@@ -12,12 +12,19 @@
 
 {#each Object.keys(patientsByWard) as ward_id, i (i)}
   {#if patientsByWard[ward_id]}
-    <h2>
+    {@const currWard = data.wards.find((w) => w.id === Number(ward_id))!}
+    {@const wardOccupiedBeds = patientsByWard[ward_id].length}
+    {@const wardOccupationRatio = wardOccupiedBeds / currWard.capacity}
+    {@const progressColor =
+      wardOccupationRatio < 0.5 ? 'green' : wardOccupationRatio < 0.8 ? 'orange' : 'red'}
+    <h2 id={currWard.id.toString()}>
       <span>
-        {data.wards.find((w) => w.id === Number(ward_id))?.name}
+        {currWard.name}
       </span>
+      <progress value={wardOccupationRatio} style="accent-color: {progressColor};"
+      ></progress>
       <span>
-        ({getTermed(patientsByWard[ward_id].length, 'مريض', 'مرضى')})
+        ({getTermed(wardOccupiedBeds, 'مريض', 'مرضى')}/{currWard.capacity})
       </span>
     </h2>
     <Sheet
