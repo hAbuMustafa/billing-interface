@@ -47,7 +47,7 @@
   );
 
   let hasSelectedPerson = $state(!!form?.personId || false);
-  let selectedPersonId = $state(0);
+  let selectedPersonId = $state(form?.personId ? Number(form?.personId) : 0);
 
   let referredFrom = $state('reception');
   let securityStatus = $state(0);
