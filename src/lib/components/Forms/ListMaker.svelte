@@ -39,7 +39,7 @@
 
   {#if list.length}
     <div class="{name}_list" transition:scale>
-      {#each list as item, i (item)}
+      {#each list as item, i (i)}
         <input
           type="checkbox"
           {name}
