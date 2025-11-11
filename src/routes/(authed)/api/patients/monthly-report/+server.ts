@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db/index';
-import { Patients } from '$lib/server/db/schema';
+import { Patient_wards, Patients } from '$lib/server/db/schema';
 import { json } from '@sveltejs/kit';
 import { between } from 'drizzle-orm';
 
@@ -28,6 +28,7 @@ export async function GET({ url }) {
   const discharges = await db.query.Patients.findMany({
     with: {
       Person: true,
+      Patient_discharge_reason: true,
     },
     where: between(
       Patients.discharge_date,
@@ -36,5 +37,16 @@ export async function GET({ url }) {
     ),
   });
 
-  return json({ admissions, discharges });
+  const transfers = await db.query.Patient_wards.findMany({
+    with: {
+      Patient: true,
+    },
+    where: between(
+      Patient_wards.timestamp,
+      new Date(castYear, castMonth - 1, 1),
+      new Date(castYear, castMonth, 0)
+    ),
+  });
+
+  return json({ admissions, discharges, transfers });
 }
