@@ -14,7 +14,11 @@ import { and, eq, isNull, like } from 'drizzle-orm';
 
 export async function createWard(ward: typeof Wards.$inferInsert) {
   try {
-    const [new_ward] = await db.insert(Wards).values(ward).returning();
+    const { id, name, floor, capacity, tags } = ward;
+    const [new_ward] = await db
+      .insert(Wards)
+      .values({ id, name, floor, capacity, tags: tags?.toString() })
+      .returning();
 
     return {
       success: true,

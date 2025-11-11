@@ -5,6 +5,8 @@ export const Wards = sqliteTable('Wards', {
   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   floor: integer().notNull(),
+  capacity: integer().notNull().default(0),
+  tags: text(),
 });
 
 export const Patient_discharge_reasons = sqliteTable('Patient_discharge_reasons', {
