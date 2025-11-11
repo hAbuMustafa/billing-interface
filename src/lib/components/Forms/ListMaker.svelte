@@ -67,17 +67,17 @@
     & > .diagnoses_list {
       display: flex;
       gap: 1rem;
+    }
+  }
 
-      & :checked + label {
-        background-color: orange;
-        color: var(--main-bg-color);
+  :checked + label {
+    background-color: orange;
+    color: var(--main-bg-color);
 
-        &:hover,
-        &:focus {
-          background-color: salmon;
-          text-decoration: line-through;
-        }
-      }
+    &:hover,
+    &:focus {
+      background-color: salmon;
+      text-decoration: line-through;
     }
   }
 </style>
