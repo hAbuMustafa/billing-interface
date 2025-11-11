@@ -10,7 +10,7 @@ import {
   Patient_Diagnoses,
 } from '$lib/server/db/schema';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
-import { eq, like } from 'drizzle-orm';
+import { and, eq, isNull, like } from 'drizzle-orm';
 
 export async function createWard(ward: typeof Wards.$inferInsert) {
   try {
@@ -83,6 +83,17 @@ export async function createDiagnosis(
       error,
     };
   }
+}
+
+export async function isAdmitted(personId: number) {
+  const foundAdmitted = await db.query.Patients.findFirst({
+    where: and(eq(Patients.person_id, personId), isNull(Patients.discharge_date)),
+    with: {
+      Ward_recent_ward: true,
+    },
+  });
+
+  return foundAdmitted;
 }
 
 type newPatientT = {
