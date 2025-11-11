@@ -14,7 +14,14 @@
         e.preventDefault();
         e.stopPropagation();
         if (value.length > 2) {
-          list.push(...new Set(value.split('+').map((item) => item.trim())));
+          list.push(
+            ...new Set(
+              value
+                .split(/[+,،;؛-]+/)
+                .map((item) => item.trim())
+                .filter(Boolean)
+            )
+          );
           value = '';
         }
       }
