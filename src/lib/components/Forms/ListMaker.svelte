@@ -4,8 +4,6 @@
   let { name, label, list, value = $bindable(''), datalist } = $props();
 </script>
 
-<!-- todo: handle + separated entries  -->
-<!-- todo: handle filled input -->
 <fieldset class="list_maker">
   <legend>{label}</legend>
   <input
@@ -16,7 +14,7 @@
         e.preventDefault();
         e.stopPropagation();
         if (value.length > 2) {
-          list.push(value.trim());
+          list.push(...new Set(value.split('+').map((item) => item.trim())));
           value = '';
         }
       }
