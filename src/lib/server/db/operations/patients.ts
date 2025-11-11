@@ -85,13 +85,22 @@ export async function createDiagnosis(
   }
 }
 
-export async function isAdmitted(personId: number) {
-  const foundAdmitted = await db.query.Patients.findFirst({
-    where: and(eq(Patients.person_id, personId), isNull(Patients.discharge_date)),
-    with: {
-      Ward_recent_ward: true,
-    },
-  });
+export async function isAdmitted(idDocType: number, idDocNum: string) {
+  const [foundAdmitted] = await db
+    .select({
+      name: People.name,
+      recent_ward_name: Patients.recent_ward,
+    })
+    .from(Patients)
+    .leftJoin(People, eq(Patients.person_id, People.id))
+    .leftJoin(Wards, eq(Patients.recent_ward, Wards.id))
+    .where(
+      and(
+        eq(People.id_doc_type, idDocType),
+        eq(People.id_doc_num, idDocNum),
+        isNull(Patients.discharge_date)
+      )
+    );
 
   return foundAdmitted;
 }

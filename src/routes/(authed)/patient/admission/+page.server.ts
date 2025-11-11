@@ -106,12 +106,13 @@ export const actions = {
       ]);
     }
 
-    const foundAdmitted = await isAdmitted(personId);
+    const foundAdmitted =
+      idDocType !== 6 ? await isAdmitted(idDocType, idDocNum) : undefined;
 
-    if (personId && foundAdmitted) {
+    if (foundAdmitted) {
       return failWithMessages([
         {
-          message: `المريض محجوز بالفعل في "${foundAdmitted.Ward_recent_ward?.name}"`,
+          message: `المريض "${foundAdmitted.name}" محجوز بالفعل في "${foundAdmitted.recent_ward_name}"`,
           type: 'error',
         },
       ]);
