@@ -1,7 +1,7 @@
 <script lang="ts">
   import { scale } from 'svelte/transition';
 
-  let { name, label, list, value = $bindable(''), datalist } = $props();
+  let { name, label, list = $bindable([]), value = $bindable(''), datalist } = $props();
 </script>
 
 <fieldset class="list_maker">

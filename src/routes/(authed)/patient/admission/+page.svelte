@@ -171,7 +171,7 @@
     name="diagnosis"
     label="التشخيص"
     bind:value={diagnosisText}
-    list={diagnoses}
+    bind:list={diagnoses}
     datalist={data.diagnoses_list}
   />
 
