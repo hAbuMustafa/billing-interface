@@ -4,6 +4,8 @@
   let { name, label, list, value = $bindable(''), datalist } = $props();
 </script>
 
+<!-- todo: handle + separated entries  -->
+<!-- todo: handle filled input -->
 <fieldset class="list_maker">
   <legend>{label}</legend>
   <input
