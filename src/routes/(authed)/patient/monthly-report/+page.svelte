@@ -29,7 +29,14 @@
 
   <div class="input-pair">
     <label for="year">السنة</label>
-    <input type="number" name="year" id="year" min="2024" bind:value={year} />
+    <input
+      type="number"
+      name="year"
+      id="year"
+      min="2024"
+      max={new Date().getFullYear()}
+      bind:value={year}
+    />
   </div>
 
   <input type="submit" value="عرض" />
@@ -37,22 +44,17 @@
 
 <style>
   form {
-    display: grid;
-    grid-template-columns: repeat(2, 2fr) 1fr;
-    align-items: center;
+    display: flex;
+    justify-content: center;
     gap: 1rem;
 
-    @media (max-width: 400px) {
-      grid-template-columns: 1fr;
+    @media (max-width: 800px) {
+      flex-direction: column;
 
       .input-pair {
         display: grid;
         grid-template-columns: 2rem 1fr;
       }
     }
-  }
-
-  input[type='number'] {
-    max-width: 3.5em;
   }
 </style>
