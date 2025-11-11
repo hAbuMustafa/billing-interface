@@ -18,11 +18,13 @@
   --main-border: 1px solid light-dark(#333, #ccc);
 }
 
+* {
+  font-family: serif;
+}
+
 body {
   background-color: var(--main-bg-color);
   color: var(--main-text-color);
-
-  font-family: serif;
 }
 
 main > form {
@@ -84,7 +86,6 @@ select {
 
 input {
   border: var(--main-border);
-  font-family: serif;
 
   @media (max-width: 400px) {
     font-size: 1rem;
