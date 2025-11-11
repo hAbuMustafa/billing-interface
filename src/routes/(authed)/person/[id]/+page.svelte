@@ -54,7 +54,6 @@
       name="id_doc_num"
       id="id_doc_num"
       type="text"
-      placeholder="22222222222222"
       bind:value={idDocNum}
       pattern={idDocType === 1 ? nationalIdPattern.source : null}
       required={idDocType !== 6}
