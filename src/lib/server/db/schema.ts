@@ -1,4 +1,3 @@
-import { sql } from 'drizzle-orm';
 import { sqliteTable, integer, text, unique, real } from 'drizzle-orm/sqlite-core';
 
 export const Wards = sqliteTable('Wards', {
