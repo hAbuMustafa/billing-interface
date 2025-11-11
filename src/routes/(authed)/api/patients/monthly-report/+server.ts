@@ -1,5 +1,5 @@
-import { db } from '$lib/server/db/index.js';
-import { Patients } from '$lib/server/db/schema.js';
+import { db } from '$lib/server/db/index';
+import { Patients } from '$lib/server/db/schema';
 import { json } from '@sveltejs/kit';
 import { between } from 'drizzle-orm';
 
@@ -23,7 +23,6 @@ export async function GET({ url }) {
       new Date(castYear, castMonth - 1, 1),
       new Date(castYear, castMonth, 0)
     ),
-    // change: check if admission in December displays correctly
   });
 
   const discharges = await db.query.Patients.findMany({
