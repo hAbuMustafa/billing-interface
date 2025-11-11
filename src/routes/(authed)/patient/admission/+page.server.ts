@@ -3,6 +3,7 @@ import {
   createPatient,
   getDiagnoses,
   getLastMedicalNumber,
+  isAdmitted,
 } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id.js';
@@ -69,6 +70,7 @@ export const actions = {
     if (!idDocType) failMessages.push('نوع الهوية مطلوبة');
     if (!idDocNum && idDocType != 6) failMessages.push('رقم الهوية مطلوب');
     if (idDocType == 1 && !verifyEgyptianNationalId(idDocNum))
+      // todo: handle invalid numbers
       failMessages.push('صيغة رقم الهوية غير صحيحة');
     if (!gender) failMessages.push('الجنس/النوع مطلوب');
     if (!birthdate) failMessages.push('تاريخ الميلاد مطلوب');
@@ -101,6 +103,17 @@ export const actions = {
       console.error(JSON.stringify(data, null, 4));
       failWithMessages([
         { message: 'خطأ في طبيعة البيانات المدخلة (أرقام أو تواريخ).', type: 'error' },
+      ]);
+    }
+
+    const foundAdmitted = await isAdmitted(personId);
+
+    if (personId && foundAdmitted) {
+      return failWithMessages([
+        {
+          message: `المريض محجوز بالفعل في "${foundAdmitted.Ward_recent_ward?.name}"`,
+          type: 'error',
+        },
       ]);
     }
 
