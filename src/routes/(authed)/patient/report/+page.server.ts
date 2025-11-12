@@ -6,7 +6,7 @@ export async function load({ fetch }) {
   );
 
   return {
-    title: 'بيان الإشغال',
+    title: 'تقرير المرضى بالأقسام',
     wards: new_Wards,
     patients: currentInpatient.map(
       (p: {

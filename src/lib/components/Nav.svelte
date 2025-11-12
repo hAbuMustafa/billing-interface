@@ -16,8 +16,9 @@
           <li><a href="/patient/discharge">تسجيل خروج مريض</a></li>
           <li><a href="/patient/transfer">تحويل مريض إلى قسم</a></li>
           <hr />
-          <li><a href="/patient/report">بيان الإشغال</a></li>
           <li><a href="/patient/">استعلام عن مريض</a></li>
+          <hr />
+          <li><a href="/patient/report">تقرير المرضى بالأقسام</a></li>
           <li>
             <a href="/patient/monthly-report"> تقرير الإشغال الشهري </a>
           </li>
@@ -33,7 +34,7 @@
           <li><a href="/pharmacy/manual-bill">تسعير فاتورة لمريض</a></li>
           <hr />
           <li>
-            <a href="/pharmacy/antibiotics-report">احصائية المضادات الحيوية</a>
+            <a href="/pharmacy/antibiotics-report">إحصائية المضادات الحيوية</a>
           </li>
           <li><a href="/pharmacy/daily-report">المنصرف اليومي</a></li>
         </ul>
