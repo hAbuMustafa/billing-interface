@@ -17,7 +17,7 @@
   });
 </script>
 
-<nav>
+<nav aria-label="Month Navigation">
   <a class="button" href="/patient/monthly-report/{prevYear}/{prevMonth}"
     >&Lt; {prevMonth}/{prevYear}</a
   >

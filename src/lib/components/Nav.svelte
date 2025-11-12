@@ -2,8 +2,8 @@
   const { user } = $props();
 </script>
 
-<nav>
-  <a href="/">
+<nav aria-label="Primary Navigation">
+  <a href="/" id="logo">
     <img src="/favicon.png" alt="مستشفى 23 يوليو للأمراض الصدرية" width="80" />
   </a>
   {#if user}
