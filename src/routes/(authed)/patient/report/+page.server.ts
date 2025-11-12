@@ -1,4 +1,4 @@
-import { new_Wards } from '$lib/server/db/menus.js';
+import { new_Wards } from '$lib/server/db/menus';
 
 export async function load({ fetch }) {
   const currentInpatient = await fetch('/api/patients/current-inpatient').then((d) =>
