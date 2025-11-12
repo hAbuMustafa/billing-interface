@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import Sheet from '$lib/components/Sheet/Sheet.svelte';
-  import { getTermed } from '$lib/utils/date-format.js';
+  import { getTermed } from '$lib/utils/date-format';
 
   let { data } = $props();
   let patientsByWard = Object.groupBy(
@@ -21,10 +21,11 @@
       <span>
         {currWard.name}
       </span>
-      <progress value={wardOccupationRatio} style="accent-color: {progressColor};"
-      ></progress>
       <span>
-        ({getTermed(wardOccupiedBeds, 'مريض', 'مرضى')}/{currWard.capacity})
+        {getTermed(wardOccupiedBeds, 'مريض', 'مرضى')}
+        <progress value={wardOccupationRatio} style="accent-color: {progressColor};"
+        ></progress>
+        {getTermed(currWard.capacity, 'سرير', 'أسرَّة')}
       </span>
     </h2>
     <Sheet
