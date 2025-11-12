@@ -221,6 +221,6 @@ input:is([type='radio'], [type='checkbox']):disabled + label {
 
 @media print {
   @page {
-    margin: 0mm;
+    margin: 5mm;
   }
 }

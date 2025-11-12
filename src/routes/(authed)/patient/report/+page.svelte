@@ -75,5 +75,9 @@
   h2 {
     display: flex;
     justify-content: space-around;
+
+    @media print {
+      break-after: avoid;
+    }
   }
 </style>
