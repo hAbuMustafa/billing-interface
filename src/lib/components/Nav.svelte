@@ -113,6 +113,10 @@
       border-radius: 0.25rem;
       padding: 0.25rem 0.2rem;
     }
+
+    @media print {
+      display: none;
+    }
   }
 
   nav a:focus {

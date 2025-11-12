@@ -3,16 +3,25 @@
 
   const columnNames: () => string[] = getContext('column names');
   const renameColumns: Record<string, string> = getContext('rename columns');
+  const actionColumns: Record<
+    string,
+    {
+      actionName: string;
+      onclick: Function;
+      style?: { color?: string; backgroundColor?: string };
+    }
+  > = getContext('action columns');
+  const actionColumnNames = actionColumns ? Object.keys(actionColumns) : [];
 </script>
 
 <thead>
   <tr>
     {#each columnNames() as colName, i (i)}
-      {#if renameColumns && renameColumns.hasOwnProperty(colName)}
-        <th>{renameColumns[colName]}</th>
-      {:else}
-        <th>{colName}</th>
-      {/if}
+      <th class:action_column={actionColumnNames.includes(colName)}>
+        {renameColumns && renameColumns.hasOwnProperty(colName)
+          ? renameColumns[colName]
+          : colName}
+      </th>
     {/each}
   </tr>
 </thead>
@@ -32,6 +41,12 @@
   th {
     padding: 0.5rem;
     text-align: center;
+
+    &.action_column {
+      @media print {
+        display: none;
+      }
+    }
   }
 
   th:not(:last-of-type) {

@@ -51,6 +51,12 @@
     padding: 0.5rem;
     text-align: center;
     text-wrap: wrap;
+
+    &:has(input[type='button']) {
+      @media print {
+        display: none;
+      }
+    }
   }
 
   input[type='button'] {
@@ -74,5 +80,9 @@
   a.button {
     display: inline-block;
     width: 80%;
+
+    @media print {
+      all: unset;
+    }
   }
 </style>

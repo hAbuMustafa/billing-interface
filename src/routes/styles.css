@@ -218,3 +218,9 @@ input:is([type='text'], [type='number'], [type*='date']):read-only,
 input:is([type='radio'], [type='checkbox']):disabled + label {
   opacity: 0.5;
 }
+
+@media print {
+  @page {
+    margin: 0mm;
+  }
+}

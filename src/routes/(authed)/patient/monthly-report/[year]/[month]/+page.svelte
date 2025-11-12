@@ -141,6 +141,10 @@
   nav {
     display: flex;
     justify-content: space-between;
+
+    @media print {
+      display: none;
+    }
   }
 
   dl {
