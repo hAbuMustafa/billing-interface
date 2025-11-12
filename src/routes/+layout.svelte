@@ -93,6 +93,10 @@
     @media (max-width: 400px) {
       grid-template-columns: 1fr;
     }
+
+    @media print {
+      grid-template-columns: 1rem 1fr 1rem;
+    }
   }
 
   h1 {
