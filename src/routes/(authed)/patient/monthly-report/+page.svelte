@@ -48,7 +48,7 @@
     justify-content: center;
     gap: 1rem;
 
-    @media (max-width: 800px) {
+    @media (max-width: 400px) {
       flex-direction: column;
 
       .input-pair {
