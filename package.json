@@ -11,8 +11,10 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "db:seed": "node scripts/seed/",
-    "db:push": "pnpm drizzle-kit push --config=drizzle-dev.config.ts",
-    "db:generate": "pnpm drizzle-kit generate --config=drizzle-dev.config.ts"
+    "db:push": "pnpm drizzle-kit push",
+    "db:generate": "pnpm drizzle-kit generate",
+    "db:push:dev": "pnpm drizzle-kit push --config=drizzle-dev.config.ts",
+    "db:generate:dev": "pnpm drizzle-kit generate --config=drizzle-dev.config.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^6.1.1",
