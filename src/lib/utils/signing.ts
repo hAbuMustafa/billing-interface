@@ -10,6 +10,9 @@ export function getSignature(data: string, encryptedPrivateKey: string): Base46S
     passphrase: PV_KEY_ENCR_KEY,
   });
 
+  // fix: This is just to make sure I've allocated enough size in the database columns for signatures: For RSA-2048: VARCHAR(512) is enough. For modern ECDSA/Ed25519: VARCHAR(256) would do [current value]
+  console.log('Key Details:', signKey.asymmetricKeyDetails);
+
   const signature = sign('sha256', Buffer.from(data), {
     key: signKey,
   });
