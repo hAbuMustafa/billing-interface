@@ -1,8 +1,11 @@
-import { drizzle } from 'drizzle-orm/libsql';
-import * as schema from '$lib/server/db/schema';
-import * as relations from '$lib/server/db/relations';
+import { drizzle } from 'drizzle-orm/mysql2';
+import mysql from 'mysql2/promise';
+import { MySQL_Connection_String } from '$env/static/private';
+
+const connection = await mysql.createConnection({
+  uri: MySQL_Connection_String,
+});
 
 export const db = drizzle({
-  connection: { url: 'file:data.db' },
-  schema: { ...schema, ...relations },
+  client: connection,
 });
