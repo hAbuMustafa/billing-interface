@@ -11,10 +11,12 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "db:seed": "node scripts/seed/",
-    "db:push": "pnpm drizzle-kit push",
-    "db:generate": "pnpm drizzle-kit generate",
-    "db:push:dev": "pnpm drizzle-kit push --config=drizzle-dev.config.ts",
-    "db:generate:dev": "pnpm drizzle-kit generate --config=drizzle-dev.config.ts"
+    "db:push:prod": "pnpm drizzle-kit push",
+    "db:pull:prod": "pnpm drizzle-kit pull",
+    "db:generate:prod": "pnpm drizzle-kit generate",
+    "db:push": "pnpm drizzle-kit push --config=drizzle-dev.config.ts",
+    "db:pull": "pnpm drizzle-kit pull --config=drizzle-dev.config.ts",
+    "db:generate": "pnpm drizzle-kit generate --config=drizzle-dev.config.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^6.1.1",
@@ -37,10 +39,11 @@
     "@libsql/client": "^0.15.15",
     "bcryptjs": "^3.0.2",
     "dayjs": "^1.11.18",
-    "drizzle-orm": "^0.44.6",
+    "drizzle-orm": "^0.44.7",
     "extend-arabic-query": "^0.3.2",
     "jose": "^6.1.0",
     "lodash.debounce": "^4.0.8",
+    "mysql2": "^3.15.3",
     "svelte-sonner": "^1.0.5",
     "svelte-vertical-timeline": "^2.0.0"
   }
