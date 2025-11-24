@@ -1,33 +1,35 @@
 import {
-  mysqlTable,
+  pgSchema,
   varchar,
   foreignKey,
   bigint,
-  int,
+  integer,
   text,
   date,
-} from 'drizzle-orm/mysql-core';
+} from 'drizzle-orm/pg-core';
 import { Person } from './people';
 
-export const Ward = mysqlTable('Ward', {
-  id: int().primaryKey(),
+export const Hospital = pgSchema('Hospital');
+
+export const Ward = Hospital.table('Ward', {
+  id: integer().primaryKey(),
   name: varchar({ length: 10 }).notNull(),
-  floor: int().notNull(),
-  capacity: int().default(0),
+  floor: integer().notNull(),
+  capacity: integer().default(0),
   tags: text(),
 });
 
-export const Staff = mysqlTable(
+export const Staff = Hospital.table(
   'Staff',
   {
-    id: int().primaryKey(),
+    id: integer().primaryKey(),
     job: varchar({ length: 45 }).notNull(),
     qualification: varchar({ length: 45 }).notNull(),
     major: varchar({ length: 45 }).notNull(),
     department: varchar({ length: 45 }).notNull(),
     employment_date: date({ mode: 'date' }).notNull(),
-    manager_id: int().notNull(),
-    person_id: bigint({ mode: 'number', unsigned: true })
+    manager_id: integer().notNull(),
+    person_id: bigint({ mode: 'bigint' })
       .notNull()
       .references(() => Person.id),
   },

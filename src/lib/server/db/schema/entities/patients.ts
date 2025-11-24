@@ -1,33 +1,35 @@
 import {
-  mysqlTable,
-  serial,
+  pgSchema,
+  bigserial,
   varchar,
   bigint,
-  int,
+  integer,
   decimal,
-  longtext,
+  text,
   date,
-  tinyint,
+  boolean,
   timestamp,
-} from 'drizzle-orm/mysql-core';
+} from 'drizzle-orm/pg-core';
 import { Staff, Ward } from './hospital';
 import { Sec_pb_key } from './system';
 import { Person } from './people';
 
-export const InPatient = mysqlTable('InPatient', {
-  id: serial().primaryKey(),
-  person_id: bigint({ mode: 'number', unsigned: true })
+export const Patient = pgSchema('Patient');
+
+export const InPatient = Patient.table('InPatient', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  person_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Person.id),
   meal_type: varchar({ length: 45 }),
-  recent_ward: int()
+  recent_ward: integer()
     .notNull()
     .references(() => Ward.id),
-  security_status: tinyint().default(0),
+  security_status: boolean().default(false),
 });
 
-export const Insurance_Doc = mysqlTable('Insurance_Doc', {
-  patient_id: bigint({ mode: 'number', unsigned: true })
+export const Insurance_Doc = Patient.table('Insurance_Doc', {
+  patient_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => InPatient.id),
   insurance_entity: varchar({ length: 45 }).notNull(),
@@ -43,130 +45,120 @@ export const Insurance_Doc = mysqlTable('Insurance_Doc', {
   maternal_deductible_percent: decimal(),
 });
 
-export const Diagnosis = mysqlTable('Diagnosis', {
-  id: serial().primaryKey(),
+export const Diagnosis = Patient.table('Diagnosis', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
   name: varchar({ length: 100 }).notNull(),
   icd11: varchar({ length: 45 }),
 });
 
-export const Patient_diagnosis = mysqlTable('Patient_diagnosis', {
-  patient_id: bigint({ mode: 'number', unsigned: true })
+export const Patient_diagnosis = Patient.table('Patient_diagnosis', {
+  patient_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => InPatient.id),
-  diagnosis_id: bigint({ mode: 'number', unsigned: true })
+  diagnosis_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Diagnosis.id),
   timestamp: timestamp({ mode: 'date' }).notNull(),
   type: varchar({ length: 45 }),
-  diagnosing_phys_id: int().references(() => Staff.id),
+  diagnosing_phys_id: integer().references(() => Staff.id),
   diagnosing_phys_signature: varchar({ length: 256 }),
-  diagnosing_phys_sign_key_id: bigint({ mode: 'number', unsigned: true }).references(
-    () => Sec_pb_key.id
-  ),
+  diagnosing_phys_sign_key_id: bigint({ mode: 'bigint' }).references(() => Sec_pb_key.id),
 });
 
-export const Admission_Order = mysqlTable('Admission_Order', {
-  id: serial().primaryKey(),
-  person_id: bigint({ mode: 'number', unsigned: true })
+export const Admission_Order = Patient.table('Admission_Order', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  person_id: bigint({ mode: 'bigint' })
     .references(() => Person.id)
     .notNull(),
-  notes: longtext(),
+  notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
   referred_from: varchar({ length: 100 }).default('reception'),
-  admitting_phys: int()
+  admitting_phys: integer()
     .references(() => Staff.id)
     .notNull(),
   admitting_phys_signature: varchar({ length: 256 }).notNull(),
-  admitting_phys_sign_key_id: bigint({ mode: 'number', unsigned: true })
+  admitting_phys_sign_key_id: bigint({ mode: 'bigint' })
     .references(() => Sec_pb_key.id)
     .notNull(),
 });
 
-export const Admission = mysqlTable('Admission', {
+export const Admission = Patient.table('Admission', {
   id: varchar({ length: 8 }).primaryKey(), // Archive File Number
-  patient_id: bigint({ mode: 'number', unsigned: true })
+  patient_id: bigint({ mode: 'bigint' })
     .references(() => InPatient.id)
     .notNull(),
-  admission_order_id: bigint({ mode: 'number', unsigned: true }).references(
-    () => Admission_Order.id
-  ),
-  admission_notes: longtext(),
+  admission_order_id: bigint({ mode: 'bigint' }).references(() => Admission_Order.id),
+  admission_notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
-  registrar: int().references(() => Staff.id),
+  registrar: integer().references(() => Staff.id),
 });
 
-export const Discharge_Reason = mysqlTable('Discharge_Reason', {
-  id: int().primaryKey(),
+export const Discharge_Reason = Patient.table('Discharge_Reason', {
+  id: integer().primaryKey(),
   reason: varchar({ length: 15 }).notNull(),
 });
 
-export const Discharge_Order = mysqlTable('Discharge_Order', {
-  id: serial().primaryKey(),
-  patient_id: bigint({ mode: 'number', unsigned: true })
+export const Discharge_Order = Patient.table('Discharge_Order', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  patient_id: bigint({ mode: 'bigint' })
     .references(() => InPatient.id)
     .notNull(),
-  notes: longtext(),
-  phys_id: int()
+  notes: text(),
+  phys_id: integer()
     .references(() => Staff.id)
     .notNull(),
   phys_signature: varchar({ length: 256 }).notNull(),
-  phys_sign_key: bigint({ mode: 'number', unsigned: true })
+  phys_sign_key: bigint({ mode: 'bigint' })
     .references(() => Sec_pb_key.id)
     .notNull(),
   timestamp: timestamp({ mode: 'date' }).notNull(),
 });
 
-export const Discharge = mysqlTable('Discharge', {
-  id: serial().primaryKey(),
-  patient_id: bigint({ mode: 'number', unsigned: true })
+export const Discharge = Patient.table('Discharge', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  patient_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => InPatient.id),
-  discharge_order_id: bigint({ mode: 'number', unsigned: true }).references(
-    () => Discharge_Order.id
-  ),
+  discharge_order_id: bigint({ mode: 'bigint' }).references(() => Discharge_Order.id),
   timestamp: timestamp({ mode: 'date' }).notNull(),
-  discharge_reason: int()
+  discharge_reason: integer()
     .notNull()
     .references(() => Discharge_Reason.id),
-  notes: longtext(),
-  registrar: int().references(() => Staff.id),
+  notes: text(),
+  registrar: integer().references(() => Staff.id),
   registrar_signature: varchar({ length: 256 }),
-  registrar_sign_key: bigint({ mode: 'number', unsigned: true }).references(
-    () => Sec_pb_key.id
-  ),
+  registrar_sign_key: bigint({ mode: 'bigint' }).references(() => Sec_pb_key.id),
 });
 
-export const Transfer_Order = mysqlTable('Transfer_Order', {
-  id: serial().primaryKey(),
-  patient_id: bigint({ mode: 'number', unsigned: true })
+export const Transfer_Order = Patient.table('Transfer_Order', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  patient_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => InPatient.id),
-  to_ward: int()
+  to_ward: integer()
     .notNull()
     .references(() => Ward.id),
-  notes: longtext(),
-  phys_id: int()
+  notes: text(),
+  phys_id: integer()
     .notNull()
     .references(() => Staff.id),
   phys_signature: varchar({ length: 256 }).notNull(),
-  phys_sign_key_id: bigint({ mode: 'number', unsigned: true })
+  phys_sign_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
   timestamp: timestamp({ mode: 'date' }).notNull(),
 });
 
-export const Transfer = mysqlTable('Transfer', {
-  id: serial().primaryKey(),
-  patient_id: bigint({ mode: 'number', unsigned: true })
+export const Transfer = Patient.table('Transfer', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  patient_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => InPatient.id),
-  from_ward_id: int().references(() => Ward.id),
-  to_ward_id: int()
+  from_ward_id: integer().references(() => Ward.id),
+  to_ward_id: integer()
     .notNull()
     .references(() => Ward.id),
-  transfer_order_id: bigint({ mode: 'number', unsigned: true }).references(
-    () => Transfer_Order.id
-  ),
-  notes: longtext(),
+  transfer_order_id: bigint({ mode: 'bigint' }).references(() => Transfer_Order.id),
+  notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull(),
 });

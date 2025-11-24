@@ -1,32 +1,33 @@
 import {
-  mysqlTable,
-  serial,
+  bigserial,
   varchar,
   bigint,
-  int,
-  longtext,
+  integer,
   text,
-  tinyint,
+  boolean,
   timestamp,
-} from 'drizzle-orm/mysql-core';
+  pgSchema,
+} from 'drizzle-orm/pg-core';
 import { Person } from './people';
 import { Staff } from './hospital';
 
-export const Sec_pb_key = mysqlTable('Sec_pb_key', {
-  id: serial().primaryKey(),
+export const Security = pgSchema('Security');
+
+export const Sec_pb_key = Security.table('Sec_pb_key', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
   key: text().notNull(),
   timestamp: timestamp({ mode: 'date' }).defaultNow().notNull(),
 });
 
-export const Sec_pv_key = mysqlTable('Sec_pv_key', {
-  id: serial().primaryKey(),
+export const Sec_pv_key = Security.table('Sec_pv_key', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
   key: text().notNull(),
   timestamp: timestamp({ mode: 'date' }).defaultNow().notNull(),
 });
 
-export const RefreshToken = mysqlTable('RefreshToken', {
+export const RefreshToken = Security.table('RefreshToken', {
   id: varchar({ length: 256 }).primaryKey(),
-  user_id: bigint({ mode: 'number', unsigned: true })
+  user_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => User.id),
   token_hash: varchar({ length: 36 }).notNull(),
@@ -35,23 +36,23 @@ export const RefreshToken = mysqlTable('RefreshToken', {
   last_used_at: timestamp({ mode: 'date' }).defaultNow(),
 });
 
-export const User = mysqlTable('User', {
-  id: serial().primaryKey(),
+export const User = Security.table('User', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
   username: varchar({ length: 45 }).notNull().unique(),
-  hashed_pw: longtext().notNull(),
-  role: int().notNull(),
-  person_id: bigint({ mode: 'number', unsigned: true })
+  hashed_pw: text().notNull(),
+  role: integer().notNull(),
+  person_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Person.id),
-  staff_id: int().references(() => Staff.id),
-  pb_key_id: bigint({ mode: 'number', unsigned: true })
+  staff_id: integer().references(() => Staff.id),
+  pb_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
-  pv_key_id: bigint({ mode: 'number', unsigned: true })
+  pv_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pv_key.id),
   created_at: timestamp({ mode: 'date' }).defaultNow().notNull(),
-  active: tinyint().default(0).notNull(),
+  active: boolean().default(false).notNull(),
   last_login: timestamp({ mode: 'date' }),
-  password_reset_required: tinyint().default(0).notNull(),
+  password_reset_required: boolean().default(false).notNull(),
 });
