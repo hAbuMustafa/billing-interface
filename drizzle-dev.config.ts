@@ -12,4 +12,12 @@ export default defineConfig({
   introspect: {
     casing: 'preserve',
   },
+  schemaFilter: [
+    'Hospital',
+    'MedicationPlan',
+    'Patient',
+    'People',
+    'Pharmacy',
+    'Security',
+  ],
 });
